@@ -4,7 +4,7 @@
 
 This repository is the reproducibility artifact for:
 
-> Obede Bessa Rocha da Silva, “Cross-Plane Operational Provenance for Cloud-Native Systems: Design and Reproducible Evaluation of a Lightweight Evidence-Aware Control Plane,” version 1.1, 2026.
+> Obede Bessa Rocha da Silva, “Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP,” version 1.2, 2026.
 
 It contains a deterministic SQLite microbenchmark, a small single-control-plane Kubernetes laboratory evaluation, and a bounded comparison with an OpenTelemetry Collector reference pipeline. The manuscript is a **preprint / technical report** and has **not undergone peer review**.
 
@@ -28,7 +28,7 @@ All values below are copied from the machine-readable files in `data/`; they are
 |---|---|---|
 | Synthetic SQLite | 10 sequential seeded trials at 10k, 50k, and 100k events; one process; warm-cache indexed queries | At 100k events, EACP ingestion was 5.332 microseconds/event (median), with service-query p95 0.691 ms versus 1.141 ms for the fragmented schema and correlation-query p95 0.0224 ms versus 0.0454 ms. EACP was an additional 413.983 bytes/event database versus 228.393 bytes/event for the fragmented database. Complete canonical projections were asserted equal in every trial. |
 | Kubernetes audit | `20260806T031453Z`; one local kind control plane; three workload rounds | 374 sanitized namespace records were normalized to 374 unique rows; 132 carried an explicit `eacp-round-NN` correlation; all three intentional RBAC denials were audited as HTTP 403. Median EACP SQLite persistence was 3.002 ms across 10 sequential trials. |
-| OpenTelemetry reference | `20260806T032418Z`; 10 sequential paired replays of the same 374-record corpus | Both pipelines retained 374/374 events. The Collector preserved the raw Kubernetes audit lines as exported log bodies; the external post-export EACP validator then matched 4,862/4,862 compared values after normalizing those bodies. Median observed time to validated output was 60.659 ms for the fresh EACP Python process and 622.477 ms for the fresh Collector container. The boundaries include unlike startup, host-side observation, validation placement, and output costs; the values are descriptive, not a ranking. |
+| OpenTelemetry reference | `20260806T032418Z`; 10 sequential paired replays of the same 374-record corpus | Both paths retained 374/374 events. The Collector preserved the raw Kubernetes audit lines as exported log bodies; the external post-export EACP validator then matched 4,862/4,862 compared values after normalizing those bodies. This establishes shared-corpus preservation through the fixed pipeline, not Collector-native EACP semantics, functional equivalence, or a performance ranking. |
 
 The Kubernetes corpus SHA-256 is `6aa39ee1cf8d3cbf58cb683ed6c7977ce851ab442c7057b7a85e974cb5400e01`. The canonical projection SHA-256 used by the paired comparison is `196d4a1bf8d057d9fe9e6f18062b7c5ac5228642df3098b28c84fb48d7a67da6`.
 
@@ -42,8 +42,8 @@ The Kubernetes corpus SHA-256 is `6aa39ee1cf8d3cbf58cb683ed6c7977ce851ab442c7057
 | `data/sqlite/` | Synthetic trial data, summaries, query plans, and sanitized environment metadata |
 | `data/kubernetes/20260806T031453Z/` | Exactly the eight approved public result files from the canonical Kubernetes run |
 | `data/comparison/20260806T032418Z/` | Safe comparison summary, trials, environment metadata, and run checksums |
-| `figures/` | Figure generator and three result figures |
-| `paper/` | Searchable version 1.1 preprint PDF and its file-specific rights notice |
+| `figures/` | Figure generator plus publication-ready PNG, SVG, and vector-PDF figures |
+| `paper/` | Searchable version 1.2 preprint PDF and its file-specific rights notice |
 | `scripts/` | Reproduction, hygiene, and release-manifest checks |
 | `tests/` | Repository-contract tests |
 
@@ -130,9 +130,9 @@ The sanitizer and selection rules are documented in `experiments/kubernetes/PUBL
 
 ## Citation and archival status
 
-GitHub can read the software citation from `CITATION.cff`. The permanent identifier for version 1.1.0 is the Zenodo software/artifact DOI <https://doi.org/10.5281/zenodo.21817377>. It identifies the versioned software, configuration, data, documentation, figures, and reproducibility materials; it is **not an article DOI** for the accompanying preprint.
+GitHub can read the software citation from `CITATION.cff`. The version-specific identifier for v1.2.0 is the Zenodo software/artifact DOI <https://doi.org/10.5281/zenodo.21818550>. The Concept DOI <https://doi.org/10.5281/zenodo.21817376> represents all artifact versions and always resolves to the latest published version. These identifiers cover the software, configuration, data, documentation, figures, and reproducibility materials; neither is an article DOI for the accompanying preprint.
 
-The searchable preprint is `paper/EACP_preprint.pdf`, and `MANIFEST.sha256` covers the frozen release tree. The release is ready to tag as `v1.1.0` only after `python scripts/verify_repository.py --release` passes.
+The searchable preprint is `paper/EACP_preprint.pdf`, and `MANIFEST.sha256` covers the frozen release tree. Release v1.2.0 is valid only after `python scripts/verify_repository.py --release` passes.
 
 ## Licensing
 

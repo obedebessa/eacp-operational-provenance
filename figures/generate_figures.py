@@ -369,11 +369,9 @@ def comparison() -> None:
     field_equality = validation["post_export_canonical_projection_preservation"]["field_value_equality"]
     accuracy = float(field_equality["overall"])
     compared_values = int(field_equality["compared_field_values"])
-    results = summary["descriptive_results"]
-
     image = Image.new("RGB", (2400, 1520), PAPER)
     draw = ImageDraw.Draw(image)
-    draw.text((100, 55), "Kubernetes Laboratory and Reference-Pipeline Comparison", font=font(51, True), fill=NAVY)
+    draw.text((100, 55), "Kubernetes Laboratory and Corpus-Preservation Exercise", font=font(49, True), fill=NAVY)
     draw.text(
         (100, 120),
         "One frozen, sanitized audit corpus • ten fresh sequential replays per pipeline",
@@ -403,7 +401,7 @@ def comparison() -> None:
     panel_b = (100, 590, 1155, 1295)
     rounded_box(draw, panel_b, WHITE, GRID, width=3, radius=22)
     draw.text((135, 620), "B. Event preservation", font=font(30, True), fill=NAVY)
-    draw.text((135, 670), "Canonical projection checked after the timed intervals", font=font(20), fill=MID)
+    draw.text((135, 670), "Canonical projection checked after each replay", font=font(20), fill=MID)
     validation_rows = [
         ("EACP", f"{event_count} / {event_count}", "indexed SQLite rows retained"),
         ("OpenTelemetry", f"{event_count} / {event_count}", "exported audit bodies retained"),
@@ -421,54 +419,44 @@ def comparison() -> None:
         y += 175
     draw.text((150, 1248), "No SQLite-versus-file query comparison was performed.", font=font(18, True), fill=MID)
 
-    # C. Descriptive end-to-end wall time.
+    # C. Shared-scope interoperability flow. Deliberately no performance ranking.
     panel_c = (1205, 590, 2300, 1295)
     rounded_box(draw, panel_c, WHITE, GRID, width=3, radius=22)
-    draw.text((1240, 620), "C. Observed time to validated output", font=font(30, True), fill=NAVY)
-    draw.text((1240, 670), "Median and IQR across ten fresh runs (milliseconds)", font=font(20), fill=MID)
-    plot_left, plot_right = 1395, 2240
-    plot_top, plot_bottom = 760, 1110
-    y_max = 750.0
-    for tick in range(0, 751, 150):
-        y_tick = plot_bottom - (tick / y_max) * (plot_bottom - plot_top)
-        draw.line((plot_left, y_tick, plot_right, y_tick), fill=GRID, width=2)
-        label = str(tick)
-        tw, th = text_size(draw, label, font(18))
-        draw.text((plot_left - tw - 18, y_tick - th / 2), label, font=font(18), fill=MID)
-    draw.line((plot_left, plot_top, plot_left, plot_bottom), fill=INK, width=3)
-    draw.line((plot_left, plot_bottom, plot_right, plot_bottom), fill=INK, width=3)
+    draw.text((1240, 620), "C. Interoperability reference exercise", font=font(30, True), fill=NAVY)
+    draw.text((1240, 670), "Same frozen bytes; distinct output and query semantics", font=font(20), fill=MID)
 
-    pipeline_values = [
-        ("EACP", results["eacp"]["wall_time_ms"], TEAL),
-        ("OpenTelemetry", results["opentelemetry"]["wall_time_ms"], BLUE),
-    ]
-    centers = [1620, 2040]
-    for (label, stats, color), center in zip(pipeline_values, centers):
-        median = float(stats["median"])
-        q1 = float(stats["q1"])
-        q3 = float(stats["q3"])
-        top_y = plot_bottom - (median / y_max) * (plot_bottom - plot_top)
-        low_y = plot_bottom - (q1 / y_max) * (plot_bottom - plot_top)
-        high_y = plot_bottom - (q3 / y_max) * (plot_bottom - plot_top)
-        draw.rounded_rectangle((center - 80, top_y, center + 80, plot_bottom), radius=9, fill=color)
-        draw.line((center, low_y, center, high_y), fill=INK, width=5)
-        draw.line((center - 22, low_y, center + 22, low_y), fill=INK, width=5)
-        draw.line((center - 22, high_y, center + 22, high_y), fill=INK, width=5)
-        value_label = f"{median:.1f} ms"
-        tw, th = text_size(draw, value_label, font(22, True))
-        draw.text((center - tw / 2, top_y - th - 18), value_label, font=font(22, True), fill=NAVY)
-        tw, _ = text_size(draw, label, font(21, True))
-        draw.text((center - tw / 2, plot_bottom + 20), label, font=font(21, True), fill=INK)
-
-    rounded_box(draw, (1245, 1180, 2260, 1260), PALE_GOLD, GOLD, width=2, radius=14)
+    shared_box = (1320, 735, 2185, 865)
+    rounded_box(draw, shared_box, LIGHT_BLUE, BLUE, width=3, radius=16)
     centered_multiline(
         draw,
-        (1260, 1185, 2245, 1255),
-        "Descriptive only: OTel includes Docker startup and host decoding; EACP projection validation occurs after its timer.",
-        font(17, True),
-        fill=INK,
-        line_gap=4,
+        shared_box,
+        f"SHARED INPUT  •  {event_count} frozen audit records  •  identical bytes",
+        font(24, True),
+        fill=NAVY,
+        line_gap=5,
     )
+
+    eacp_box = (1255, 925, 1735, 1085)
+    otel_box = (1770, 925, 2250, 1085)
+    rounded_box(draw, eacp_box, LIGHT_TEAL, TEAL, width=3, radius=16)
+    rounded_box(draw, otel_box, LIGHT_BLUE, BLUE, width=3, radius=16)
+    centered_multiline(draw, eacp_box, f"EACP\n{event_count} / {event_count} indexed rows retained", font(23, True), fill=NAVY, line_gap=5)
+    centered_multiline(draw, otel_box, f"OpenTelemetry\n{event_count} / {event_count} raw bodies retained", font(23, True), fill=NAVY, line_gap=5)
+    arrow(draw, (1620, 875), (1495, 915), fill=TEAL, width=5)
+    arrow(draw, (1885, 875), (2010, 915), fill=BLUE, width=5)
+
+    validation_box = (1320, 1140, 2185, 1260)
+    rounded_box(draw, validation_box, PALE_GOLD, GOLD, width=3, radius=16)
+    centered_multiline(
+        draw,
+        validation_box,
+        f"EXTERNAL PROJECTION CHECK  •  {compared_values:,} / {compared_values:,} values matched",
+        font(23, True),
+        fill=INK,
+        line_gap=5,
+    )
+    arrow(draw, (1495, 1095), (1620, 1130), fill=GOLD, width=5)
+    arrow(draw, (2010, 1095), (1885, 1130), fill=GOLD, width=5)
 
     draw.text(
         (100, 1360),
@@ -478,11 +466,11 @@ def comparison() -> None:
     )
     draw.text(
         (100, 1405),
-        "Scope: bounded replay and corpus preservation. Raw bodies were mapped later by an external EACP validator.",
+        "Scope: bounded replay and corpus preservation only • no performance ranking • no claim of Collector-native EACP semantics",
         font=font(21, True),
         fill=TEAL,
     )
-    image.save(OUT / "eacp_kubernetes_otel_results.png", dpi=(300, 300))
+    image.save(OUT / "eacp_kubernetes_preservation_results_v1_2.png", dpi=(300, 300))
 
 
 def main() -> None:

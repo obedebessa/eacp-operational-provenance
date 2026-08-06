@@ -18,12 +18,12 @@ def sha256(path: Path) -> str:
 class RepositoryContractTests(unittest.TestCase):
     def test_versions_and_primary_artifact_citation(self) -> None:
         metadata = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-        self.assertIn('version = "1.1.0"', metadata)
+        self.assertIn('version = "1.2.0"', metadata)
 
         cff = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
         self.assertIn("type: software", cff)
-        self.assertIn("version: 1.1.0", cff)
-        self.assertIn('doi: "10.5281/zenodo.21817377"', cff)
+        self.assertIn("version: 1.2.0", cff)
+        self.assertIn('doi: "10.5281/zenodo.21818550"', cff)
         self.assertIn(
             'repository-code: "https://github.com/obedebessa/eacp-operational-provenance"',
             cff,
@@ -32,6 +32,10 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertIn("article.", cff)
         self.assertNotIn("email:", cff)
         self.assertNotIn("preferred-citation:", cff)
+
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn("10.5281/zenodo.21818550", readme)
+        self.assertIn("10.5281/zenodo.21817376", readme)
 
     def test_scope_caveats_are_explicit(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -51,7 +55,7 @@ class RepositoryContractTests(unittest.TestCase):
         )
         license_map = (ROOT / "LICENSES/README.md").read_text(encoding="utf-8")
         self.assertIn("Data under data/", license_map)
-        self.assertIn("Preprint files under paper/", license_map)
+        self.assertIn("paper/EACP_preprint.pdf", license_map)
         paper_notice = (ROOT / "paper/README.md").read_text(encoding="utf-8")
         self.assertIn("All rights reserved", paper_notice)
         self.assertIn("not an article", paper_notice)

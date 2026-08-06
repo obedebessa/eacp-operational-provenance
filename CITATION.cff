@@ -1,23 +1,24 @@
 cff-version: 1.2.0
 message: "If you use this artifact, please cite the software record described in this file."
-title: "EACP: Reproducible Artifact for Cross-Plane Operational Provenance"
+title: "EACP Operational-Provenance Artifact: Reproducible SQLite, Kubernetes, and OpenTelemetry Evaluation"
 abstract: >-
   Reproducibility artifact for a lightweight evidence-aware control plane,
   including a deterministic SQLite microbenchmark, a small single-control-plane
   Kubernetes laboratory evaluation, and a bounded OpenTelemetry Collector
   reference-pipeline comparison. The accompanying manuscript is a non-peer-reviewed
   preprint. The DOI in this record identifies the artifact, not the accompanying
-  article.
+  article. Licensing is file-scoped; see LICENSES/README.md and paper/README.md.
 type: software
 authors:
   - family-names: "Rocha da Silva"
     given-names: "Obede Bessa"
-version: 1.1.0
+    orcid: "https://orcid.org/0009-0001-0787-5710"
+    affiliation: "Independent Researcher in Cloud Architecture and DevOps"
+version: 1.2.0
 date-released: 2026-08-06
 repository-code: "https://github.com/obedebessa/eacp-operational-provenance"
-doi: "10.5281/zenodo.21817377"
-url: "https://doi.org/10.5281/zenodo.21817377"
-license: Apache-2.0
+doi: "10.5281/zenodo.21818550"
+url: "https://doi.org/10.5281/zenodo.21818550"
 keywords:
   - operational provenance
   - cloud-native systems
@@ -27,10 +28,10 @@ keywords:
   - evidence index
 references:
   - type: report
-    title: "Cross-Plane Operational Provenance for Cloud-Native Systems: Design and Reproducible Evaluation of a Lightweight Evidence-Aware Control Plane"
+    title: "Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP"
     authors:
       - family-names: "Rocha da Silva"
         given-names: "Obede Bessa"
     year: 2026
     month: 8
-    version: "1.1"
+    version: "1.2"

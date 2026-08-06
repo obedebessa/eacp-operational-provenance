@@ -70,8 +70,16 @@ RELEASE_REQUIRED_FILES = (
     "figures/generate_figures.py",
     "figures/eacp_architecture.png",
     "figures/eacp_benchmark_results.png",
-    "figures/eacp_kubernetes_otel_results.png",
+    "figures/eacp_kubernetes_preservation_results_v1_2.png",
+    "figures/generate_vector_figures.py",
+    "figures/figure_1_eacp_architecture_v1_2.svg",
+    "figures/figure_1_eacp_architecture_v1_2.pdf",
+    "figures/figure_2_reproducible_pilot_benchmark_v1_2.svg",
+    "figures/figure_2_reproducible_pilot_benchmark_v1_2.pdf",
+    "figures/figure_3_kubernetes_preservation_v1_2.svg",
+    "figures/figure_3_kubernetes_preservation_v1_2.pdf",
     "paper/EACP_preprint.pdf",
+    "RELEASE_NOTES_v1.2.0.md",
     "MANIFEST.sha256",
 )
 
@@ -90,7 +98,9 @@ KUBERNETES_INPUT_SHA256 = "6aa39ee1cf8d3cbf58cb683ed6c7977ce851ab442c7057b7a85e9
 KUBERNETES_PROJECTION_CSV_SHA256 = "ff03698e83a764651aec912fc806a50464374567ae862936fe32251523d796b5"
 CANONICAL_PROJECTION_SHA256 = "196d4a1bf8d057d9fe9e6f18062b7c5ac5228642df3098b28c84fb48d7a67da6"
 OTEL_IMAGE_DIGEST = "sha256:c5918f78992ee73b0d6f0e599423ac5ec52dd5d9726733114d6eca53d5a32ed5"
-ARTIFACT_DOI = "10.5281/zenodo.21817377"
+ARTIFACT_VERSION = "1.2.0"
+ARTIFACT_DOI = "10.5281/zenodo.21818550"
+CONCEPT_DOI = "10.5281/zenodo.21817376"
 REPOSITORY_URL = "https://github.com/obedebessa/eacp-operational-provenance"
 
 TEXT_SUFFIXES = {
@@ -244,8 +254,8 @@ def main() -> int:
     cff_path = ROOT / "CITATION.cff"
     if cff_path.is_file():
         cff = cff_path.read_text(encoding="utf-8")
-        if "version: 1.1.0" not in cff:
-            errors.append("CITATION.cff does not declare artifact version 1.1.0")
+        if f"version: {ARTIFACT_VERSION}" not in cff:
+            errors.append(f"CITATION.cff does not declare artifact version {ARTIFACT_VERSION}")
         if f'doi: "{ARTIFACT_DOI}"' not in cff:
             errors.append("CITATION.cff does not declare the reserved artifact DOI")
         if f'repository-code: "{REPOSITORY_URL}"' not in cff:
@@ -254,6 +264,14 @@ def main() -> int:
             errors.append("CITATION.cff must not publish a personal email address")
         if args.release and not re.search(r"(?m)^\s*doi\s*:\s*[\"']?10\.", cff):
             errors.append("release CITATION.cff is missing the published DOI")
+
+    readme_path = ROOT / "README.md"
+    if readme_path.is_file():
+        readme = readme_path.read_text(encoding="utf-8")
+        if ARTIFACT_DOI not in readme:
+            errors.append("README.md does not declare the version-specific artifact DOI")
+        if CONCEPT_DOI not in readme:
+            errors.append("README.md does not declare the Zenodo Concept DOI")
 
     for path in iter_text_files():
         try:

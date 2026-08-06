@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1550" viewBox="0 0 2400 1550" role="img" aria-labelledby="title desc">
+<title id="title">Figure 2. Reproducible pilot benchmark</title>
+<desc id="desc">Four bar charts report service-state reconstruction, cross-plane correlation, evidence ingestion, and physical SQLite storage for 10k, 50k, and 100k event workloads. Bars show medians and whiskers show interquartile ranges across ten sequential seeded trials.</desc>
+<metadata>Generated from the archived EACP v1.2 experiment inputs; all elements are vector-native.</metadata>
+<defs>
+  <marker id="arrow-teal" markerWidth="28" markerHeight="28" refX="24" refY="14" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0,0 L28,14 L0,28 Z" fill="#167C80"/>
+  </marker>
+  <marker id="arrow-blue" markerWidth="28" markerHeight="28" refX="24" refY="14" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0,0 L28,14 L0,28 Z" fill="#1E5A7A"/>
+  </marker>
+  <marker id="arrow-gold" markerWidth="28" markerHeight="28" refX="24" refY="14" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0,0 L28,14 L0,28 Z" fill="#D7A62A"/>
+  </marker>
+  <marker id="arrow-mid" markerWidth="28" markerHeight="28" refX="24" refY="14" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0,0 L28,14 L0,28 Z" fill="#6B7B86"/>
+  </marker>
+  <style>
+    text { font-family: Arial, Helvetica, sans-serif; }
+    .navy { fill: #14324B; }
+    .ink { fill: #24313A; }
+    .mid { fill: #6B7B86; }
+    .blue { fill: #1E5A7A; }
+    .teal { fill: #167C80; }
+    .gold { fill: #D7A62A; }
+    .bold { font-weight: 700; }
+  </style>
+</defs>
+<rect x="0" y="0" width="2400" height="1550" rx="0" fill="#F8FAFB" stroke="none" stroke-width="0"/>
+<text x="100" y="105" font-size="56" fill="#14324B" font-weight="700" text-anchor="start">Reproducible Pilot Benchmark</text>
+<text x="100" y="158" font-size="28" fill="#6B7B86" font-weight="400" text-anchor="start">Median of 10 sequential seeded trials; whiskers show the interquartile range</text>
+<rect x="100" y="200" width="1070" height="605" rx="22" fill="#FFFFFF" stroke="#D8E0E5" stroke-width="3"/>
+<text x="134" y="255" font-size="30" fill="#14324B" font-weight="700" text-anchor="start">A. Service-state reconstruction</text>
+<text x="134" y="292" font-size="20" fill="#6B7B86" font-weight="400" text-anchor="start">Indexed warm-cache p95 by service (milliseconds)</text>
+<line x1="215" y1="723" x2="1128" y2="723" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="203" y="730" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">0.00</text>
+<line x1="215" y1="623.5" x2="1128" y2="623.5" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="203" y="630.5" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">0.38</text>
+<line x1="215" y1="524" x2="1128" y2="524" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="203" y="531" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">0.75</text>
+<line x1="215" y1="424.5" x2="1128" y2="424.5" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="203" y="431.5" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">1.12</text>
+<line x1="215" y1="325" x2="1128" y2="325" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="203" y="332" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">1.50</text>
+<line x1="215" y1="325" x2="215" y2="723" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="215" y1="723" x2="1128" y2="723" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="299.967" y="695.152" width="54.4" height="27.8477" rx="6" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<line x1="327.167" y1="695.647" x2="327.167" y2="693.4" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="318.167" y1="695.647" x2="336.167" y2="695.647" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="318.167" y1="693.4" x2="336.167" y2="693.4" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="379.967" y="703.077" width="54.4" height="19.9232" rx="6" fill="#167C80" stroke="none" stroke-width="0"/>
+<line x1="407.167" y1="703.323" x2="407.167" y2="702.087" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="398.167" y1="703.323" x2="416.167" y2="703.323" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="398.167" y1="702.087" x2="416.167" y2="702.087" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="367.167" y="765" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">10k</text>
+<rect x="604.3" y="587.594" width="54.4" height="135.406" rx="6" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<line x1="631.5" y1="590.281" x2="631.5" y2="585.163" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="622.5" y1="590.281" x2="640.5" y2="590.281" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="622.5" y1="585.163" x2="640.5" y2="585.163" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="684.3" y="633.944" width="54.4" height="89.0563" rx="6" fill="#167C80" stroke="none" stroke-width="0"/>
+<line x1="711.5" y1="635.438" x2="711.5" y2="627.111" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="702.5" y1="635.438" x2="720.5" y2="635.438" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="702.5" y1="627.111" x2="720.5" y2="627.111" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="671.5" y="765" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">50k</text>
+<rect x="908.633" y="420.153" width="54.4" height="302.847" rx="6" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<line x1="935.833" y1="428.262" x2="935.833" y2="413.821" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="926.833" y1="428.262" x2="944.833" y2="428.262" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="926.833" y1="413.821" x2="944.833" y2="413.821" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="988.633" y="539.675" width="54.4" height="183.325" rx="6" fill="#167C80" stroke="none" stroke-width="0"/>
+<line x1="1015.83" y1="542.927" x2="1015.83" y2="538.182" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1006.83" y1="542.927" x2="1024.83" y2="542.927" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1006.83" y1="538.182" x2="1024.83" y2="538.182" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="975.833" y="765" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">100k</text>
+<rect x="778" y="279" width="24" height="24" rx="4" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<text x="812" y="298" font-size="18" fill="#24313A" font-weight="700" text-anchor="start">Fragmented</text>
+<rect x="953" y="279" width="24" height="24" rx="4" fill="#167C80" stroke="none" stroke-width="0"/>
+<text x="987" y="298" font-size="18" fill="#24313A" font-weight="700" text-anchor="start">EACP</text>
+<rect x="1230" y="200" width="1070" height="605" rx="22" fill="#FFFFFF" stroke="#D8E0E5" stroke-width="3"/>
+<text x="1264" y="255" font-size="30" fill="#14324B" font-weight="700" text-anchor="start">B. Cross-plane correlation</text>
+<text x="1264" y="292" font-size="20" fill="#6B7B86" font-weight="400" text-anchor="start">Indexed warm-cache p95 by correlation ID (milliseconds)</text>
+<line x1="1345" y1="723" x2="2258" y2="723" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="1333" y="730" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">0.000</text>
+<line x1="1345" y1="623.5" x2="2258" y2="623.5" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="1333" y="630.5" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">0.015</text>
+<line x1="1345" y1="524" x2="2258" y2="524" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="1333" y="531" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">0.030</text>
+<line x1="1345" y1="424.5" x2="2258" y2="424.5" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="1333" y="431.5" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">0.045</text>
+<line x1="1345" y1="325" x2="2258" y2="325" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="1333" y="332" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">0.060</text>
+<line x1="1345" y1="325" x2="1345" y2="723" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1345" y1="723" x2="2258" y2="723" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="1429.97" y="534.696" width="54.4" height="188.304" rx="6" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<line x1="1457.17" y1="538.335" x2="1457.17" y2="518.992" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1448.17" y1="538.335" x2="1466.17" y2="538.335" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1448.17" y1="518.992" x2="1466.17" y2="518.992" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="1509.97" y="599.563" width="54.4" height="123.437" rx="6" fill="#167C80" stroke="none" stroke-width="0"/>
+<line x1="1537.17" y1="604.093" x2="1537.17" y2="586.312" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1528.17" y1="604.093" x2="1546.17" y2="604.093" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1528.17" y1="586.312" x2="1546.17" y2="586.312" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="1497.17" y="765" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">10k</text>
+<rect x="1734.3" y="485.963" width="54.4" height="237.037" rx="6" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<line x1="1761.5" y1="496.57" x2="1761.5" y2="468.391" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1752.5" y1="496.57" x2="1770.5" y2="496.57" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1752.5" y1="468.391" x2="1770.5" y2="468.391" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="1814.3" y="589.031" width="54.4" height="133.969" rx="6" fill="#167C80" stroke="none" stroke-width="0"/>
+<line x1="1841.5" y1="595.718" x2="1841.5" y2="583.043" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1832.5" y1="595.718" x2="1850.5" y2="595.718" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1832.5" y1="583.043" x2="1850.5" y2="583.043" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="1801.5" y="765" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">50k</text>
+<rect x="2038.63" y="421.986" width="54.4" height="301.014" rx="6" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<line x1="2065.83" y1="430.418" x2="2065.83" y2="401.251" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="2056.83" y1="430.418" x2="2074.83" y2="430.418" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="2056.83" y1="401.251" x2="2074.83" y2="401.251" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="2118.63" y="574.109" width="54.4" height="148.891" rx="6" fill="#167C80" stroke="none" stroke-width="0"/>
+<line x1="2145.83" y1="576.937" x2="2145.83" y2="556.781" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="2136.83" y1="576.937" x2="2154.83" y2="576.937" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="2136.83" y1="556.781" x2="2154.83" y2="556.781" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="2105.83" y="765" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">100k</text>
+<rect x="1908" y="279" width="24" height="24" rx="4" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<text x="1942" y="298" font-size="18" fill="#24313A" font-weight="700" text-anchor="start">Fragmented</text>
+<rect x="2083" y="279" width="24" height="24" rx="4" fill="#167C80" stroke="none" stroke-width="0"/>
+<text x="2117" y="298" font-size="18" fill="#24313A" font-weight="700" text-anchor="start">EACP</text>
+<rect x="100" y="850" width="1070" height="605" rx="22" fill="#FFFFFF" stroke="#D8E0E5" stroke-width="3"/>
+<text x="134" y="905" font-size="30" fill="#14324B" font-weight="700" text-anchor="start">C. Evidence ingestion</text>
+<text x="134" y="942" font-size="20" fill="#6B7B86" font-weight="400" text-anchor="start">Amortized bulk normalization, SHA-256, three indexes, and one commit (events / second)</text>
+<line x1="215" y1="1373" x2="1128" y2="1373" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="203" y="1380" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">0</text>
+<line x1="215" y1="1273.5" x2="1128" y2="1273.5" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="203" y="1280.5" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">57,500</text>
+<line x1="215" y1="1174" x2="1128" y2="1174" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="203" y="1181" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">115,000</text>
+<line x1="215" y1="1074.5" x2="1128" y2="1074.5" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="203" y="1081.5" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">172,500</text>
+<line x1="215" y1="975" x2="1128" y2="975" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="203" y="982" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">230,000</text>
+<line x1="215" y1="975" x2="215" y2="1373" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="215" y1="1373" x2="1128" y2="1373" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="339.967" y="1023.73" width="54.4" height="349.269" rx="6" fill="#D7A62A" stroke="none" stroke-width="0"/>
+<line x1="367.167" y1="1030.25" x2="367.167" y2="1017.41" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="358.167" y1="1030.25" x2="376.167" y2="1030.25" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="358.167" y1="1017.41" x2="376.167" y2="1017.41" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="367.167" y="1415" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">10k</text>
+<rect x="644.3" y="1031.14" width="54.4" height="341.862" rx="6" fill="#D7A62A" stroke="none" stroke-width="0"/>
+<line x1="671.5" y1="1033.88" x2="671.5" y2="1027.13" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="662.5" y1="1033.88" x2="680.5" y2="1033.88" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="662.5" y1="1027.13" x2="680.5" y2="1027.13" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="671.5" y="1415" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">50k</text>
+<rect x="948.633" y="1048.46" width="54.4" height="324.542" rx="6" fill="#D7A62A" stroke="none" stroke-width="0"/>
+<line x1="975.833" y1="1068.98" x2="975.833" y2="1038.52" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="966.833" y1="1068.98" x2="984.833" y2="1068.98" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="966.833" y1="1038.52" x2="984.833" y2="1038.52" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="975.833" y="1415" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">100k</text>
+<rect x="953" y="929" width="24" height="24" rx="4" fill="#D7A62A" stroke="none" stroke-width="0"/>
+<text x="987" y="948" font-size="18" fill="#24313A" font-weight="700" text-anchor="start">EACP</text>
+<rect x="1230" y="850" width="1070" height="605" rx="22" fill="#FFFFFF" stroke="#D8E0E5" stroke-width="3"/>
+<text x="1264" y="905" font-size="30" fill="#14324B" font-weight="700" text-anchor="start">D. Physical SQLite storage</text>
+<text x="1264" y="942" font-size="20" fill="#6B7B86" font-weight="400" text-anchor="start">Separate database size after VACUUM (bytes / event)</text>
+<line x1="1345" y1="1373" x2="2258" y2="1373" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="1333" y="1380" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">0</text>
+<line x1="1345" y1="1273.5" x2="2258" y2="1273.5" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="1333" y="1280.5" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">125</text>
+<line x1="1345" y1="1174" x2="2258" y2="1174" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="1333" y="1181" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">250</text>
+<line x1="1345" y1="1074.5" x2="2258" y2="1074.5" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="1333" y="1081.5" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">375</text>
+<line x1="1345" y1="975" x2="2258" y2="975" stroke="#D8E0E5" stroke-width="2" stroke-linecap="round"/>
+<text x="1333" y="982" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="end">500</text>
+<line x1="1345" y1="975" x2="1345" y2="1373" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1345" y1="1373" x2="2258" y2="1373" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="1429.97" y="1186.83" width="54.4" height="186.17" rx="6" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<line x1="1457.17" y1="1186.83" x2="1457.17" y2="1186.83" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1448.17" y1="1186.83" x2="1466.17" y2="1186.83" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1448.17" y1="1186.83" x2="1466.17" y2="1186.83" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="1509.97" y="1042.72" width="54.4" height="330.28" rx="6" fill="#167C80" stroke="none" stroke-width="0"/>
+<line x1="1537.17" y1="1042.72" x2="1537.17" y2="1042.72" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1528.17" y1="1042.72" x2="1546.17" y2="1042.72" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1528.17" y1="1042.72" x2="1546.17" y2="1042.72" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="1497.17" y="1415" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">10k</text>
+<rect x="1734.3" y="1191.72" width="54.4" height="181.279" rx="6" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<line x1="1761.5" y1="1191.72" x2="1761.5" y2="1191.72" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1752.5" y1="1191.72" x2="1770.5" y2="1191.72" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1752.5" y1="1191.72" x2="1770.5" y2="1191.72" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="1814.3" y="1044.42" width="54.4" height="328.585" rx="6" fill="#167C80" stroke="none" stroke-width="0"/>
+<line x1="1841.5" y1="1044.42" x2="1841.5" y2="1044.42" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1832.5" y1="1044.42" x2="1850.5" y2="1044.42" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="1832.5" y1="1044.42" x2="1850.5" y2="1044.42" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="1801.5" y="1415" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">50k</text>
+<rect x="2038.63" y="1191.2" width="54.4" height="181.801" rx="6" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<line x1="2065.83" y1="1191.2" x2="2065.83" y2="1191.13" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="2056.83" y1="1191.2" x2="2074.83" y2="1191.2" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="2056.83" y1="1191.13" x2="2074.83" y2="1191.13" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<rect x="2118.63" y="1043.47" width="54.4" height="329.53" rx="6" fill="#167C80" stroke="none" stroke-width="0"/>
+<line x1="2145.83" y1="1043.47" x2="2145.83" y2="1043.47" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="2136.83" y1="1043.47" x2="2154.83" y2="1043.47" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<line x1="2136.83" y1="1043.47" x2="2154.83" y2="1043.47" stroke="#24313A" stroke-width="3" stroke-linecap="round"/>
+<text x="2105.83" y="1415" font-size="20" fill="#24313A" font-weight="700" text-anchor="middle">100k</text>
+<rect x="1908" y="929" width="24" height="24" rx="4" fill="#1E5A7A" stroke="none" stroke-width="0"/>
+<text x="1942" y="948" font-size="18" fill="#24313A" font-weight="700" text-anchor="start">Fragmented</text>
+<rect x="2083" y="929" width="24" height="24" rx="4" fill="#167C80" stroke="none" stroke-width="0"/>
+<text x="2117" y="948" font-size="18" fill="#24313A" font-weight="700" text-anchor="start">EACP</text>
+<text x="100" y="1507" font-size="20" fill="#6B7B86" font-weight="400" text-anchor="start">Synthetic workload - 200 services - 300 service and 300 correlation queries per trial - Apple M4 Max - CPython 3.11.9 - SQLite 3.51.0</text>
+</svg>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1520" viewBox="0 0 2400 1520" role="img" aria-labelledby="title desc">
+<title id="title">Figure 3. Kubernetes laboratory and corpus-preservation exercise</title>
+<desc id="desc">A frozen sanitized corpus of 374 Kubernetes audit records was replayed through EACP and an OpenTelemetry reference pipeline. Both retained all records, and an external canonical projection check matched all 4,862 compared values. No performance ranking is shown.</desc>
+<metadata>Generated from the archived EACP v1.2 experiment inputs; all elements are vector-native.</metadata>
+<defs>
+  <marker id="arrow-teal" markerWidth="28" markerHeight="28" refX="24" refY="14" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0,0 L28,14 L0,28 Z" fill="#167C80"/>
+  </marker>
+  <marker id="arrow-blue" markerWidth="28" markerHeight="28" refX="24" refY="14" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0,0 L28,14 L0,28 Z" fill="#1E5A7A"/>
+  </marker>
+  <marker id="arrow-gold" markerWidth="28" markerHeight="28" refX="24" refY="14" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0,0 L28,14 L0,28 Z" fill="#D7A62A"/>
+  </marker>
+  <marker id="arrow-mid" markerWidth="28" markerHeight="28" refX="24" refY="14" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M0,0 L28,14 L0,28 Z" fill="#6B7B86"/>
+  </marker>
+  <style>
+    text { font-family: Arial, Helvetica, sans-serif; }
+    .navy { fill: #14324B; }
+    .ink { fill: #24313A; }
+    .mid { fill: #6B7B86; }
+    .blue { fill: #1E5A7A; }
+    .teal { fill: #167C80; }
+    .gold { fill: #D7A62A; }
+    .bold { font-weight: 700; }
+  </style>
+</defs>
+<rect x="0" y="0" width="2400" height="1520" rx="0" fill="#F8FAFB" stroke="none" stroke-width="0"/>
+<text x="100" y="105" font-size="49" fill="#14324B" font-weight="700" text-anchor="start">Kubernetes Laboratory and Corpus-Preservation Exercise</text>
+<text x="100" y="158" font-size="27" fill="#6B7B86" font-weight="400" text-anchor="start">One frozen, sanitized audit corpus - ten fresh sequential replays per pipeline</text>
+<rect x="100" y="205" width="2200" height="340" rx="22" fill="#FFFFFF" stroke="#D8E0E5" stroke-width="3"/>
+<text x="135" y="260" font-size="30" fill="#14324B" font-weight="700" text-anchor="start">A. Executed Kubernetes corpus</text>
+<rect x="140" y="305" width="480" height="195" rx="18" fill="#E8F1F7" stroke="#167C80" stroke-width="3"/>
+<text x="165" y="345" font-size="19" fill="#1E5A7A" font-weight="700" text-anchor="start">AUDIT EVENTS</text>
+<text x="165" y="415" font-size="53" fill="#14324B" font-weight="700" text-anchor="start">374</text>
+<text x="165" y="470" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="start">namespace-filtered records</text>
+<rect x="670" y="305" width="480" height="195" rx="18" fill="#DCEFF0" stroke="#167C80" stroke-width="3"/>
+<text x="695" y="345" font-size="19" fill="#1E5A7A" font-weight="700" text-anchor="start">EXPLICIT CORRELATION</text>
+<text x="695" y="415" font-size="53" fill="#14324B" font-weight="700" text-anchor="start">132</text>
+<text x="695" y="470" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="start">records with eacp-round ID</text>
+<rect x="1200" y="305" width="480" height="195" rx="18" fill="#E8F1F7" stroke="#167C80" stroke-width="3"/>
+<text x="1225" y="345" font-size="19" fill="#1E5A7A" font-weight="700" text-anchor="start">RBAC DENIALS</text>
+<text x="1225" y="415" font-size="53" fill="#14324B" font-weight="700" text-anchor="start">3</text>
+<text x="1225" y="470" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="start">audited HTTP 403 events</text>
+<rect x="1730" y="305" width="480" height="195" rx="18" fill="#DCEFF0" stroke="#167C80" stroke-width="3"/>
+<text x="1755" y="345" font-size="19" fill="#1E5A7A" font-weight="700" text-anchor="start">UNIQUE SOURCE KEYS</text>
+<text x="1755" y="415" font-size="53" fill="#14324B" font-weight="700" text-anchor="start">374</text>
+<text x="1755" y="470" font-size="18" fill="#6B7B86" font-weight="400" text-anchor="start">auditID:stage; no duplicates</text>
+<rect x="100" y="590" width="1055" height="705" rx="22" fill="#FFFFFF" stroke="#D8E0E5" stroke-width="3"/>
+<text x="135" y="645" font-size="30" fill="#14324B" font-weight="700" text-anchor="start">B. Event preservation</text>
+<text x="135" y="695" font-size="20" fill="#6B7B86" font-weight="400" text-anchor="start">Canonical projection checked after each replay</text>
+<rect x="145" y="745" width="965" height="145" rx="16" fill="#DCEFF0" stroke="#167C80" stroke-width="3"/>
+<text x="175" y="790" font-size="23" fill="#14324B" font-weight="700" text-anchor="start">EACP</text>
+<text x="1075" y="790" font-size="32" fill="#167C80" font-weight="700" text-anchor="end">374 / 374</text>
+<text x="175" y="845" font-size="20" fill="#24313A" font-weight="400" text-anchor="start">indexed SQLite rows retained</text>
+<rect x="145" y="920" width="965" height="145" rx="16" fill="#DCEFF0" stroke="#167C80" stroke-width="3"/>
+<text x="175" y="965" font-size="23" fill="#14324B" font-weight="700" text-anchor="start">OpenTelemetry</text>
+<text x="1075" y="965" font-size="32" fill="#167C80" font-weight="700" text-anchor="end">374 / 374</text>
+<text x="175" y="1020" font-size="20" fill="#24313A" font-weight="400" text-anchor="start">exported audit bodies retained</text>
+<rect x="145" y="1095" width="965" height="145" rx="16" fill="#FAF2D6" stroke="#D7A62A" stroke-width="3"/>
+<text x="175" y="1140" font-size="23" fill="#14324B" font-weight="700" text-anchor="start">Post-export field check</text>
+<text x="1075" y="1140" font-size="32" fill="#D7A62A" font-weight="700" text-anchor="end">Matched</text>
+<text x="175" y="1195" font-size="20" fill="#24313A" font-weight="400" text-anchor="start">4,862 / 4,862 compared values matched</text>
+<text x="150" y="1272" font-size="18" fill="#6B7B86" font-weight="700" text-anchor="start">No SQLite-versus-file query comparison was performed.</text>
+<rect x="1205" y="590" width="1095" height="705" rx="22" fill="#FFFFFF" stroke="#D8E0E5" stroke-width="3"/>
+<text x="1240" y="645" font-size="30" fill="#14324B" font-weight="700" text-anchor="start">C. Interoperability reference exercise</text>
+<text x="1240" y="695" font-size="20" fill="#6B7B86" font-weight="400" text-anchor="start">Same frozen bytes; distinct output and query semantics</text>
+<rect x="1320" y="735" width="865" height="130" rx="16" fill="#E8F1F7" stroke="#1E5A7A" stroke-width="3"/>
+<text x="1752.5" y="807" font-size="24" fill="#14324B" font-weight="700" text-anchor="middle"><tspan x="1752.5" dy="0">SHARED INPUT - 374 frozen audit records - identical bytes</tspan></text>
+<rect x="1255" y="925" width="480" height="160" rx="16" fill="#DCEFF0" stroke="#167C80" stroke-width="3"/>
+<rect x="1770" y="925" width="480" height="160" rx="16" fill="#E8F1F7" stroke="#1E5A7A" stroke-width="3"/>
+<text x="1495" y="983.43" font-size="23" fill="#14324B" font-weight="700" text-anchor="middle"><tspan x="1495" dy="0">EACP</tspan><tspan x="1495" dy="27.14">374 / 374 indexed rows retained</tspan></text>
+<text x="2010" y="983.43" font-size="23" fill="#14324B" font-weight="700" text-anchor="middle"><tspan x="2010" dy="0">OpenTelemetry</tspan><tspan x="2010" dy="27.14">374 / 374 raw bodies retained</tspan></text>
+<line x1="1620" y1="875" x2="1495" y2="915" stroke="#167C80" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-teal)"/>
+<line x1="1885" y1="875" x2="2010" y2="915" stroke="#1E5A7A" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-blue)"/>
+<rect x="1320" y="1140" width="865" height="120" rx="16" fill="#FAF2D6" stroke="#D7A62A" stroke-width="3"/>
+<text x="1752.5" y="1205" font-size="23" fill="#24313A" font-weight="700" text-anchor="middle"><tspan x="1752.5" dy="0">EXTERNAL PROJECTION CHECK - 4,862 / 4,862 values matched</tspan></text>
+<line x1="1495" y1="1095" x2="1620" y2="1130" stroke="#D7A62A" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-gold)"/>
+<line x1="2010" y1="1095" x2="1885" y2="1130" stroke="#D7A62A" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-gold)"/>
+<text x="100" y="1385" font-size="20" fill="#6B7B86" font-weight="400" text-anchor="start">Shared input SHA-256: 6aa39ee1...5400e01 - Collector Contrib 0.158.0 image digest: sha256:c5918f78...a32ed5</text>
+<text x="100" y="1430" font-size="21" fill="#167C80" font-weight="700" text-anchor="start">Scope: bounded replay and corpus preservation only - no performance ranking - no claim of Collector-native EACP semantics</text>
+</svg>
