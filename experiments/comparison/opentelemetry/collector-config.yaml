@@ -1,0 +1,30 @@
+receivers:
+  filelog:
+    include:
+      - /input/public_filtered_audit.jsonl
+    start_at: beginning
+    include_file_name: false
+    include_file_path: false
+    operators:
+      - type: json_parser
+
+processors:
+  batch:
+    timeout: 100ms
+    send_batch_size: 8192
+
+exporters:
+  file:
+    path: /output/collector-output.jsonl
+    format: json
+    flush_interval: 100ms
+
+service:
+  telemetry:
+    logs:
+      level: error
+  pipelines:
+    logs:
+      receivers: [filelog]
+      processors: [batch]
+      exporters: [file]

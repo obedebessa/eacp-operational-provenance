@@ -1,0 +1,34 @@
+apiVersion: audit.k8s.io/v1
+kind: Policy
+
+# The experiment needs request and response metadata for ordinary workload
+# resources. Secrets and authentication APIs are explicitly excluded so the
+# resulting artifact can be reviewed and published without credential data.
+omitStages:
+  - RequestReceived
+omitManagedFields: true
+
+rules:
+  - level: None
+    resources:
+      - group: ""
+        resources: ["secrets", "serviceaccounts/token"]
+      - group: "authentication.k8s.io"
+        resources: ["tokenreviews"]
+      - group: "authorization.k8s.io"
+        resources: ["subjectaccessreviews", "selfsubjectaccessreviews", "localsubjectaccessreviews"]
+
+  - level: RequestResponse
+    namespaces: ["eacp-k8s-eval"]
+    verbs: ["create", "get", "list", "update", "patch", "delete", "deletecollection"]
+    resources:
+      - group: ""
+        resources: ["configmaps", "serviceaccounts", "services", "pods", "events"]
+      - group: "apps"
+        resources: ["deployments", "replicasets"]
+      - group: "rbac.authorization.k8s.io"
+        resources: ["roles", "rolebindings"]
+
+  # Keep only metadata for remaining requests so that cluster bootstrap and
+  # control-plane activity can be counted without recording arbitrary bodies.
+  - level: Metadata

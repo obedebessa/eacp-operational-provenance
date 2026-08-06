@@ -1,0 +1,64 @@
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Python caches, environments, and packaging output
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+build/
+dist/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*kubeconfig*
+*service-account-key*
+*service-account-token*
+
+# Kubernetes and container runtime material that must not be published
+audit.log
+raw-audit*.jsonl
+complete-audit*.jsonl
+kind-runtime-*.yaml
+.kind/
+container-output/
+
+# Generated databases and transient benchmark state
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite3
+results/work/
+experiments/kubernetes/results/
+reproduction-output/
+tmp/
+.tmp/
+
+# Document QA and local render intermediates
+qa/
+rendered/
+*.docx
+~$*.docx

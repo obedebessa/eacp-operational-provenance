@@ -1,0 +1,155 @@
+{
+  "artifact_sizes_bytes": {
+    "eacp_sqlite": 290816,
+    "local_qa_complete_audit_log": 2538220,
+    "normalized_evidence_csv": 146001,
+    "public_filtered_audit_jsonl": 975250,
+    "raw_sqlite": 1257472
+  },
+  "distribution": {
+    "actors": {
+      "kubernetes-admin": 334,
+      "system:apiserver": 1,
+      "system:kube-scheduler": 2,
+      "system:node:eacp-eval-control-plane": 10,
+      "system:serviceaccount:eacp-k8s-eval:eacp-observer": 4,
+      "system:serviceaccount:kube-system:deployment-controller": 16,
+      "system:serviceaccount:kube-system:replicaset-controller": 5,
+      "system:serviceaccount:kube-system:root-ca-cert-publisher": 1,
+      "system:serviceaccount:kube-system:service-account-controller": 1
+    },
+    "http_status_codes": {
+      "200": 273,
+      "201": 76,
+      "403": 3,
+      "404": 18,
+      "409": 4
+    },
+    "resources": {
+      "configmaps": 301,
+      "cronjobs": 1,
+      "daemonsets": 1,
+      "deployments": 22,
+      "events": 7,
+      "horizontalpodautoscalers": 1,
+      "jobs": 1,
+      "limitranges": 1,
+      "namespaces": 6,
+      "pods": 9,
+      "replicasets": 11,
+      "replicationcontrollers": 1,
+      "rolebindings": 3,
+      "roles": 3,
+      "serviceaccounts": 4,
+      "services": 1,
+      "statefulsets": 1
+    },
+    "verbs": {
+      "create": 76,
+      "delete": 12,
+      "get": 153,
+      "list": 46,
+      "patch": 67,
+      "update": 17,
+      "watch": 3
+    }
+  },
+  "experiment": "EACP ingestion of real Kubernetes API-server audit records",
+  "integrity": {
+    "append_only_triggers": {
+      "delete_blocked": true,
+      "update_blocked": true
+    },
+    "distinct_content_hashes": 374,
+    "row_count_matches_filtered_input": true,
+    "stored_rows": 374
+  },
+  "limitations": [
+    "Single-node local kind cluster; results do not estimate production-scale throughput or availability.",
+    "One namespace and a compact CRUD-oriented workload; managed-cloud control planes may behave differently.",
+    "The persistence and query measurements are local microbenchmarks over one captured audit dataset.",
+    "Kubernetes audit records cover the API plane only; telemetry, identity-provider, incident, and recovery sources remain outside this experiment.",
+    "RequestResponse logging was restricted to non-secret resources; the complete audit log should still be reviewed before public release."
+  ],
+  "normalization": {
+    "elapsed_ms": 32.449416,
+    "microseconds_per_namespace_event": 86.76314438502673,
+    "normalized_rows": 374,
+    "rows_with_explicit_workload_correlation": 132
+  },
+  "persistence_trials": {
+    "count": 10,
+    "eacp_median_microseconds_per_event": 8.025512032085562,
+    "eacp_sqlite_median_ms": 3.0015415,
+    "eacp_sqlite_p95_ms": 4.059216,
+    "raw_sqlite_median_ms": 3.6289795,
+    "raw_sqlite_p95_ms": 5.550747249999999
+  },
+  "privacy": {
+    "absolute_filesystem_paths_redacted": true,
+    "certificates_redacted": true,
+    "complete_audit_log_is_local_qa_only": true,
+    "credential_identifiers_removed": true,
+    "public_dataset_is_namespace_filtered": true,
+    "service_account_token_projections_redacted": true,
+    "audit_sourceIPs_fields_removed": true,
+    "token_subresource_records_excluded": true
+  },
+  "query_microbenchmark": {
+    "correlation": {
+      "mean_rows": 3.9433333333333334,
+      "median_ms": 0.006208,
+      "p95_ms": 0.01137950000000002,
+      "query_plan": [
+        [
+          4,
+          0,
+          62,
+          "SEARCH evidence USING INDEX ev_correlation_time (correlation_id=?)"
+        ]
+      ],
+      "repetitions": 300
+    },
+    "service": {
+      "mean_rows": 3.9133333333333336,
+      "median_ms": 0.006084,
+      "p95_ms": 0.011622600000000007,
+      "query_plan": [
+        [
+          4,
+          0,
+          62,
+          "SEARCH evidence USING INDEX ev_service_time (service=?)"
+        ]
+      ],
+      "repetitions": 300
+    }
+  },
+  "rbac_denials": {
+    "all_status_403": true,
+    "count": 3,
+    "expected_actor": "system:serviceaccount:eacp-k8s-eval:eacp-observer",
+    "resources": {
+      "configmaps": 1,
+      "deployments": 2
+    },
+    "verbs": {
+      "get": 2,
+      "patch": 1
+    }
+  },
+  "runtime": {
+    "logical_cpus": 16,
+    "machine": "arm64",
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "python": "3.11.9",
+    "sqlite": "3.51.0"
+  },
+  "scope": {
+    "kubectl_initiated_records": 338,
+    "namespace": "eacp-k8s-eval",
+    "namespace_audit_records": 374,
+    "total_audit_records": 1819,
+    "unique_audit_ids": 373
+  }
+}

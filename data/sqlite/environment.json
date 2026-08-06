@@ -1,0 +1,30 @@
+{
+  "generated_at_utc": "2026-08-06T02:33:47.920Z",
+  "portable_reproduction_command": [
+    "python3",
+    "benchmark/sqlite/eacp_benchmark.py",
+    "--sizes",
+    "10000",
+    "50000",
+    "100000",
+    "--trials",
+    "10",
+    "--services",
+    "200",
+    "--query-samples",
+    "300",
+    "--output",
+    "data/sqlite"
+  ],
+  "python": "3.11.9",
+  "python_implementation": "CPython",
+  "sqlite": "3.51.0",
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "processor": "arm",
+  "cpu_count": 16,
+  "cpu_brand": "Apple M4 Max",
+  "memory_bytes": 51539607552,
+  "max_rss_platform_units": 240500736,
+  "privacy_note": "The source interpreter and output paths were replaced by this repository-relative reproduction command; numeric environment values are unchanged."
+}

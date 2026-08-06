@@ -1,0 +1,3 @@
+round=1 resource=deployment/eacp-demo status=403 result=Forbidden
+round=2 resource=configmap/eacp-r02-cm001 status=403 result=Forbidden
+round=3 resource=deployment/eacp-demo status=403 result=Forbidden

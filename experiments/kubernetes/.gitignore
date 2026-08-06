@@ -1,0 +1,11 @@
+# Full API-server audit logs include control-plane metadata and can be large.
+# Publish the namespace-filtered dataset in analysis/ only after review.
+results/*/audit-host/
+results/*/analysis/*.sqlite
+results/*/analysis-preprivacy/
+results/*/analysis-fixed/
+results/*/analysis-fixed-console.json
+results/*/analysis-console.json
+results/*/kind-config.yaml
+results/*/cluster-state.yaml
+results/*/namespace-events.txt

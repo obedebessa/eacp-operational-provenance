@@ -1,0 +1,47 @@
+name: Reproduce small
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-small:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up Python
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile Python sources
+        run: python -m compileall -q scripts tests benchmark experiments
+
+      - name: Test repository contract
+        run: python -m unittest discover -s tests -v
+
+      - name: Verify public repository hygiene
+        run: python scripts/verify_repository.py
+
+      - name: Run small deterministic reproduction
+        run: bash scripts/reproduce_small.sh
+
+  release-contract:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Reject incomplete archival tags
+        run: python3 scripts/verify_repository.py --release
+
