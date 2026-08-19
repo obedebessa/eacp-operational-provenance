@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this artifact, please cite the software record described in this file."
+message: "If you use the research findings, cite the preprint below; cite this software record when referring specifically to the reproducibility artifact."
 title: "EACP Operational-Provenance Artifact: Reproducible SQLite, Kubernetes, and OpenTelemetry Evaluation"
 abstract: >-
   Reproducibility artifact for a lightweight evidence-aware control plane,
@@ -35,3 +35,14 @@ references:
     year: 2026
     month: 8
     version: "1.2"
+preferred-citation:
+  type: report
+  title: "Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP"
+  authors:
+    - family-names: "Rocha da Silva"
+      given-names: "Obede Bessa"
+      orcid: "https://orcid.org/0009-0001-0787-5710"
+  year: 2026
+  month: 8
+  version: "1.2"
+  url: "https://github.com/obedebessa/eacp-operational-provenance/blob/main/paper/EACP_preprint.pdf"
