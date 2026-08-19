@@ -8,6 +8,35 @@ This repository is the reproducibility artifact for:
 
 It contains a deterministic SQLite microbenchmark, a small single-control-plane Kubernetes laboratory evaluation, and a bounded comparison with an OpenTelemetry Collector reference pipeline. The manuscript is a **preprint / technical report** and has **not undergone peer review**.
 
+## Read and cite the paper
+
+- [Read the searchable preprint (PDF)](paper/EACP_preprint.pdf)
+- [Open the archived reproducibility artifact](https://doi.org/10.5281/zenodo.21818550)
+- Use GitHub's **Cite this repository** control for automatically generated
+  citation formats. The preferred citation in `CITATION.cff` points to the
+  preprint. The Zenodo DOI identifies the separate software and reproducibility
+  artifact; it is not an article DOI.
+
+**APA**
+
+> Rocha da Silva, O. B. (2026). *Cross-Plane Operational Provenance in
+> Cloud-Native Systems: A Reproducible Evaluation of EACP* (Version 1.2)
+> [Preprint/technical report].
+
+**BibTeX**
+
+```bibtex
+@techreport{rocha_da_silva_eacp_2026,
+  author  = {Obede Bessa Rocha da Silva},
+  title   = {Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP},
+  year    = {2026},
+  month   = aug,
+  version = {1.2},
+  url     = {https://github.com/obedebessa/eacp-operational-provenance/blob/main/paper/EACP_preprint.pdf},
+  note    = {Preprint/technical report}
+}
+```
+
 ## Artifact boundary
 
 EACP is an append-oriented evidence index for reconstructing operational transitions across heterogeneous control and observation planes. It retains normalized metadata and source pointers; it does not replace authoritative source systems or cryptographically preserve the artifacts to which those pointers refer.
