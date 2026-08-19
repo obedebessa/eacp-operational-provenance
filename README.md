@@ -1,5 +1,6 @@
 # EACP operational-provenance artifact
 
+[![Article DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22017662.svg)](https://doi.org/10.5281/zenodo.22017662)
 [![Reproduce small](https://github.com/obedebessa/eacp-operational-provenance/actions/workflows/reproduce-small.yml/badge.svg)](https://github.com/obedebessa/eacp-operational-provenance/actions/workflows/reproduce-small.yml)
 
 This repository is the reproducibility artifact for:
@@ -11,6 +12,7 @@ It contains a deterministic SQLite microbenchmark, a small single-control-plane 
 ## Read and cite the paper
 
 - [Read the searchable preprint (PDF)](paper/EACP_preprint.pdf)
+- [Open the archived preprint and article DOI](https://doi.org/10.5281/zenodo.22017662)
 - [Open the archived reproducibility artifact](https://doi.org/10.5281/zenodo.21818550)
 - Use GitHub's **Cite this repository** control for automatically generated
   citation formats. The preferred citation in `CITATION.cff` points to the
@@ -21,7 +23,7 @@ It contains a deterministic SQLite microbenchmark, a small single-control-plane 
 
 > Rocha da Silva, O. B. (2026). *Cross-Plane Operational Provenance in
 > Cloud-Native Systems: A Reproducible Evaluation of EACP* (Version 1.2)
-> [Preprint/technical report].
+> [Preprint]. Zenodo. https://doi.org/10.5281/zenodo.22017662
 
 **BibTeX**
 
@@ -32,8 +34,9 @@ It contains a deterministic SQLite microbenchmark, a small single-control-plane 
   year    = {2026},
   month   = aug,
   version = {1.2},
-  url     = {https://github.com/obedebessa/eacp-operational-provenance/blob/main/paper/EACP_preprint.pdf},
-  note    = {Preprint/technical report}
+  doi     = {10.5281/zenodo.22017662},
+  url     = {https://doi.org/10.5281/zenodo.22017662},
+  note    = {Preprint}
 }
 ```
 
