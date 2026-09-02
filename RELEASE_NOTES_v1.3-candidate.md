@@ -3,6 +3,9 @@
 Status: reviewer candidate, 2026-09-02. This is not a GitHub or Zenodo release,
 has not undergone peer review, and has no v1.3 DOI.
 
+The evidence-and-protocol snapshot used by the candidate manuscript is commit
+[`c20d2c06efda105cf6772861dd447413c5e709fa`](https://github.com/obedebessa/eacp-operational-provenance/tree/c20d2c06efda105cf6772861dd447413c5e709fa).
+
 ## Candidate claim
 
 EACP 1.3 is a domain-specific operational-provenance profile and materialized

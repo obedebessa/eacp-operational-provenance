@@ -21,6 +21,8 @@ manuscript is a **preprint / technical report** and has **not undergone peer rev
 
 ## Review EACP 1.3
 
+- [Read the v1.3 reviewer-candidate paper (PDF)](paper/EACP_preprint_v1.3_candidate.pdf)
+- [Copy-ready expert review request](EXPERT_REVIEW_REQUEST_v1.3.md)
 - [Reviewer guide and verification path](REVIEWER_GUIDE_v1.3.md)
 - [Candidate release notes](RELEASE_NOTES_v1.3-candidate.md)
 - [Normative EACP Profile 1.3](spec/EACP_PROFILE_v1.3.md)
@@ -138,7 +140,7 @@ The Kubernetes corpus SHA-256 is `6aa39ee1cf8d3cbf58cb683ed6c7977ce851ab442c7057
 | `data/kubernetes/20260806T031453Z/` | Exactly the eight approved public result files from the canonical Kubernetes run |
 | `data/comparison/20260806T032418Z/` | Safe comparison summary, trials, environment metadata, and run checksums |
 | `figures/` | v1.3 candidate PNG generators/results plus the released v1.2 PNG, SVG, and vector-PDF set |
-| `paper/` | Searchable version 1.2 preprint PDF and its file-specific rights notice |
+| `paper/` | Released v1.2 preprint and the separately labeled v1.3 reviewer-candidate PDF, with file-specific status and rights notes |
 | `scripts/` | Reproduction, hygiene, and release-manifest checks |
 | `tests/` | Repository-contract tests |
 

@@ -4,6 +4,12 @@ Status: reviewer candidate, 2026-09-02. This branch is not an archival release,
 has not undergone peer review, and has no v1.3 DOI. The DOI-backed release
 remains v1.2.0; see [archival status](#version-and-archival-status).
 
+The evidence, protocols, frozen public-run bundles, and reviewer documentation
+used by the candidate manuscript are pinned at commit
+[`c20d2c06efda105cf6772861dd447413c5e709fa`](https://github.com/obedebessa/eacp-operational-provenance/tree/c20d2c06efda105cf6772861dd447413c5e709fa).
+That repository snapshot is distinct from the live run's source commit
+`76b2ed54381ae52cf0f54cd22a20341c3216b77b`.
+
 ## The contribution in one sentence
 
 EACP 1.3 is a domain-specific operational-provenance profile and materialized
