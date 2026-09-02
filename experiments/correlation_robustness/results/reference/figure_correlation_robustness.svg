@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="720" viewBox="0 0 1240 720" role="img" aria-labelledby="title desc">
+<title id="title">EACP adversarial correlation robustness</title>
+<desc id="desc">Two panels show degradation under missing identifiers and safe abstention under identifier reuse.</desc>
+<rect width="1240" height="720" fill="#ffffff"/>
+<style>text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#17212b}.title{font-size:25px;font-weight:700}.subtitle{font-size:14px;fill:#53606d}.panel{font-size:17px;font-weight:650}.axis{font-size:12px;fill:#53606d}.legend{font-size:12px}.note{font-size:13px;fill:#344451}.grid{stroke:#dce2e8;stroke-width:1}.frame{stroke:#87939f;stroke-width:1.2;fill:none}</style>
+<text id="figure-title" class="title" x="70" y="45">Correlation faults expose a safety–coverage trade-off</text>
+<text class="subtitle" x="70" y="70">Median across 30 predetermined seeds; 600 six-plane chains and 3,600 canonical events per seed</text>
+<text class="panel" x="70" y="103">A. Missing IDs: degradation without fabricated joins</text>
+<text class="panel" x="670" y="103">B. ID reuse: abstain or silently merge</text>
+<line class="grid" x1="70" y1="508.0" x2="570" y2="508.0"/>
+<text class="axis" x="60" y="512.0" text-anchor="end">0%</text>
+<line class="grid" x1="70" y1="430.0" x2="570" y2="430.0"/>
+<text class="axis" x="60" y="434.0" text-anchor="end">20%</text>
+<line class="grid" x1="70" y1="352.0" x2="570" y2="352.0"/>
+<text class="axis" x="60" y="356.0" text-anchor="end">40%</text>
+<line class="grid" x1="70" y1="274.0" x2="570" y2="274.0"/>
+<text class="axis" x="60" y="278.0" text-anchor="end">60%</text>
+<line class="grid" x1="70" y1="196.0" x2="570" y2="196.0"/>
+<text class="axis" x="60" y="200.0" text-anchor="end">80%</text>
+<line class="grid" x1="70" y1="118.0" x2="570" y2="118.0"/>
+<text class="axis" x="60" y="122.0" text-anchor="end">100%</text>
+<rect class="frame" x="70" y="118" width="500" height="390"/>
+<line class="grid" x1="670" y1="508.0" x2="1170" y2="508.0"/>
+<text class="axis" x="660" y="512.0" text-anchor="end">0%</text>
+<line class="grid" x1="670" y1="430.0" x2="1170" y2="430.0"/>
+<text class="axis" x="660" y="434.0" text-anchor="end">5%</text>
+<line class="grid" x1="670" y1="352.0" x2="1170" y2="352.0"/>
+<text class="axis" x="660" y="356.0" text-anchor="end">10%</text>
+<line class="grid" x1="670" y1="274.0" x2="1170" y2="274.0"/>
+<text class="axis" x="660" y="278.0" text-anchor="end">15%</text>
+<line class="grid" x1="670" y1="196.0" x2="1170" y2="196.0"/>
+<text class="axis" x="660" y="200.0" text-anchor="end">20%</text>
+<line class="grid" x1="670" y1="118.0" x2="1170" y2="118.0"/>
+<text class="axis" x="660" y="122.0" text-anchor="end">25%</text>
+<rect class="frame" x="670" y="118" width="500" height="390"/>
+<text class="axis" x="70.0" y="528" text-anchor="middle">0%</text>
+<text class="axis" x="95.0" y="528" text-anchor="middle">1%</text>
+<text class="axis" x="195.0" y="528" text-anchor="middle">5%</text>
+<text class="axis" x="320.0" y="528" text-anchor="middle">10%</text>
+<text class="axis" x="570.0" y="528" text-anchor="middle">20%</text>
+<text class="axis" x="320" y="553" text-anchor="middle">events with missing correlation ID</text>
+<polyline points="70.0,118.0 95.0,140.7 195.0,222.3 320.0,301.3 570.0,405.9" fill="none" stroke="#12355b" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="70.0" cy="118.0" r="4.5" fill="#12355b"/><circle cx="95.0" cy="140.7" r="4.5" fill="#12355b"/><circle cx="195.0" cy="222.3" r="4.5" fill="#12355b"/><circle cx="320.0" cy="301.3" r="4.5" fill="#12355b"/><circle cx="570.0" cy="405.9" r="4.5" fill="#12355b"/>
+<polyline points="70.0,118.0 95.0,125.8 195.0,156.1 320.0,192.1 570.0,258.3" fill="none" stroke="#00798c" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="8 5"/><circle cx="70.0" cy="118.0" r="4.5" fill="#00798c"/><circle cx="95.0" cy="125.8" r="4.5" fill="#00798c"/><circle cx="195.0" cy="156.1" r="4.5" fill="#00798c"/><circle cx="320.0" cy="192.1" r="4.5" fill="#00798c"/><circle cx="570.0" cy="258.3" r="4.5" fill="#00798c"/>
+<polyline points="70.0,214.2 95.0,214.2 195.0,214.2 320.0,214.2 570.0,214.2" fill="none" stroke="#d1495b" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="3 5"/><circle cx="70.0" cy="214.2" r="4.5" fill="#d1495b"/><circle cx="95.0" cy="214.2" r="4.5" fill="#d1495b"/><circle cx="195.0" cy="214.2" r="4.5" fill="#d1495b"/><circle cx="320.0" cy="214.2" r="4.5" fill="#d1495b"/><circle cx="570.0" cy="214.2" r="4.5" fill="#d1495b"/>
+<line x1="85" y1="579" x2="115" y2="579" stroke="#12355b" stroke-width="3"/><text class="legend" x="122" y="583">strict exact-chain accuracy</text>
+<line x1="285" y1="579" x2="315" y2="579" stroke="#00798c" stroke-width="3" stroke-dasharray="8 5"/><text class="legend" x="322" y="583">strict pairwise recall</text>
+<line x1="445" y1="579" x2="475" y2="579" stroke="#d1495b" stroke-width="3" stroke-dasharray="3 5"/><text class="legend" x="482" y="583">temporal exact accuracy</text>
+<rect x="88" y="135" width="190" height="31" rx="6" fill="#e8f5ef"/><text class="note" x="100" y="156">strict false-join rate: 0%</text>
+<text class="axis" x="670.0" y="528" text-anchor="middle">0%</text>
+<text class="axis" x="720.0" y="528" text-anchor="middle">1%</text>
+<text class="axis" x="920.0" y="528" text-anchor="middle">5%</text>
+<text class="axis" x="1170.0" y="528" text-anchor="middle">10%</text>
+<text class="axis" x="920" y="553" text-anchor="middle">reused-ID pairs / truth chains</text>
+<polyline points="670.0,508.0 720.0,476.8 920.0,352.0 1170.0,196.0" fill="none" stroke="#d1495b" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="670.0" cy="508.0" r="4.5" fill="#d1495b"/><circle cx="720.0" cy="476.8" r="4.5" fill="#d1495b"/><circle cx="920.0" cy="352.0" r="4.5" fill="#d1495b"/><circle cx="1170.0" cy="196.0" r="4.5" fill="#d1495b"/>
+<polyline points="670.0,508.0 720.0,471.4 920.0,340.9 1170.0,206.1" fill="none" stroke="#7a5195" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="8 5"/><circle cx="670.0" cy="508.0" r="4.5" fill="#7a5195"/><circle cx="720.0" cy="471.4" r="4.5" fill="#7a5195"/><circle cx="920.0" cy="340.9" r="4.5" fill="#7a5195"/><circle cx="1170.0" cy="206.1" r="4.5" fill="#7a5195"/>
+<polyline points="670.0,508.0 720.0,508.0 920.0,508.0 1170.0,508.0" fill="none" stroke="#00798c" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="3 5"/><circle cx="670.0" cy="508.0" r="4.5" fill="#00798c"/><circle cx="720.0" cy="508.0" r="4.5" fill="#00798c"/><circle cx="920.0" cy="508.0" r="4.5" fill="#00798c"/><circle cx="1170.0" cy="508.0" r="4.5" fill="#00798c"/>
+<line x1="686" y1="579" x2="716" y2="579" stroke="#d1495b" stroke-width="3"/><text class="legend" x="723" y="583">strict abstention</text>
+<line x1="835" y1="579" x2="865" y2="579" stroke="#7a5195" stroke-width="3" stroke-dasharray="8 5"/><text class="legend" x="872" y="583">ID-only false joins</text>
+<line x1="1010" y1="579" x2="1040" y2="579" stroke="#00798c" stroke-width="3" stroke-dasharray="3 5"/><text class="legend" x="1047" y="583">strict false joins</text>
+<rect x="690" y="135" width="315" height="48" rx="6" fill="#eef3f8"/>
+<text class="note" x="703" y="155">Cross-service reuse at 5%: strict 0.00% false joins;</text>
+<text class="note" x="703" y="174">correlation-ID-only 10.71%</text>
+<line x1="70" y1="625" x2="1170" y2="625" stroke="#dce2e8"/>
+<text class="note" x="70" y="650">Strict mode preserves evidence but withholds missing, conflicting, or observably ambiguous records from multi-event joins.</text>
+<text class="subtitle" x="70" y="677">Synthetic sensitivity analysis; values are not production prevalence or performance claims.</text>
+<text class="subtitle" x="70" y="699">Full medians, quartiles, counts, and definitions: summary_results.json.</text>
+</svg>
