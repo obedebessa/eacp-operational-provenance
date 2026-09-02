@@ -57,6 +57,7 @@ Every GitHub bundle is written atomically and contains:
 source/github_actions.json              minimized source snapshot
 eacp/evidence.csv                       compatible 13-column projection
 eacp/evidence.jsonl                     schema-linked projection
+eacp/profile_records.jsonl              normative eacp.profile/1.3 records
 kubernetes/annotation_merge_patch.json  hand-off patch, not an observation
 summary.json                             scope and claim boundary
 SHA256SUMS                              exact bundle manifest
@@ -73,6 +74,19 @@ before publication.
 The JSON Schemas are under `schema/`. Runtime verification does not require a
 third-party JSON Schema package: it checks SHA-256 manifests and regenerates
 the CSV, JSONL, summary, and Kubernetes patch from the minimized source.
+Normative profile records are also passed through
+`spec/tools/eacp_profile.py`. GitHub records distinguish `initiator`,
+`triggering_actor`, and the `github-actions` execution principal. Kubernetes
+records distinguish the authenticated initiator from an impersonated
+service-account execution principal when the audit event supplies both.
+
+Profile records carry scoped, typed `operational_correlation`, `workflow_run`,
+`vcs_revision`, and (when configured) `artifact_digest` links. Kubernetes may
+also emit `deployment_uid`. The operational link is `explicit` on the GitHub
+side because the adapter binds it; it is `source_native` on Kubernetes records
+only when the API object/audit body actually carries the annotation. The flat
+CSV remains a compatibility projection and is not presented as the normative
+multilink representation.
 
 ## Capture a completed public run
 
@@ -89,6 +103,9 @@ python3 experiments/github_actions/eacp_gha_v1_3.py capture \
 
 python3 experiments/github_actions/eacp_gha_v1_3.py verify \
   --bundle /tmp/eacp-github-run
+
+python3 spec/tools/eacp_profile.py validate \
+  /tmp/eacp-github-run/eacp/profile_records.jsonl
 ```
 
 This operation is read-only. It never dispatches, reruns, cancels, or modifies
@@ -247,7 +264,7 @@ linking, the no-ID negative control, and the correlated RBAC denial.
 
 Validated locally in this repository:
 
-- 12 deterministic tests on Python 3.11;
+- 13 deterministic tests on Python 3.11;
 - shell syntax for the runners;
 - authenticated, read-only capture and checksum verification of public run
   `31075453078`;

@@ -187,7 +187,12 @@ kubectl --context "${CONTEXT}" version -o json \
 
 sleep 3
 docker exec "${CLUSTER_NAME}-control-plane" sync
-AUDIT_LOG="${AUDIT_HOST_DIR}/audit.log"
+# kube-apiserver creates the bind-mounted audit log as root with restrictive
+# permissions. Stream it through the already-required Docker control channel
+# so the unprivileged Actions runner receives a readable, byte-for-byte copy.
+AUDIT_LOG="${WORK_DIR}/audit-readable.log"
+docker exec "${CLUSTER_NAME}-control-plane" \
+  cat /var/log/kubernetes/audit.log > "${AUDIT_LOG}"
 if [[ ! -s "${AUDIT_LOG}" ]]; then
   echo "Kubernetes API server did not emit the expected audit log." >&2
   exit 1

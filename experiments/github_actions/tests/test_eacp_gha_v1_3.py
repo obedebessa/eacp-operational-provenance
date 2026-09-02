@@ -293,6 +293,14 @@ class GitHubActionsAdapterTests(unittest.TestCase):
             with self.assertRaisesRegex(adapter.AdapterError, "unsafe path"):
                 adapter.safe_extract_artifact(malicious, root / "extract")
 
+    def test_nested_extracted_artifact_source_is_found(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "eacp-cross-plane-v1.3-results/github/source/github_actions.json"
+            source.parent.mkdir(parents=True)
+            source.write_text("{}", encoding="utf-8")
+            self.assertEqual(adapter.safe_extract_artifact(root, root / "unused"), source)
+
     def test_annotation_defaults_to_non_mutating_plan(self):
         with tempfile.TemporaryDirectory() as temporary:
             bundle = Path(temporary) / "bundle"

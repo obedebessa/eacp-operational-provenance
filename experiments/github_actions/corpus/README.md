@@ -7,13 +7,14 @@ public GitHub Actions run at:
 
 Capture facts:
 
-- REST capture time: `2026-09-02T20:36:24Z`;
+- REST capture time: `2026-09-02T20:41:04Z`;
 - source run time: `2026-08-06T05:52:51Z` to `2026-08-06T05:53:05Z`;
 - repository ID: `1324720646`;
 - run attempt: `1`;
 - commit: `829d1babff46c0b52c01dfcc856148d91b50dc93`;
 - conclusion: `success`;
-- EACP projection: one workflow row and two job rows;
+- EACP outputs: one workflow and two job records in both the compatibility
+  projection and the validated `eacp.profile/1.3` representation;
 - source artifacts reported by the API: zero.
 
 The capture was made through an authenticated, read-only `gh api` session. The

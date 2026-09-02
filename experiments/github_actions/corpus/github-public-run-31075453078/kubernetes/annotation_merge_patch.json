@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "annotations": {
+      "eacp.io/correlation-id": "eacp-gha-1324720646-31075453078-1",
+      "eacp.io/github-commit-sha": "829d1babff46c0b52c01dfcc856148d91b50dc93",
+      "eacp.io/github-repository": "obedebessa/eacp-operational-provenance",
+      "eacp.io/github-repository-id": "1324720646",
+      "eacp.io/github-run-attempt": "1",
+      "eacp.io/github-run-id": "31075453078",
+      "eacp.io/github-source-url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/31075453078",
+      "eacp.io/github-workflow": "Reproduce small",
+      "eacp.io/source-plane": "github-actions"
+    }
+  }
+}

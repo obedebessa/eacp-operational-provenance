@@ -19,7 +19,6 @@ import argparse
 import csv
 import hashlib
 import importlib.util
-import io
 import json
 import os
 import re
@@ -33,7 +32,7 @@ import urllib.request
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
-from typing import Any, Iterable, Sequence
+from typing import Any, Sequence
 
 
 SCHEMA_VERSION = "eacp.github-actions.capture/1.3.0"
@@ -129,6 +128,20 @@ def require_positive_int(value: Any, description: str) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value < 1:
         raise AdapterError(f"{description} must be a positive integer")
     return value
+
+
+def require_fields(
+    value: dict[str, Any],
+    *,
+    required: set[str],
+    optional: set[str] | None = None,
+    description: str,
+) -> None:
+    optional = optional or set()
+    missing = sorted(required - set(value))
+    unknown = sorted(set(value) - required - optional)
+    if missing or unknown:
+        raise AdapterError(f"{description} fields differ; missing={missing}, unknown={unknown}")
 
 
 def optional_string(value: Any) -> str | None:
@@ -575,6 +588,9 @@ def project_evidence(snapshot: dict[str, Any]) -> list[dict[str, str]]:
     prefix = f"github://repositories/{repository_id}/actions/runs/{run_id}/attempts/{attempt}"
     policy = f"github-actions:{run.get('path') or run.get('name') or 'unknown-workflow'}"
     actor = str(require_mapping(run.get("actor"), "run.actor").get("login") or "unknown")
+    captured_at = str(
+        require_mapping(snapshot.get("capture"), "snapshot.capture").get("captured_at") or ""
+    )
     correlation_id = require_nonempty_string(projection.get("correlation_id"), "projection.correlation_id")
     service = require_nonempty_string(projection.get("service"), "projection.service")
     intent = require_nonempty_string(projection.get("intent"), "projection.intent")
@@ -586,7 +602,7 @@ def project_evidence(snapshot: dict[str, Any]) -> list[dict[str, str]]:
             "source_type": "github.actions.run",
             "source_id": prefix,
             "source_ts": str(run.get("run_started_at") or run.get("created_at") or ""),
-            "observed_ts": str(run.get("updated_at") or run.get("created_at") or ""),
+            "observed_ts": captured_at,
             "actor": actor,
             "service": service,
             "intent": intent,
@@ -608,7 +624,7 @@ def project_evidence(snapshot: dict[str, Any]) -> list[dict[str, str]]:
                 "source_type": "github.actions.job",
                 "source_id": f"{prefix}/jobs/{job_id}",
                 "source_ts": str(job.get("started_at") or job.get("created_at") or run.get("created_at") or ""),
-                "observed_ts": str(job.get("completed_at") or job.get("created_at") or run.get("updated_at") or ""),
+                "observed_ts": captured_at,
                 "actor": actor,
                 "service": service,
                 "intent": intent,
@@ -630,7 +646,7 @@ def project_evidence(snapshot: dict[str, Any]) -> list[dict[str, str]]:
                 "source_type": "github.actions.artifact",
                 "source_id": f"{prefix}/artifacts/{artifact_id}",
                 "source_ts": str(artifact.get("created_at") or run.get("updated_at") or ""),
-                "observed_ts": str(artifact.get("updated_at") or artifact.get("created_at") or run.get("updated_at") or ""),
+                "observed_ts": captured_at,
                 "actor": actor,
                 "service": service,
                 "intent": intent,
@@ -851,18 +867,97 @@ def read_csv_rows(path: Path) -> list[dict[str, str]]:
 
 
 def validate_snapshot(snapshot: dict[str, Any]) -> None:
+    require_fields(
+        snapshot,
+        required={
+            "$schema",
+            "schema_version",
+            "capture",
+            "repository",
+            "run",
+            "jobs",
+            "artifacts",
+            "projection",
+        },
+        description="source snapshot",
+    )
+    if snapshot.get("$schema") != CAPTURE_SCHEMA_URL:
+        raise AdapterError("source snapshot $schema does not identify the v1.3 capture schema")
     if snapshot.get("schema_version") != SCHEMA_VERSION:
         raise AdapterError(f"unsupported schema_version: {snapshot.get('schema_version')!r}")
     capture = require_mapping(snapshot.get("capture"), "capture")
+    require_fields(
+        capture,
+        required={
+            "acquisition",
+            "transport",
+            "authenticated",
+            "captured_at",
+            "sanitization_profile",
+            "raw_api_payload_retained",
+            "excluded",
+        },
+        description="capture",
+    )
+    if capture.get("acquisition") not in {
+        "github-rest-api",
+        "imported-api-json",
+        "imported-actions-artifact",
+    }:
+        raise AdapterError("capture.acquisition is unsupported")
+    require_nonempty_string(capture.get("transport"), "capture.transport")
+    if capture.get("authenticated") not in {True, False, None}:
+        raise AdapterError("capture.authenticated must be boolean or null")
+    if capture.get("sanitization_profile") != "public-metadata-minimal-v1":
+        raise AdapterError("capture.sanitization_profile is unsupported")
+    excluded = require_list(capture.get("excluded"), "capture.excluded")
+    if not excluded or not all(isinstance(item, str) and item for item in excluded):
+        raise AdapterError("capture.excluded must contain non-empty strings")
     validate_rfc3339(capture.get("captured_at"), "capture.captured_at")
     if capture.get("raw_api_payload_retained") is not False:
         raise AdapterError("raw_api_payload_retained must be false for this public-minimal profile")
     repo = require_mapping(snapshot.get("repository"), "repository")
+    require_fields(
+        repo,
+        required={"id", "full_name", "private", "html_url"},
+        description="repository",
+    )
     require_positive_int(repo.get("id"), "repository.id")
-    require_nonempty_string(repo.get("full_name"), "repository.full_name")
+    repository_name = require_nonempty_string(repo.get("full_name"), "repository.full_name")
+    if not REPOSITORY_PATTERN.fullmatch(repository_name):
+        raise AdapterError("repository.full_name is invalid")
     if repo.get("private") not in {True, False}:
         raise AdapterError("repository.private must be boolean")
+    if repo.get("html_url") is not None and strip_url_secrets(repo.get("html_url")) != repo.get("html_url"):
+        raise AdapterError("repository.html_url must be a sanitized HTTP(S) URL")
     run = require_mapping(snapshot.get("run"), "run")
+    require_fields(
+        run,
+        required={
+            "id",
+            "node_id",
+            "run_number",
+            "run_attempt",
+            "workflow_id",
+            "name",
+            "path",
+            "event",
+            "status",
+            "conclusion",
+            "head_branch",
+            "head_sha",
+            "created_at",
+            "run_started_at",
+            "updated_at",
+            "html_url",
+            "api_url",
+            "jobs_url",
+            "artifacts_url",
+            "actor",
+            "triggering_actor",
+        },
+        description="run",
+    )
     require_positive_int(run.get("id"), "run.id")
     require_positive_int(run.get("run_attempt"), "run.run_attempt")
     sha = require_nonempty_string(run.get("head_sha"), "run.head_sha")
@@ -871,13 +966,144 @@ def validate_snapshot(snapshot: dict[str, Any]) -> None:
     validate_rfc3339(run.get("created_at"), "run.created_at")
     validate_rfc3339(run.get("updated_at"), "run.updated_at")
     validate_rfc3339(run.get("run_started_at"), "run.run_started_at", allow_null=True)
+    for url_field in ("html_url", "api_url", "jobs_url", "artifacts_url"):
+        url = run.get(url_field)
+        if url is None and url_field == "html_url":
+            raise AdapterError("run.html_url must not be null")
+        if url is not None and strip_url_secrets(url) != url:
+            raise AdapterError(f"run.{url_field} must be a sanitized HTTP(S) URL")
+    actor_fields = {"login", "id", "type"}
+    for actor_name in ("actor", "triggering_actor"):
+        actor = require_mapping(run.get(actor_name), f"run.{actor_name}")
+        require_fields(
+            actor,
+            required=actor_fields,
+            optional={"html_url"},
+            description=f"run.{actor_name}",
+        )
+        require_nonempty_string(actor.get("login"), f"run.{actor_name}.login")
+        if actor.get("id") is not None and not isinstance(actor.get("id"), int):
+            raise AdapterError(f"run.{actor_name}.id must be integer or null")
+        if actor.get("html_url") is not None and strip_url_secrets(actor.get("html_url")) != actor.get("html_url"):
+            raise AdapterError(f"run.{actor_name}.html_url must be sanitized")
+    jobs = require_list(snapshot.get("jobs"), "jobs")
+    for index, job_value in enumerate(jobs):
+        job = require_mapping(job_value, f"jobs[{index}]")
+        require_fields(
+            job,
+            required={
+                "id",
+                "run_id",
+                "run_attempt",
+                "name",
+                "workflow_name",
+                "status",
+                "conclusion",
+                "created_at",
+                "started_at",
+                "completed_at",
+                "html_url",
+                "labels",
+                "steps",
+            },
+            description=f"jobs[{index}]",
+        )
+        require_positive_int(job.get("id"), f"jobs[{index}].id")
+        if job.get("run_id") != run.get("id") or job.get("run_attempt") != run.get("run_attempt"):
+            raise AdapterError(f"jobs[{index}] run identity differs from the source run")
+        for timestamp in ("created_at", "started_at", "completed_at"):
+            validate_rfc3339(job.get(timestamp), f"jobs[{index}].{timestamp}", allow_null=True)
+        if job.get("html_url") is not None and strip_url_secrets(job.get("html_url")) != job.get("html_url"):
+            raise AdapterError(f"jobs[{index}].html_url must be sanitized")
+        require_list(job.get("labels"), f"jobs[{index}].labels")
+        steps = require_list(job.get("steps"), f"jobs[{index}].steps")
+        for step_index, step_value in enumerate(steps):
+            step = require_mapping(step_value, f"jobs[{index}].steps[{step_index}]")
+            require_fields(
+                step,
+                required={"number", "name", "status", "conclusion", "started_at", "completed_at"},
+                description=f"jobs[{index}].steps[{step_index}]",
+            )
+            for timestamp in ("started_at", "completed_at"):
+                validate_rfc3339(
+                    step.get(timestamp),
+                    f"jobs[{index}].steps[{step_index}].{timestamp}",
+                    allow_null=True,
+                )
+    artifacts = require_list(snapshot.get("artifacts"), "artifacts")
+    for index, artifact_value in enumerate(artifacts):
+        artifact = require_mapping(artifact_value, f"artifacts[{index}]")
+        require_fields(
+            artifact,
+            required={
+                "id",
+                "name",
+                "size_in_bytes",
+                "expired",
+                "created_at",
+                "updated_at",
+                "expires_at",
+                "archive_download_url",
+                "workflow_run_id",
+            },
+            description=f"artifacts[{index}]",
+        )
+        require_positive_int(artifact.get("id"), f"artifacts[{index}].id")
+        linked_run = artifact.get("workflow_run_id")
+        if linked_run is not None and linked_run != run.get("id"):
+            raise AdapterError(f"artifacts[{index}] run identity differs from the source run")
+        for timestamp in ("created_at", "updated_at", "expires_at"):
+            validate_rfc3339(
+                artifact.get(timestamp), f"artifacts[{index}].{timestamp}", allow_null=True
+            )
+        artifact_url = artifact.get("archive_download_url")
+        if artifact_url is not None and strip_url_secrets(artifact_url) != artifact_url:
+            raise AdapterError(f"artifacts[{index}].archive_download_url must be sanitized")
     projection = require_mapping(snapshot.get("projection"), "projection")
+    require_fields(
+        projection,
+        required={
+            "schema_version",
+            "service",
+            "intent",
+            "correlation_id",
+            "correlation_derivation",
+            "kubernetes_target",
+            "subject",
+        },
+        description="projection",
+    )
+    if projection.get("schema_version") != EVIDENCE_SCHEMA_VERSION:
+        raise AdapterError("projection.schema_version is unsupported")
+    if projection.get("intent") != "software_delivery":
+        raise AdapterError("projection.intent is unsupported")
+    require_nonempty_string(projection.get("service"), "projection.service")
+    if projection.get("correlation_derivation") not in {
+        "repository-id + run-id + run-attempt",
+        "operator-supplied",
+    }:
+        raise AdapterError("projection.correlation_derivation is unsupported")
+    target = require_mapping(projection.get("kubernetes_target"), "projection.kubernetes_target")
+    require_fields(
+        target,
+        required={"resource", "name", "namespace", "annotation_key"},
+        description="projection.kubernetes_target",
+    )
+    if target.get("resource") != "deployment" or target.get("annotation_key") != ANNOTATION_KEY:
+        raise AdapterError("projection Kubernetes target type or annotation key is unsupported")
+    require_nonempty_string(target.get("name"), "projection.kubernetes_target.name")
+    require_nonempty_string(target.get("namespace"), "projection.kubernetes_target.namespace")
     validate_correlation_id(
         require_nonempty_string(projection.get("correlation_id"), "projection.correlation_id")
     )
     subject = projection.get("subject")
     if subject is not None:
         subject_mapping = require_mapping(subject, "projection.subject")
+        require_fields(
+            subject_mapping,
+            required={"uri", "digest"},
+            description="projection.subject",
+        )
         require_nonempty_string(subject_mapping.get("uri"), "projection.subject.uri")
         digest = require_nonempty_string(subject_mapping.get("digest"), "projection.subject.digest")
         if not DIGEST_PATTERN.fullmatch(digest):
@@ -1062,10 +1288,19 @@ def private_capture_guard(snapshot: dict[str, Any], allow_private: bool) -> None
 
 def safe_extract_artifact(artifact_path: Path, destination: Path) -> Path:
     if artifact_path.is_dir():
-        source_path = artifact_path / "source/github_actions.json"
-        if not source_path.is_file():
-            raise AdapterError(f"artifact directory has no source/github_actions.json: {artifact_path}")
-        return source_path
+        candidates = [
+            path
+            for path in artifact_path.rglob("github_actions.json")
+            if path.is_file()
+            and not path.is_symlink()
+            and path.parent.name == "source"
+        ]
+        if len(candidates) != 1:
+            raise AdapterError(
+                "artifact directory must contain exactly one source/github_actions.json; "
+                f"found {len(candidates)}"
+            )
+        return candidates[0]
     if artifact_path.suffix.lower() == ".json":
         return artifact_path
     if artifact_path.suffix.lower() != ".zip":
