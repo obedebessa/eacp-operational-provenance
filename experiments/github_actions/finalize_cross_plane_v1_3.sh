@@ -24,22 +24,20 @@ fi
   shasum -a 256 -c PUBLIC_SHA256SUMS
 )
 
-readarray -t SOURCE_FIELDS < <(python3 - "${SOURCE_RESULTS}/environment.json" <<'PY'
+IFS=$'\t' read -r REPOSITORY RUN_ID RUN_ATTEMPT CORRELATION_ID SUBJECT_URI SUBJECT_DIGEST < <(
+python3 - "${SOURCE_RESULTS}/environment.json" <<'PY'
 import json
 import sys
 from pathlib import Path
 
 value = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-for key in ("repository", "run_id", "run_attempt", "correlation_id", "subject_uri", "subject_digest"):
-    print(value[key])
+keys = ("repository", "run_id", "run_attempt", "correlation_id", "subject_uri", "subject_digest")
+fields = [str(value[key]) for key in keys]
+if any("\t" in field or "\n" in field for field in fields):
+    raise SystemExit("environment identity fields contain unsupported control characters")
+print("\t".join(fields))
 PY
 )
-REPOSITORY=${SOURCE_FIELDS[0]}
-RUN_ID=${SOURCE_FIELDS[1]}
-RUN_ATTEMPT=${SOURCE_FIELDS[2]}
-CORRELATION_ID=${SOURCE_FIELDS[3]}
-SUBJECT_URI=${SOURCE_FIELDS[4]}
-SUBJECT_DIGEST=${SOURCE_FIELDS[5]}
 
 mkdir -p "${FINAL_OUTPUT}"
 python3 "${SCRIPT_DIR}/eacp_gha_v1_3.py" capture \
@@ -109,9 +107,19 @@ value = {
 output_path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 PY
 
-(
-  cd "${FINAL_OUTPUT}"
-  find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 shasum -a 256
-) > "${FINAL_OUTPUT}/SHA256SUMS"
+python3 - "${FINAL_OUTPUT}" > "${FINAL_OUTPUT}/SHA256SUMS" <<'PY'
+import hashlib
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+for path in sorted(
+    (candidate for candidate in root.rglob("*") if candidate.is_file() and candidate.name != "SHA256SUMS"),
+    key=lambda candidate: candidate.relative_to(root).as_posix(),
+):
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    relative = "./" + path.relative_to(root).as_posix()
+    print(f"{digest}  {relative}")
+PY
 
 echo "Completed-run finalization written to ${FINAL_OUTPUT}"
