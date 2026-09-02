@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""Check the public EACP artifact for structure and common release leaks."""
+"""Check the public EACP artifact for release boundaries and frozen integrity."""
 
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
+import math
 import re
+import struct
 import subprocess
 import sys
 from pathlib import Path
@@ -83,6 +86,99 @@ RELEASE_REQUIRED_FILES = (
     "MANIFEST.sha256",
 )
 
+CANDIDATE_SENTINELS = (
+    "spec/EACP_PROFILE_v1.3.md",
+    "REVIEWER_GUIDE_v1.3.md",
+    "experiments/github_actions/results/reference/run-33682116347/reference_summary.json",
+)
+
+CANDIDATE_REQUIRED_FILES = (
+    ".github/workflows/eacp-cross-plane-v1.3.yml",
+    "RELEASE_NOTES_v1.3-candidate.md",
+    "REVIEWER_GUIDE_v1.3.md",
+    "spec/EACP_PROFILE_v1.3.md",
+    "spec/schema/eacp-core-evidence-record-v1.3.schema.json",
+    "spec/schema/eacp-evidence-collection-v1.3.schema.json",
+    "spec/schema/eacp-link-resolution-v1.3.schema.json",
+    "spec/examples/valid-record-v1.3.json",
+    "spec/tools/eacp_profile.py",
+    "spec/tests/test_eacp_profile.py",
+    "experiments/correlation_robustness/README.md",
+    "experiments/correlation_robustness/LIMITATIONS_AND_NEXT_PROTOCOL.md",
+    "experiments/correlation_robustness/correlation_robustness.py",
+    "experiments/correlation_robustness/generate_figure.py",
+    "experiments/correlation_robustness/test_correlation_robustness.py",
+    "experiments/correlation_robustness/results/reference/SHA256SUMS",
+    "experiments/correlation_robustness/results/reference/summary_results.json",
+    "experiments/index_ablation/README.md",
+    "experiments/index_ablation/index_ablation.py",
+    "experiments/index_ablation/test_index_ablation.py",
+    "experiments/index_ablation/results/reference/SHA256SUMS",
+    "experiments/index_ablation/results/reference/method.json",
+    "experiments/index_ablation/results/reference/summary_results.json",
+    "experiments/github_actions/README.md",
+    "experiments/github_actions/summarize_reference_run.py",
+    "experiments/github_actions/results/reference/run-33682116347/README.md",
+    "experiments/github_actions/results/reference/run-33682116347/REFERENCE_SHA256SUMS",
+    "experiments/github_actions/results/reference/run-33682116347/reference_summary.json",
+    "figures/README.md",
+    "figures/generate_v1_3_figures.py",
+    "figures/eacp_architecture_v1_3.png",
+    "figures/eacp_correlation_robustness_v1_3.png",
+    "figures/eacp_live_cross_plane_v1_3.png",
+)
+
+CANDIDATE_REQUIRED_DIRECTORIES = (
+    "spec/examples",
+    "spec/schema",
+    "spec/tests",
+    "spec/tools",
+    "experiments/correlation_robustness/results/reference",
+    "experiments/index_ablation/results/reference",
+    "experiments/github_actions/results/reference/run-33682116347",
+)
+
+CORRELATION_RESULT_FILES = {
+    "environment.json",
+    "figure_correlation_robustness.svg",
+    "summary_results.csv",
+    "summary_results.json",
+    "trial_results.csv",
+    "trial_results.json",
+}
+
+INDEX_ABLATION_RESULT_FILES = {
+    "cold_open_measurements.csv",
+    "environment.json",
+    "method.json",
+    "query_measurements.csv",
+    "query_plans.json",
+    "summary_results.csv",
+    "summary_results.json",
+    "trial_results.csv",
+    "trial_results.json",
+}
+
+CORRELATION_MANIFEST_SHA256 = "5407328c9d9249214710f2fb92fec0c0dccf016e45dc9e67e5adb784f2169796"
+INDEX_ABLATION_MANIFEST_SHA256 = "c19b701d1a2865ff8a32204e00d02cdaf6a3cbf5eb793ba56a9b985974e004c6"
+GITHUB_ACTIONS_REFERENCE_MANIFEST_SHA256 = (
+    "38129b4fce63ed6e1ca4528f8b427f4c61cd8a4fabda19592d81549930bbb2c5"
+)
+GITHUB_ACTIONS_REFERENCE_SUMMARY_SHA256 = (
+    "06b2a0f206630df72b5985286d2c0d93b67e55d763fcfaac281a10b99f383dee"
+)
+GITHUB_ACTIONS_RUN_ID = 33682116347
+GITHUB_ACTIONS_HEAD_SHA = "76b2ed54381ae52cf0f54cd22a20341c3216b77b"
+GITHUB_ACTIONS_SUBJECT_DIGEST = (
+    "sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a"
+)
+
+EXPECTED_CANDIDATE_FIGURES = {
+    "figures/eacp_architecture_v1_3.png": (2400, 1500),
+    "figures/eacp_correlation_robustness_v1_3.png": (2400, 1520),
+    "figures/eacp_live_cross_plane_v1_3.png": (2400, 1520),
+}
+
 APPROVED_KUBERNETES_RESULT_FILES = {
     "analysis/public_filtered_audit.jsonl",
     "analysis/normalized_evidence.csv",
@@ -152,6 +248,516 @@ def sha256(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             value.update(block)
     return value.hexdigest()
+
+
+def load_json_object(path: Path, label: str, errors: list[str]) -> dict[str, object] | None:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        errors.append(f"cannot parse {label}: {exc}")
+        return None
+    if not isinstance(value, dict):
+        errors.append(f"{label} must contain a JSON object")
+        return None
+    return value
+
+
+def validate_checksum_manifest(
+    *,
+    result_root: Path,
+    manifest_name: str,
+    expected_files: set[str],
+    expected_manifest_sha256: str,
+    label: str,
+    errors: list[str],
+) -> None:
+    """Validate one frozen, flat checksum inventory without shell utilities."""
+
+    manifest = result_root / manifest_name
+    if not manifest.is_file():
+        errors.append(f"missing {label} checksum manifest: {relative(manifest)}")
+        return
+    if sha256(manifest) != expected_manifest_sha256:
+        errors.append(f"{label} checksum manifest differs from the frozen candidate")
+
+    listed: set[str] = set()
+    try:
+        lines = manifest.read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeDecodeError) as exc:
+        errors.append(f"cannot read {label} checksum manifest: {exc}")
+        return
+
+    resolved_root = result_root.resolve()
+    for line_number, raw in enumerate(lines, start=1):
+        if not raw.strip():
+            continue
+        parts = raw.split(maxsplit=1)
+        if len(parts) != 2 or not re.fullmatch(r"[0-9a-f]{64}", parts[0]):
+            errors.append(f"malformed {label} checksum line {line_number}")
+            continue
+        expected, raw_name = parts
+        name = raw_name.strip()
+        if name.startswith("*"):
+            name = name[1:]
+        candidate = Path(name)
+        if candidate.is_absolute() or ".." in candidate.parts:
+            errors.append(f"unsafe path in {label} checksum manifest: {name!r}")
+            continue
+        normalized = candidate.as_posix()
+        if normalized.startswith("./"):
+            normalized = normalized[2:]
+        if normalized in listed:
+            errors.append(f"duplicate path in {label} checksum manifest: {normalized}")
+            continue
+        listed.add(normalized)
+        target = (result_root / candidate).resolve()
+        try:
+            target.relative_to(resolved_root)
+        except ValueError:
+            errors.append(f"path escapes {label} result root: {name!r}")
+            continue
+        if not target.is_file():
+            errors.append(f"missing {label} checksummed file: {normalized}")
+        elif sha256(target) != expected:
+            errors.append(f"{label} checksum mismatch: {normalized}")
+
+    if listed != expected_files:
+        errors.append(
+            f"{label} checksum inventory differs "
+            f"(missing={sorted(expected_files - listed)}, "
+            f"extra={sorted(listed - expected_files)})"
+        )
+    actual = {
+        path.relative_to(result_root).as_posix()
+        for path in result_root.rglob("*")
+        if path.is_file() and path != manifest
+    }
+    if actual != expected_files:
+        errors.append(
+            f"{label} frozen directory inventory differs "
+            f"(missing={sorted(expected_files - actual)}, "
+            f"extra={sorted(actual - expected_files)})"
+        )
+
+
+def csv_data_row_count(path: Path, label: str, errors: list[str]) -> int | None:
+    try:
+        with path.open("r", encoding="utf-8", newline="") as stream:
+            reader = csv.reader(stream)
+            next(reader)
+            return sum(1 for _ in reader)
+    except (OSError, UnicodeDecodeError, csv.Error, StopIteration) as exc:
+        errors.append(f"cannot count {label} rows: {exc}")
+        return None
+
+
+def run_offline_check(command: list[str], label: str, errors: list[str]) -> None:
+    try:
+        result = subprocess.run(
+            command,
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=120,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        errors.append(f"could not execute {label}: {exc}")
+        return
+    if result.returncode == 0:
+        return
+    detail_lines = (result.stderr + "\n" + result.stdout).strip().splitlines()
+    detail = " | ".join(detail_lines[-4:]) if detail_lines else "no diagnostic output"
+    errors.append(f"{label} failed: {detail}")
+
+
+def validate_profile_candidate(errors: list[str]) -> None:
+    schema_paths = (
+        ROOT / "spec/schema/eacp-core-evidence-record-v1.3.schema.json",
+        ROOT / "spec/schema/eacp-evidence-collection-v1.3.schema.json",
+        ROOT / "spec/schema/eacp-link-resolution-v1.3.schema.json",
+    )
+    for path in schema_paths:
+        if not path.is_file():
+            continue
+        schema = load_json_object(path, relative(path), errors)
+        if schema is not None:
+            if schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
+                errors.append(f"{relative(path)} is not declared as JSON Schema Draft 2020-12")
+
+    core_path = schema_paths[0]
+    if core_path.is_file():
+        core = load_json_object(core_path, relative(core_path), errors)
+        if core is not None:
+            required = core.get("required")
+            required_members = {
+                "profile",
+                "source_type",
+                "source_id",
+                "source_ts",
+                "observed_ts",
+                "actors",
+                "service",
+                "intent",
+                "policy",
+                "action",
+                "outcome",
+                "source_pointer",
+                "links",
+            }
+            if not isinstance(required, list) or not all(
+                member in required for member in required_members
+            ):
+                errors.append("Profile 1.3 core schema omits a normative tuple member")
+            properties = core.get("properties")
+            if not isinstance(properties, dict) or properties.get("profile") != {
+                "const": "eacp.profile/1.3"
+            }:
+                errors.append("Profile 1.3 core schema does not fix the profile identifier")
+
+    example = ROOT / "spec/examples/valid-record-v1.3.json"
+    tool = ROOT / "spec/tools/eacp_profile.py"
+    if example.is_file() and tool.is_file():
+        try:
+            result = subprocess.run(
+                [sys.executable, str(tool), "validate", str(example)],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=120,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            errors.append(f"could not validate the Profile 1.3 example: {exc}")
+        else:
+            if result.returncode != 0:
+                detail = (result.stderr or result.stdout).strip().splitlines()
+                errors.append(
+                    "Profile 1.3 example failed the reference validator: "
+                    + (detail[-1] if detail else "no diagnostic output")
+                )
+            else:
+                try:
+                    report = json.loads(result.stdout)
+                except json.JSONDecodeError as exc:
+                    errors.append(f"Profile 1.3 validator emitted invalid JSON: {exc}")
+                else:
+                    if report.get("valid") is not True or report.get("record_count") != 1:
+                        errors.append("Profile 1.3 example validation did not report one valid record")
+
+    tests = ROOT / "spec/tests/test_eacp_profile.py"
+    if tests.is_file():
+        test_count = len(
+            re.findall(r"(?m)^\s+def test_[A-Za-z0-9_]+\(", tests.read_text(encoding="utf-8"))
+        )
+        if test_count != 19:
+            errors.append(f"Profile 1.3 reference test inventory is {test_count}, expected 19")
+
+
+def validate_correlation_candidate(errors: list[str]) -> None:
+    result_root = ROOT / "experiments/correlation_robustness/results/reference"
+    validate_checksum_manifest(
+        result_root=result_root,
+        manifest_name="SHA256SUMS",
+        expected_files=CORRELATION_RESULT_FILES,
+        expected_manifest_sha256=CORRELATION_MANIFEST_SHA256,
+        label="correlation robustness",
+        errors=errors,
+    )
+    summary_path = result_root / "summary_results.json"
+    if not summary_path.is_file():
+        return
+    summary = load_json_object(summary_path, relative(summary_path), errors)
+    if summary is None:
+        return
+    scenarios = summary.get("scenario_definitions")
+    rows = summary.get("summaries")
+    configuration = summary.get("configuration")
+    if summary.get("schema_version") != "1.0":
+        errors.append("correlation robustness summary schema version mismatch")
+    if summary.get("data_classification") != "fully synthetic; contains no user or production data":
+        errors.append("correlation robustness data classification mismatch")
+    if not isinstance(scenarios, list) or len(scenarios) != 25:
+        errors.append("correlation robustness summary must define 25 scenarios")
+    if not isinstance(configuration, dict) or configuration.get("chains_per_seed") != 600:
+        errors.append("correlation robustness summary must declare 600 chains per seed")
+    seeds = configuration.get("seeds") if isinstance(configuration, dict) else None
+    if not isinstance(seeds, list) or len(seeds) != 30:
+        errors.append("correlation robustness summary must declare 30 seeds")
+    if not isinstance(rows, list) or len(rows) != 75:
+        errors.append("correlation robustness summary must contain 75 scenario-policy rows")
+    else:
+        identities = {
+            (row.get("scenario"), row.get("algorithm"))
+            for row in rows
+            if isinstance(row, dict)
+            and isinstance(row.get("scenario"), str)
+            and isinstance(row.get("algorithm"), str)
+        }
+        algorithms = {identity[1] for identity in identities}
+        if len(identities) != 75 or algorithms != {
+            "strict_service_plus_correlation",
+            "correlation_id_only_ablation",
+            "naive_temporal_window",
+        }:
+            errors.append("correlation robustness scenario-policy matrix is incomplete")
+        if any(not isinstance(row, dict) or row.get("trials") != 30 for row in rows):
+            errors.append("correlation robustness summary rows must each aggregate 30 trials")
+
+        selected = {
+            row.get("scenario"): row
+            for row in rows
+            if isinstance(row, dict)
+            and isinstance(row.get("scenario"), str)
+            and row.get("algorithm") == "strict_service_plus_correlation"
+        }
+        expected_metrics = {
+            "control": (1.0, 0.0, 0.0),
+            "missing_random_1pct": (0.9416666666666667, 0.01, 0.0),
+            "missing_random_20pct": (0.26166666666666666, 0.2, 0.0),
+            "compound_adversarial": (0.47333333333333333, 0.19013888888888889, 0.0),
+        }
+        for scenario, expected in expected_metrics.items():
+            row = selected.get(scenario)
+            observed = (
+                row.get("exact_chain_accuracy_median") if row else None,
+                row.get("abstention_rate_median") if row else None,
+                row.get("false_join_rate_median") if row else None,
+            )
+            if any(
+                not isinstance(actual, (int, float))
+                or not math.isclose(float(actual), target, rel_tol=0.0, abs_tol=1e-12)
+                for actual, target in zip(observed, expected)
+            ):
+                errors.append(f"correlation robustness frozen metrics differ: {scenario}")
+
+    trial_count = csv_data_row_count(result_root / "trial_results.csv", "correlation trial", errors)
+    if trial_count is not None and trial_count != 2250:
+        errors.append(f"correlation robustness trial row count is {trial_count}, expected 2250")
+
+
+def validate_index_ablation_candidate(errors: list[str]) -> None:
+    result_root = ROOT / "experiments/index_ablation/results/reference"
+    validate_checksum_manifest(
+        result_root=result_root,
+        manifest_name="SHA256SUMS",
+        expected_files=INDEX_ABLATION_RESULT_FILES,
+        expected_manifest_sha256=INDEX_ABLATION_MANIFEST_SHA256,
+        label="index ablation",
+        errors=errors,
+    )
+    verifier = ROOT / "experiments/index_ablation/index_ablation.py"
+    if verifier.is_file() and result_root.is_dir():
+        run_offline_check(
+            [sys.executable, str(verifier), "--verify", str(result_root)],
+            "index-ablation source and result verification",
+            errors,
+        )
+
+    summary_path = result_root / "summary_results.json"
+    if not summary_path.is_file():
+        return
+    summary = load_json_object(summary_path, relative(summary_path), errors)
+    if summary is None:
+        return
+    rows = summary.get("rows")
+    if summary.get("result_schema_version") != "1.0":
+        errors.append("index ablation summary schema version mismatch")
+    if summary.get("analysis_unit") != "one event-count/seed trial":
+        errors.append("index ablation analysis unit mismatch")
+    if summary.get("inferential_statistics") is not False:
+        errors.append("index ablation must not claim inferential statistics")
+    if not isinstance(rows, list) or len(rows) != 12:
+        errors.append("index ablation summary must contain 12 size-variant rows")
+    else:
+        identities = {
+            (row.get("event_count"), row.get("variant"))
+            for row in rows
+            if isinstance(row, dict)
+            and isinstance(row.get("event_count"), int)
+            and not isinstance(row.get("event_count"), bool)
+            and isinstance(row.get("variant"), str)
+        }
+        expected_identities = {
+            (size, variant)
+            for size in (10000, 50000, 100000)
+            for variant in (
+                "full_indexes",
+                "no_service_index",
+                "no_correlation_index",
+                "no_lookup_indexes",
+            )
+        }
+        if identities != expected_identities:
+            errors.append("index ablation size-treatment matrix is incomplete")
+        if any(
+            not isinstance(row, dict)
+            or row.get("trials") != 10
+            or row.get("all_outputs_equivalent") != 1
+            for row in rows
+        ):
+            errors.append("index ablation rows must report 10 equivalent-output trials")
+
+        keyed = {
+            (row.get("event_count"), row.get("variant")): row
+            for row in rows
+            if isinstance(row, dict)
+            and isinstance(row.get("event_count"), int)
+            and not isinstance(row.get("event_count"), bool)
+            and isinstance(row.get("variant"), str)
+        }
+        service = keyed.get((100000, "no_service_index"), {})
+        correlation = keyed.get((100000, "no_correlation_index"), {})
+        neither = keyed.get((100000, "no_lookup_indexes"), {})
+        checks = (
+            (service.get("warm_service_p95_ratio_to_full_median"), 5.651081309441061),
+            (correlation.get("warm_correlation_p95_ratio_to_full_median"), 73.91221766021741),
+            (neither.get("database_bytes_reduction_vs_full_percent_median"), 22.77629365786089),
+            (neither.get("ingest_time_reduction_vs_full_percent_median"), 17.89957879997673),
+        )
+        if any(
+            not isinstance(actual, (int, float))
+            or not math.isclose(float(actual), expected, rel_tol=0.0, abs_tol=1e-12)
+            for actual, expected in checks
+        ):
+            errors.append("index ablation frozen 100,000-event metrics differ")
+
+    expected_row_counts = {
+        "trial_results.csv": 120,
+        "query_measurements.csv": 18000,
+        "cold_open_measurements.csv": 1200,
+    }
+    for name, expected in expected_row_counts.items():
+        count = csv_data_row_count(result_root / name, f"index ablation {name}", errors)
+        if count is not None and count != expected:
+            errors.append(f"index ablation {name} row count is {count}, expected {expected}")
+
+
+def validate_github_actions_candidate(errors: list[str]) -> None:
+    result_root = (
+        ROOT
+        / "experiments/github_actions/results/reference"
+        / f"run-{GITHUB_ACTIONS_RUN_ID}"
+    )
+    manifest = result_root / "REFERENCE_SHA256SUMS"
+    summary_path = result_root / "reference_summary.json"
+    if manifest.is_file() and sha256(manifest) != GITHUB_ACTIONS_REFERENCE_MANIFEST_SHA256:
+        errors.append("GitHub Actions reference manifest differs from the frozen candidate")
+    if summary_path.is_file() and sha256(summary_path) != GITHUB_ACTIONS_REFERENCE_SUMMARY_SHA256:
+        errors.append("GitHub Actions reference summary differs from the frozen candidate")
+
+    summarizer = ROOT / "experiments/github_actions/summarize_reference_run.py"
+    if summarizer.is_file() and result_root.is_dir():
+        run_offline_check(
+            [sys.executable, str(summarizer), "--verify"],
+            "GitHub Actions frozen-run checksum and invariant verification",
+            errors,
+        )
+
+    if not summary_path.is_file():
+        return
+    summary = load_json_object(summary_path, relative(summary_path), errors)
+    if summary is None:
+        return
+    run = summary.get("run")
+    subject = summary.get("subject")
+    aggregate = summary.get("aggregate")
+    attempts = summary.get("attempt_results")
+    if summary.get("schema_version") != "eacp.github-actions.reference-run-summary/1.3.0":
+        errors.append("GitHub Actions reference summary schema version mismatch")
+    if not isinstance(run, dict) or (
+        run.get("run_id"), run.get("head_sha"), run.get("attempts"), run.get("all_conclusions")
+    ) != (GITHUB_ACTIONS_RUN_ID, GITHUB_ACTIONS_HEAD_SHA, 3, "success"):
+        errors.append("GitHub Actions reference run identity or completion state mismatch")
+    if not isinstance(subject, dict) or subject.get("digest") != GITHUB_ACTIONS_SUBJECT_DIGEST:
+        errors.append("GitHub Actions reference subject digest mismatch")
+    expected_aggregate = {
+        "successful_exact_link_attempts": 3,
+        "successful_negative_controls": 3,
+        "successful_target_bound_rbac_controls": 3,
+        "archive_attestation_statements_matching_subject": 3,
+        "distinct_attempt_specific_correlation_ids": 3,
+    }
+    if not isinstance(aggregate, dict) or any(
+        aggregate.get(key) != value for key, value in expected_aggregate.items()
+    ):
+        errors.append("GitHub Actions three-attempt aggregate invariants mismatch")
+    if not isinstance(attempts, list) or len(attempts) != 3:
+        errors.append("GitHub Actions reference summary must contain three attempts")
+    else:
+        for expected_attempt, attempt in enumerate(attempts, start=1):
+            if not isinstance(attempt, dict) or (
+                attempt.get("attempt") != expected_attempt
+                or attempt.get("github_completed_evidence_records") != 3
+                or attempt.get("kubernetes_source_native_positive_records") != 8
+                or attempt.get("kubernetes_projected_records_with_exact_id") != 9
+                or attempt.get("negative_control_audit_records") != 3
+                or attempt.get("negative_control_unjoined") is not True
+                or attempt.get("target_bound_http_403_records") != 1
+                or attempt.get("rbac_correlation_evidence_method") != "explicit"
+                or attempt.get("rbac_source_native_correlation_records") != 0
+                or attempt.get("pod_spec_and_runtime_subject_digest_exact") is not True
+                or attempt.get("attestation_statement_subject_matches_archive") is not True
+                or attempt.get("verified_manifest_entries") != 37
+            ):
+                errors.append(f"GitHub Actions attempt {expected_attempt} invariants mismatch")
+
+
+def png_dimensions(path: Path, errors: list[str]) -> tuple[int, int] | None:
+    try:
+        with path.open("rb") as stream:
+            header = stream.read(24)
+    except OSError as exc:
+        errors.append(f"cannot read candidate figure {relative(path)}: {exc}")
+        return None
+    if len(header) != 24 or header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
+        errors.append(f"candidate figure is not a valid PNG header: {relative(path)}")
+        return None
+    return struct.unpack(">II", header[16:24])
+
+
+def validate_candidate_figures_and_docs(errors: list[str]) -> None:
+    for name, expected in EXPECTED_CANDIDATE_FIGURES.items():
+        path = ROOT / name
+        if path.is_file():
+            dimensions = png_dimensions(path, errors)
+            if dimensions is not None and dimensions != expected:
+                errors.append(
+                    f"candidate figure dimensions differ for {name}: "
+                    f"{dimensions[0]}x{dimensions[1]}, expected {expected[0]}x{expected[1]}"
+                )
+
+    release_notes = ROOT / "RELEASE_NOTES_v1.3-candidate.md"
+    reviewer_guide = ROOT / "REVIEWER_GUIDE_v1.3.md"
+    for path in (release_notes, reviewer_guide):
+        if not path.is_file():
+            continue
+        content = path.read_text(encoding="utf-8")
+        for required_text in (
+            "reviewer candidate",
+            "no v1.3 DOI",
+            ARTIFACT_DOI,
+            str(GITHUB_ACTIONS_RUN_ID),
+        ):
+            if required_text not in content:
+                errors.append(f"{relative(path)} omits candidate boundary text: {required_text}")
+
+
+def validate_candidate_additions(errors: list[str]) -> None:
+    if not any((ROOT / name).exists() for name in CANDIDATE_SENTINELS):
+        return
+    for name in CANDIDATE_REQUIRED_FILES:
+        if not (ROOT / name).is_file():
+            errors.append(f"missing v1.3 candidate file: {name}")
+    for name in CANDIDATE_REQUIRED_DIRECTORIES:
+        if not (ROOT / name).is_dir():
+            errors.append(f"missing v1.3 candidate directory: {name}")
+
+    validate_profile_candidate(errors)
+    validate_correlation_candidate(errors)
+    validate_index_ablation_candidate(errors)
+    validate_github_actions_candidate(errors)
+    validate_candidate_figures_and_docs(errors)
 
 
 def validate_frozen_results(errors: list[str]) -> None:
@@ -250,6 +856,7 @@ def main() -> int:
             errors.append(f"missing required directory: {name}")
 
     validate_frozen_results(errors)
+    validate_candidate_additions(errors)
 
     cff_path = ROOT / "CITATION.cff"
     if cff_path.is_file():
@@ -347,7 +954,8 @@ def main() -> int:
         print(f"Repository verification failed with {len(errors)} error(s).", file=sys.stderr)
         return 1
 
-    mode = "release" if args.release else "scaffold"
+    candidate = any((ROOT / name).exists() for name in CANDIDATE_SENTINELS)
+    mode = "release" if args.release else "candidate" if candidate else "scaffold"
     print(f"Repository {mode} verification passed with {len(warnings)} warning(s).")
     return 0
 

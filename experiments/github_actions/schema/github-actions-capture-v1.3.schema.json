@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/obedebessa/eacp-operational-provenance/v1.3.0/experiments/github_actions/schema/github-actions-capture-v1.3.schema.json",
+  "$id": "https://raw.githubusercontent.com/obedebessa/eacp-operational-provenance/eacp-v1.3-candidate/experiments/github_actions/schema/github-actions-capture-v1.3.schema.json",
   "title": "EACP v1.3 minimized GitHub Actions source snapshot",
   "type": "object",
   "additionalProperties": false,

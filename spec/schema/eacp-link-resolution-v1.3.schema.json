@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/obedebessa/eacp-operational-provenance/v1.3.0/spec/schema/eacp-link-resolution-v1.3.schema.json",
+  "$id": "https://raw.githubusercontent.com/obedebessa/eacp-operational-provenance/eacp-v1.3-candidate/spec/schema/eacp-link-resolution-v1.3.schema.json",
   "title": "EACP Profile 1.3 safe link resolution result",
   "type": "object",
   "additionalProperties": false,

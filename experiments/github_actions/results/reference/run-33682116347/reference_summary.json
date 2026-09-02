@@ -1,0 +1,81 @@
+{
+  "aggregate": {
+    "archive_attestation_statements_matching_subject": 3,
+    "distinct_attempt_specific_correlation_ids": 3,
+    "successful_exact_link_attempts": 3,
+    "successful_negative_controls": 3,
+    "successful_target_bound_rbac_controls": 3
+  },
+  "attempt_results": [
+    {
+      "archive_sha256": "cc4acb77fb0861631fcdb8f262b8eabaeb9e7014d8251f450c6a4f315f3cb327",
+      "attempt": 1,
+      "attestation_bundle_sha256": "81f00da2fc9889a5c2d8c906a2d86fd4bd79ad1cedbbcaae0b6c0b2e9ffcaaaf",
+      "attestation_statement_subject_matches_archive": true,
+      "correlation_id": "eacp-gha-1324720646-33682116347-1",
+      "github_completed_evidence_records": 3,
+      "kubernetes_namespace_records": 56,
+      "kubernetes_projected_records_with_exact_id": 9,
+      "kubernetes_source_native_positive_records": 8,
+      "negative_control_audit_records": 3,
+      "negative_control_unjoined": true,
+      "pod_spec_and_runtime_subject_digest_exact": true,
+      "rbac_correlation_evidence_method": "explicit",
+      "rbac_source_native_correlation_records": 0,
+      "target_bound_http_403_records": 1,
+      "verified_manifest_entries": 37
+    },
+    {
+      "archive_sha256": "e378b7117c3692f91211488e31294625ac03a1aab2ae0c3d38cfd4c52efa4eb5",
+      "attempt": 2,
+      "attestation_bundle_sha256": "835b1cd0af0fe36b5715e618d94a522aca6e6f634f130c0301ee244859e8b247",
+      "attestation_statement_subject_matches_archive": true,
+      "correlation_id": "eacp-gha-1324720646-33682116347-2",
+      "github_completed_evidence_records": 3,
+      "kubernetes_namespace_records": 51,
+      "kubernetes_projected_records_with_exact_id": 9,
+      "kubernetes_source_native_positive_records": 8,
+      "negative_control_audit_records": 3,
+      "negative_control_unjoined": true,
+      "pod_spec_and_runtime_subject_digest_exact": true,
+      "rbac_correlation_evidence_method": "explicit",
+      "rbac_source_native_correlation_records": 0,
+      "target_bound_http_403_records": 1,
+      "verified_manifest_entries": 37
+    },
+    {
+      "archive_sha256": "88d4ca7f572c41e156b5c68e43e3f931c296cca0b55d1ee755f652f3286be7fd",
+      "attempt": 3,
+      "attestation_bundle_sha256": "5ccb35ac483163bb38b545733be1ed4d5c47c4be496f3c424520ad4b249badd9",
+      "attestation_statement_subject_matches_archive": true,
+      "correlation_id": "eacp-gha-1324720646-33682116347-3",
+      "github_completed_evidence_records": 3,
+      "kubernetes_namespace_records": 52,
+      "kubernetes_projected_records_with_exact_id": 9,
+      "kubernetes_source_native_positive_records": 8,
+      "negative_control_audit_records": 3,
+      "negative_control_unjoined": true,
+      "pod_spec_and_runtime_subject_digest_exact": true,
+      "rbac_correlation_evidence_method": "explicit",
+      "rbac_source_native_correlation_records": 0,
+      "target_bound_http_403_records": 1,
+      "verified_manifest_entries": 37
+    }
+  ],
+  "attestation_boundary": "Bundled DSSE statements name the exact archive digests. Cryptographic identity and transparency-log verification is performed separately with gh attestation verify.",
+  "claim_boundary": "Three controlled attempts demonstrate reproducible exact delivery-to-runtime composition for this workflow and ephemeral single-node cluster. They do not establish semantic causality, source truth, production effectiveness, or managed-cluster scalability.",
+  "run": {
+    "all_conclusions": "success",
+    "attempts": 3,
+    "head_sha": "76b2ed54381ae52cf0f54cd22a20341c3216b77b",
+    "repository": "obedebessa/eacp-operational-provenance",
+    "run_id": 33682116347,
+    "url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33682116347"
+  },
+  "schema_version": "eacp.github-actions.reference-run-summary/1.3.0",
+  "source_classification": "real_public_github_actions_and_kubernetes_api_evidence",
+  "subject": {
+    "digest": "sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a",
+    "uri": "registry.k8s.io/pause"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "annotations": {
+      "eacp.io/correlation-id": "eacp-gha-1324720646-33682116347-2",
+      "eacp.io/github-commit-sha": "76b2ed54381ae52cf0f54cd22a20341c3216b77b",
+      "eacp.io/github-repository": "obedebessa/eacp-operational-provenance",
+      "eacp.io/github-repository-id": "1324720646",
+      "eacp.io/github-run-attempt": "2",
+      "eacp.io/github-run-id": "33682116347",
+      "eacp.io/github-source-url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33682116347",
+      "eacp.io/github-workflow": "EACP cross-plane v1.3",
+      "eacp.io/source-plane": "github-actions",
+      "eacp.io/subject-digest": "sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a",
+      "eacp.io/subject-uri": "registry.k8s.io/pause"
+    }
+  }
+}

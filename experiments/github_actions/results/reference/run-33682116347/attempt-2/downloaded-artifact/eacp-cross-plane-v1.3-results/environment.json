@@ -1,0 +1,22 @@
+{
+  "cluster_retained": false,
+  "correlation_id": "eacp-gha-1324720646-33682116347-2",
+  "docker": "28.0.4",
+  "github_actor": "obedebessa",
+  "github_triggering_actor": "obedebessa",
+  "head_sha": "76b2ed54381ae52cf0f54cd22a20341c3216b77b",
+  "kind": "kind v0.32.0 go1.26.3 linux/amd64",
+  "kind_node_image": "kindest/node:v1.36.1@sha256:3489c7674813ba5d8b1a9977baea8a6e553784dab7b84759d1014dbd78f7ebd5",
+  "kubectl_client": "Client Version: v1.36.4\nKustomize Version: v5.8.1",
+  "kubernetes_allowed_principal": "kubernetes-admin",
+  "kubernetes_denied_principal": "system:serviceaccount:eacp-cross-plane-v13:eacp-observer",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "python": "3.11.16",
+  "repository": "obedebessa/eacp-operational-provenance",
+  "repository_id": 1324720646,
+  "run_attempt": 2,
+  "run_id": 33682116347,
+  "run_started_utc": "20260902T205734Z",
+  "subject_digest": "sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a",
+  "subject_uri": "registry.k8s.io/pause"
+}

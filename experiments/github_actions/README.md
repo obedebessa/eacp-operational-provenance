@@ -74,6 +74,10 @@ before publication.
 The JSON Schemas are under `schema/`. Runtime verification does not require a
 third-party JSON Schema package: it checks SHA-256 manifests and regenerates
 the CSV, JSONL, summary, and Kubernetes patch from the minimized source.
+Current schema identifiers resolve through the public candidate branch. The
+checksum-bound run artifacts retain the prospective `v1.3.0` identifiers that
+were emitted at execution time; the verifier accepts those historical values
+without rewriting or weakening their manifests.
 Normative profile records are also passed through
 `spec/tools/eacp_profile.py`. GitHub records distinguish `initiator`,
 `triggering_actor`, and the `github-actions` execution principal. Kubernetes
@@ -264,7 +268,7 @@ non-mutating annotation planning, exact and near-miss joins, subject-digest
 linking, the no-ID negative control, and the target-bound adapter-explicit RBAC
 denial.
 
-## Current validation boundary
+## Frozen public validation
 
 Validated locally in this repository:
 
@@ -276,17 +280,34 @@ Validated locally in this repository:
 - no tokens, logs, event payloads, artifact contents, commit messages, author
   emails, or runner identities retained in the frozen capture.
 
-Not yet established until the candidate workflow executes externally:
+The live protocol then completed three public attempts under run
+[`33682116347`](https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33682116347),
+all at commit `76b2ed54381ae52cf0f54cd22a20341c3216b77b`. In every attempt:
 
-- a real GitHub Actions → Kubernetes observation from the same causal run;
-- three successful attempts;
-- observed subject-digest equality in the real Deployment and Pod;
-- the runtime `status.containerStatuses[].imageID`, reported separately because
-  container runtimes may resolve the pinned manifest-list digest to a distinct
-  platform-manifest digest;
-- a real negative-control audit trace and correlated HTTP 403 trace;
-- the archive's GitHub-hosted attestation and completed post-run API capture.
+- the completed capture produced three GitHub records;
+- eight Kubernetes audit records carried the source-native correlation
+  annotation, and the normalized projection contained nine matching records
+  after one target-bound HTTP 403 was added as an explicit adapter assertion;
+- the Deployment, Pod specification, and runtime image ID matched the declared
+  OCI subject digest exactly;
+- three audit records for the no-ID negative-control object remained unjoined;
+- one HTTP 403 from the expected service account targeted the exact correlated
+  Deployment; its audit record contained no source-native correlation and is
+  labeled `adapter_explicit_exact_target`;
+- archive checksums and nested public manifests verified; and
+- the downloaded SLSA provenance attestation verified against the repository,
+  signer workflow, source revision and Git ref, with self-hosted runners denied.
 
-Docker was unavailable in the local preparation environment, so the real kind
-portion was not represented as having run. That limitation is explicit rather
-than filled with fixture output.
+The namespace corpus varied from 51 to 56 records because controller activity
+is asynchronous; the declared controls remained invariant. The exact
+downloaded artifacts, completed-state recaptures, offline attestation bundles,
+aggregate summary, and 98-entry checksum inventory are frozen under
+`results/reference/run-33682116347/`. Run:
+
+```bash
+python3 experiments/github_actions/summarize_reference_run.py --verify
+```
+
+These executions demonstrate repeatability of one controlled workflow and an
+ephemeral single-node cluster. They do not establish causal correctness,
+production reliability, managed-cluster behavior, or source truth.
