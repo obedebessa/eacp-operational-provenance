@@ -31,7 +31,8 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertIn("identifies the artifact, not the accompanying", cff)
         self.assertIn("article.", cff)
         self.assertNotIn("email:", cff)
-        self.assertNotIn("preferred-citation:", cff)
+        self.assertIn("preferred-citation:", cff)
+        self.assertIn('doi: "10.5281/zenodo.22017662"', cff)
 
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("10.5281/zenodo.21818550", readme)

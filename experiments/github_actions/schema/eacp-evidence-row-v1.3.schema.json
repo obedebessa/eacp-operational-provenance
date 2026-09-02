@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/obedebessa/eacp-operational-provenance/v1.3.0/experiments/github_actions/schema/eacp-evidence-row-v1.3.schema.json",
+  "title": "EACP v1.3 evidence row",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "source_type",
+    "source_id",
+    "source_ts",
+    "observed_ts",
+    "actor",
+    "service",
+    "intent",
+    "policy",
+    "action",
+    "outcome",
+    "source_pointer",
+    "correlation_id",
+    "content_hash"
+  ],
+  "properties": {
+    "$schema": {"type": "string", "format": "uri"},
+    "source_type": {
+      "enum": ["github.actions.run", "github.actions.job", "github.actions.artifact"]
+    },
+    "source_id": {"type": "string", "pattern": "^github://repositories/[1-9][0-9]*/actions/runs/"},
+    "source_ts": {"type": "string", "format": "date-time"},
+    "observed_ts": {"type": "string", "format": "date-time"},
+    "actor": {"type": "string", "minLength": 1},
+    "service": {"type": "string", "minLength": 1},
+    "intent": {"const": "software_delivery"},
+    "policy": {"type": "string", "pattern": "^github-actions:"},
+    "action": {"enum": ["execute_workflow", "execute_job", "publish_artifact"]},
+    "outcome": {"type": "string", "minLength": 1},
+    "source_pointer": {"type": "string", "format": "uri"},
+    "correlation_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "content_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

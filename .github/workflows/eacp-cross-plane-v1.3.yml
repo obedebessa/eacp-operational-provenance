@@ -1,0 +1,99 @@
+name: EACP cross-plane v1.3
+
+on:
+  push:
+    branches: ["eacp-v1.3-candidate"]
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+  id-token: write
+  attestations: write
+
+concurrency:
+  group: eacp-cross-plane-v1-3-${{ github.run_id }}-${{ github.run_attempt }}
+  cancel-in-progress: false
+
+jobs:
+  github-actions-to-kubernetes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      KIND_VERSION: v0.32.0
+      KIND_LINUX_AMD64_SHA256: 50030de23cf40a18505f20426f6a8506bedf13c6e509244bd1fa9463721b0f54
+      EACP_RESULTS_DIR: ${{ runner.temp }}/eacp-cross-plane-v1.3-results
+    steps:
+      - name: Check out the exact run revision
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.0.2
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Verify adapter unit and negative-control tests
+        run: |
+          python -m compileall -q experiments/github_actions
+          python -m unittest discover -s experiments/github_actions/tests -v
+
+      - name: Install checksum-pinned kind
+        shell: bash
+        run: |
+          set -euo pipefail
+          KIND_PATH="${RUNNER_TEMP}/kind"
+          curl --fail --silent --show-error --location \
+            "https://github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/kind-linux-amd64" \
+            --output "${KIND_PATH}"
+          printf '%s  %s\n' "${KIND_LINUX_AMD64_SHA256}" "${KIND_PATH}" | sha256sum --check --strict
+          chmod 0755 "${KIND_PATH}"
+          echo "${RUNNER_TEMP}" >> "${GITHUB_PATH}"
+
+      - name: Execute real cross-plane chain and controls
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EACP_REPOSITORY: ${{ github.repository }}
+          EACP_RUN_ID: ${{ github.run_id }}
+          EACP_RUN_ATTEMPT: ${{ github.run_attempt }}
+          RESULTS_DIR: ${{ runner.temp }}/eacp-cross-plane-v1.3-results
+        run: bash experiments/github_actions/run_cross_plane_v1_3.sh
+
+      - name: Create stable archive subject
+        id: archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          ARCHIVE="${RUNNER_TEMP}/eacp-cross-plane-v1.3-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.tar.gz"
+          tar --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner \
+            -czf "${ARCHIVE}" -C "${EACP_RESULTS_DIR}" .
+          sha256sum "${ARCHIVE}" > "${ARCHIVE}.sha256"
+          echo "archive=${ARCHIVE}" >> "${GITHUB_OUTPUT}"
+
+      - name: Attest the evidence archive
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: ${{ steps.archive.outputs.archive }}
+
+      - name: Upload evidence, archive, and digest
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: eacp-cross-plane-v1.3-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: |
+            ${{ env.EACP_RESULTS_DIR }}/
+            ${{ steps.archive.outputs.archive }}
+            ${{ steps.archive.outputs.archive }}.sha256
+
+      - name: Record claim boundary in job summary
+        shell: bash
+        run: |
+          {
+            echo '## EACP cross-plane v1.3'
+            echo
+            echo "Run/attempt: \`${GITHUB_RUN_ID}/${GITHUB_RUN_ATTEMPT}\`"
+            echo
+            echo 'The run observed exact GitHub Actions → Kubernetes correlation, an immutable OCI subject digest, a correlation-free negative control, and an expected RBAC denial.'
+            echo
+            echo 'The attestation protects the produced archive digest and builder identity; it does not prove the semantic truth of upstream events. Recapture the completed run metadata after this job finishes, as documented in the experiment README.'
+          } >> "${GITHUB_STEP_SUMMARY}"

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/obedebessa/eacp-operational-provenance/v1.3.0/spec/schema/eacp-evidence-collection-v1.3.schema.json",
+  "title": "EACP Profile 1.3 evidence collection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "records"],
+  "properties": {
+    "profile": {"const": "eacp.collection/1.3"},
+    "records": {
+      "type": "array",
+      "items": {"$ref": "eacp-core-evidence-record-v1.3.schema.json"}
+    }
+  },
+  "description": "Collection-level source-key uniqueness is a semantic constraint enforced by the EACP reference validator."
+}
+

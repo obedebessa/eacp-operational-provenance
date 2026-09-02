@@ -1,0 +1,47 @@
+{
+  "id": 987654321,
+  "node_id": "WFR_fixture_only",
+  "run_number": 17,
+  "run_attempt": 2,
+  "workflow_id": 112233,
+  "name": "Fixture delivery workflow",
+  "path": ".github/workflows/fixture.yml",
+  "event": "workflow_dispatch",
+  "status": "completed",
+  "conclusion": "success",
+  "head_branch": "main",
+  "head_sha": "0123456789abcdef0123456789abcdef01234567",
+  "created_at": "2026-01-02T03:04:05Z",
+  "run_started_at": "2026-01-02T03:04:06Z",
+  "updated_at": "2026-01-02T03:06:00Z",
+  "html_url": "https://github.com/example/eacp-fixture/actions/runs/987654321?token=must-not-survive",
+  "url": "https://api.github.com/repos/example/eacp-fixture/actions/runs/987654321",
+  "jobs_url": "https://api.github.com/repos/example/eacp-fixture/actions/runs/987654321/jobs",
+  "artifacts_url": "https://api.github.com/repos/example/eacp-fixture/actions/runs/987654321/artifacts",
+  "actor": {
+    "login": "fixture-actor",
+    "id": 2468,
+    "type": "User",
+    "html_url": "https://github.com/fixture-actor"
+  },
+  "triggering_actor": {
+    "login": "fixture-trigger",
+    "id": 1357,
+    "type": "User",
+    "html_url": "https://github.com/fixture-trigger"
+  },
+  "head_commit": {
+    "id": "0123456789abcdef0123456789abcdef01234567",
+    "message": "This fixture-only commit message must not be retained",
+    "author": {
+      "name": "Fixture Person",
+      "email": "fixture-secret@example.invalid"
+    }
+  },
+  "repository": {
+    "id": 424242,
+    "full_name": "example/eacp-fixture",
+    "private": false,
+    "html_url": "https://github.com/example/eacp-fixture"
+  }
+}

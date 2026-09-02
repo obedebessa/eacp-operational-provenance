@@ -1,0 +1,95 @@
+{
+  "profile": "eacp.profile/1.3",
+  "source_type": "github.actions.run",
+  "source_id": "github://repositories/424242/actions/runs/9001/attempts/1",
+  "source_ts": "2026-09-02T14:00:00Z",
+  "observed_ts": "2026-09-02T14:00:05Z",
+  "actors": {
+    "initiator": {
+      "id": "example-user",
+      "type": "human",
+      "scope": {
+        "type": "organization",
+        "id": "github://organizations/example"
+      }
+    },
+    "triggering_actor": {
+      "id": "example-user",
+      "type": "human",
+      "scope": {
+        "type": "organization",
+        "id": "github://organizations/example"
+      }
+    },
+    "execution_principal": {
+      "id": "github-actions",
+      "type": "automation",
+      "scope": {
+        "type": "repository",
+        "id": "github://repositories/424242"
+      }
+    }
+  },
+  "service": {
+    "id": "checkout-api",
+    "type": "logical_service",
+    "scope": {
+      "type": "environment",
+      "id": "urn:eacp:environment:example:production"
+    }
+  },
+  "intent": "software_delivery",
+  "policy": ".github/workflows/deploy.yml@refs/heads/main",
+  "action": "execute_workflow",
+  "outcome": "success",
+  "source_pointer": "https://example.invalid/actions/runs/9001",
+  "source_digest": {
+    "algorithm": "sha256",
+    "value": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "representation": "sanitized_canonical_json",
+    "canonicalization": "EACP example fixture canonical JSON; synthetic data"
+  },
+  "links": [
+    {
+      "type": "operational_correlation",
+      "value": "release-2026-09-02.1",
+      "scope": {
+        "type": "environment",
+        "id": "urn:eacp:environment:example:production"
+      },
+      "evidence_method": "explicit"
+    },
+    {
+      "type": "vcs_revision",
+      "value": "0123456789abcdef0123456789abcdef01234567",
+      "scope": {
+        "type": "repository",
+        "id": "github://repositories/424242"
+      },
+      "evidence_method": "source_native"
+    },
+    {
+      "type": "artifact_digest",
+      "value": "sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+      "scope": {
+        "type": "repository",
+        "id": "registry.example.invalid/checkout-api"
+      },
+      "evidence_method": "digest_match"
+    },
+    {
+      "type": "deployment_uid",
+      "value": "4bd54a10-f2b8-45e9-b86f-09eb94bde001",
+      "scope": {
+        "type": "cluster",
+        "id": "urn:eacp:cluster:example:production-us-east"
+      },
+      "evidence_method": "source_native"
+    }
+  ],
+  "extensions": {
+    "org.eacp/example": {
+      "synthetic": true
+    }
+  }
+}

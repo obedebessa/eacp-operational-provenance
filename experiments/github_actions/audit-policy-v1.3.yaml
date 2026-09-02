@@ -1,0 +1,32 @@
+apiVersion: audit.k8s.io/v1
+kind: Policy
+
+# Request/response bodies are retained only for the isolated experiment
+# namespace and non-secret resource types. The public extractor removes source
+# IPs and other credential-adjacent values before anything is archived.
+omitStages:
+  - RequestReceived
+omitManagedFields: true
+
+rules:
+  - level: None
+    resources:
+      - group: ""
+        resources: ["secrets", "serviceaccounts/token"]
+      - group: "authentication.k8s.io"
+        resources: ["tokenreviews"]
+      - group: "authorization.k8s.io"
+        resources: ["subjectaccessreviews", "selfsubjectaccessreviews", "localsubjectaccessreviews"]
+
+  - level: RequestResponse
+    namespaces: ["eacp-cross-plane-v13"]
+    verbs: ["create", "get", "list", "update", "patch", "delete", "deletecollection"]
+    resources:
+      - group: ""
+        resources: ["configmaps", "serviceaccounts", "pods", "events"]
+      - group: "apps"
+        resources: ["deployments", "replicasets"]
+      - group: "rbac.authorization.k8s.io"
+        resources: ["roles", "rolebindings"]
+
+  - level: Metadata
