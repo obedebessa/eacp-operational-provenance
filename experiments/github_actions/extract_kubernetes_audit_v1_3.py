@@ -4,8 +4,8 @@
 This intentionally small extractor accepts API-server audit JSONL produced by
 the isolated kind cluster.  It publishes only namespace-scoped, sanitized
 records, projects the existing 13 EACP columns, and fails closed unless the
-positive correlation, correlation-free negative control, and RBAC denial are
-all present.
+source-native positive correlation, correlation-free negative control, and a
+target-bound adapter-explicit RBAC denial are all present.
 """
 
 from __future__ import annotations
@@ -165,7 +165,45 @@ def object_name(record: dict[str, Any]) -> str:
     return str(object_ref.get("name") or metadata.get("name") or "unknown-object")
 
 
-def normalize(record: dict[str, Any], namespace: str) -> dict[str, str]:
+def object_target(record: dict[str, Any]) -> dict[str, str]:
+    object_ref = record.get("objectRef") if isinstance(record.get("objectRef"), dict) else {}
+    return {
+        "api_group": str(object_ref.get("apiGroup") or ""),
+        "resource": str(object_ref.get("resource") or ""),
+        "namespace": namespace_of(record),
+        "name": object_name(record),
+    }
+
+
+def correlation_binding(
+    record: dict[str, Any],
+    *,
+    adapter_correlation_id: str | None = None,
+    adapter_target: dict[str, str] | None = None,
+) -> tuple[str | None, str]:
+    native = correlation_of(record)
+    if native:
+        return native, "source_native_object_annotation"
+    # Authorization can reject before decoding requestObject. Bind that 403 to
+    # the chain only when its source-native target tuple exactly equals the
+    # already correlated Deployment selected by the adapter.
+    if (
+        adapter_correlation_id
+        and adapter_target
+        and status_value(record)[0] == 403
+        and object_target(record) == adapter_target
+    ):
+        return adapter_correlation_id, "adapter_explicit_exact_target"
+    return None, "absent"
+
+
+def normalize(
+    record: dict[str, Any],
+    namespace: str,
+    *,
+    adapter_correlation_id: str | None = None,
+    adapter_target: dict[str, str] | None = None,
+) -> dict[str, str]:
     object_ref = record.get("objectRef") if isinstance(record.get("objectRef"), dict) else {}
     metadata = object_metadata(record)
     labels = metadata.get("labels") if isinstance(metadata.get("labels"), dict) else {}
@@ -177,7 +215,12 @@ def normalize(record: dict[str, Any], namespace: str) -> dict[str, str]:
     source_ts = str(record.get("requestReceivedTimestamp") or record.get("stageTimestamp") or "")
     observed_ts = str(record.get("stageTimestamp") or source_ts)
     _, outcome = status_value(record)
-    correlation = correlation_of(record) or f"k8s://{namespace}/{resource}/{name}"
+    correlation, _ = correlation_binding(
+        record,
+        adapter_correlation_id=adapter_correlation_id,
+        adapter_target=adapter_target,
+    )
+    correlation = correlation or f"k8s://{namespace}/{resource}/{name}"
     return {
         "source_type": "kubernetes.audit",
         "source_id": f"{audit_id}:{stage}",
@@ -210,16 +253,44 @@ def kubernetes_actor_reference(actor: str, cluster_id: str, namespace: str) -> d
     return {"id": actor, "type": actor_type, "scope": scope}
 
 
-def profile_links(record: dict[str, Any], cluster_id: str) -> list[dict[str, Any]]:
+def profile_links(
+    record: dict[str, Any],
+    cluster_id: str,
+    *,
+    adapter_correlation_id: str | None = None,
+    adapter_target: dict[str, str] | None = None,
+) -> list[dict[str, Any]]:
     annotations = annotations_of(record)
     links: list[dict[str, Any]] = []
-    correlation = annotations.get("eacp.io/correlation-id")
+    correlation, binding_method = correlation_binding(
+        record,
+        adapter_correlation_id=adapter_correlation_id,
+        adapter_target=adapter_target,
+    )
     if correlation:
         links.append(
             {
                 "type": "operational_correlation",
                 "value": str(correlation),
                 "scope": dict(EXPERIMENT_SCOPE),
+                "evidence_method": (
+                    "source_native"
+                    if binding_method == "source_native_object_annotation"
+                    else "explicit"
+                ),
+            }
+        )
+    if binding_method == "adapter_explicit_exact_target":
+        target = object_target(record)
+        links.append(
+            {
+                "type": "custom",
+                "custom_type": "kubernetes_resource_target",
+                "value": (
+                    f"kubernetes://{target['api_group']}/{target['resource']}"
+                    f"/{target['namespace']}/{target['name']}"
+                ),
+                "scope": {"type": "cluster", "id": cluster_id},
                 "evidence_method": "source_native",
             }
         )
@@ -279,7 +350,13 @@ def profile_links(record: dict[str, Any], cluster_id: str) -> list[dict[str, Any
 
 
 def profile_record(
-    record: dict[str, Any], row: dict[str, str], *, namespace: str, cluster_id: str
+    record: dict[str, Any],
+    row: dict[str, str],
+    *,
+    namespace: str,
+    cluster_id: str,
+    adapter_correlation_id: str | None = None,
+    adapter_target: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     authenticated = record.get("user") if isinstance(record.get("user"), dict) else {}
     authenticated_name = str(authenticated.get("username") or "unknown")
@@ -322,13 +399,23 @@ def profile_record(
                 "EACP Kubernetes audit extractor v1.3"
             ),
         },
-        "links": profile_links(record, cluster_id),
+        "links": profile_links(
+            record,
+            cluster_id,
+            adapter_correlation_id=adapter_correlation_id,
+            adapter_target=adapter_target,
+        ),
         "extensions": {
             "org.eacp/kubernetes_audit_adapter": {
                 "resource": str(object_ref.get("resource") or "unknown-resource"),
                 "namespace": namespace,
                 "http_status": code,
-                "explicit_correlation_present": correlation_of(record) is not None,
+                "source_native_correlation_present": correlation_of(record) is not None,
+                "correlation_binding": correlation_binding(
+                    record,
+                    adapter_correlation_id=adapter_correlation_id,
+                    adapter_target=adapter_target,
+                )[1],
                 "compatibility_projection_content_hash": row["content_hash"],
             }
         },
@@ -350,6 +437,9 @@ def write_outputs(
     namespace: str,
     correlation_id: str,
     denied_principal: str,
+    denied_target_api_group: str,
+    denied_target_resource: str,
+    denied_target_name: str,
     negative_control_name: str,
     cluster_id: str,
 ) -> dict[str, Any]:
@@ -369,9 +459,30 @@ def write_outputs(
     if not scoped:
         raise ExtractionError(f"no audit records found for namespace {namespace!r}")
     sanitized = [sanitize(record) for record in scoped]
-    rows = [normalize(record, namespace) for record in sanitized]
+    denied_target = {
+        "api_group": denied_target_api_group,
+        "resource": denied_target_resource,
+        "namespace": namespace,
+        "name": denied_target_name,
+    }
+    rows = [
+        normalize(
+            record,
+            namespace,
+            adapter_correlation_id=correlation_id,
+            adapter_target=denied_target,
+        )
+        for record in sanitized
+    ]
     profile_records = [
-        profile_record(record, row, namespace=namespace, cluster_id=cluster_id)
+        profile_record(
+            record,
+            row,
+            namespace=namespace,
+            cluster_id=cluster_id,
+            adapter_correlation_id=correlation_id,
+            adapter_target=denied_target,
+        )
         for record, row in zip(sanitized, rows)
     ]
     validate_profile_records(profile_records)
@@ -379,7 +490,7 @@ def write_outputs(
     denial = [
         record
         for record in sanitized
-        if correlation_of(record) == correlation_id
+        if object_target(record) == denied_target
         and effective_actor(record) == denied_principal
         and status_value(record)[0] == 403
     ]
@@ -388,7 +499,23 @@ def write_outputs(
     if not positive:
         raise ExtractionError("positive control failed: no audit record contains the expected correlation ID")
     if not denial:
-        raise ExtractionError("RBAC control failed: no matching HTTP 403 from the expected principal")
+        target_403 = sum(
+            object_target(record) == denied_target and status_value(record)[0] == 403
+            for record in sanitized
+        )
+        principal_403 = sum(
+            effective_actor(record) == denied_principal and status_value(record)[0] == 403
+            for record in sanitized
+        )
+        native_correlation_403 = sum(
+            correlation_of(record) == correlation_id and status_value(record)[0] == 403
+            for record in sanitized
+        )
+        raise ExtractionError(
+            "RBAC control failed: no HTTP 403 matched both expected principal and exact target; "
+            f"target_403={target_403}, principal_403={principal_403}, "
+            f"source_native_correlation_403={native_correlation_403}"
+        )
     if not negative:
         raise ExtractionError("negative control failed: no audit record exists for the control object")
     if negative_with_id:
@@ -427,6 +554,12 @@ def write_outputs(
         },
         "rbac_denial": {
             "expected_principal": denied_principal,
+            "expected_target": denied_target,
+            "binding_method": "adapter_explicit_exact_target",
+            "source_native_correlation_required": False,
+            "source_native_correlation_records": sum(
+                correlation_of(record) == correlation_id for record in denial
+            ),
             "matching_http_403_records": len(denial),
             "validated": True,
         },
@@ -470,6 +603,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--namespace", required=True)
     parser.add_argument("--correlation-id", required=True)
     parser.add_argument("--denied-principal", required=True)
+    parser.add_argument("--denied-target-api-group", required=True)
+    parser.add_argument("--denied-target-resource", required=True)
+    parser.add_argument("--denied-target-name", required=True)
     parser.add_argument("--negative-control-name", required=True)
     parser.add_argument("--cluster-id", required=True)
     return parser
@@ -484,6 +620,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             namespace=args.namespace,
             correlation_id=args.correlation_id,
             denied_principal=args.denied_principal,
+            denied_target_api_group=args.denied_target_api_group,
+            denied_target_resource=args.denied_target_resource,
+            denied_target_name=args.denied_target_name,
             negative_control_name=args.negative_control_name,
             cluster_id=args.cluster_id,
         )

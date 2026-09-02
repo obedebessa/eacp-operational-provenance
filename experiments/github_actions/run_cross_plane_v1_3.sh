@@ -151,8 +151,10 @@ kubectl --context "${CONTEXT}" apply -f "${WORKLOAD}"
 kubectl --context "${CONTEXT}" --namespace "${NAMESPACE}" \
   wait --for=condition=Available "deployment/${DEPLOYMENT}" --timeout=120s
 
-# The denied request repeats the positive correlation in its request body so
-# the audit record can be joined even though admission correctly rejects it.
+# Authorization can reject the request before Kubernetes decodes its patch
+# body. The extractor therefore binds the 403 to the already correlated
+# Deployment by exact API group/resource/namespace/name and labels that link
+# adapter-explicit rather than source-native correlation.
 DENIAL_PATCH=$(python3 - "${CORRELATION_ID}" <<'PY'
 import json
 import sys
@@ -169,7 +171,7 @@ DENIAL_OUTPUT=$(kubectl --context "${CONTEXT}" --namespace "${NAMESPACE}" \
 DENIAL_STATUS=$?
 set -e
 if [[ "${DENIAL_STATUS}" == "0" || "${DENIAL_OUTPUT}" != *"Forbidden"* ]]; then
-  echo "Expected RBAC denial was not observed: ${DENIAL_OUTPUT}" >&2
+  echo "Expected target-bound RBAC denial was not observed: ${DENIAL_OUTPUT}" >&2
   exit 1
 fi
 
@@ -203,6 +205,9 @@ python3 "${SCRIPT_DIR}/extract_kubernetes_audit_v1_3.py" \
   --namespace "${NAMESPACE}" \
   --correlation-id "${CORRELATION_ID}" \
   --denied-principal "${DENIED_PRINCIPAL}" \
+  --denied-target-api-group apps \
+  --denied-target-resource deployments \
+  --denied-target-name "${DEPLOYMENT}" \
   --negative-control-name "${NEGATIVE_CONTROL}" \
   --cluster-id "kind://${CLUSTER_NAME}" >/dev/null
 
@@ -227,6 +232,7 @@ python3 "${SCRIPT_DIR}/eacp_gha_v1_3.py" join \
   --kubernetes-object-json "${RESULTS_DIR}/kubernetes/deployment.json" \
   --negative-control-object-json "${RESULTS_DIR}/kubernetes/negative_control.json" \
   --kubernetes-pods-json "${RESULTS_DIR}/kubernetes/pods.json" \
+  --kubernetes-audit-summary-json "${RESULTS_DIR}/kubernetes/audit/audit_summary.json" \
   --output "${RESULTS_DIR}/cross_plane_join.json"
 
 python3 - "${RESULTS_DIR}/cross_plane_join.json" \
@@ -240,8 +246,9 @@ pods = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
 expected_image = sys.argv[3]
 if report["status"] != "observed_cross_plane_link_with_subject_digest":
     raise SystemExit(f"cross-plane validation failed: {report['status']}")
-if report["kubernetes"]["rbac_denied_rows_with_exact_id"] < 1:
-    raise SystemExit("cross-plane validation failed: correlated RBAC denial is missing")
+binding = report["kubernetes"]["rbac_denial_binding"]
+if not binding or binding["binding_method"] != "adapter_explicit_exact_target":
+    raise SystemExit("cross-plane validation failed: target-bound adapter-explicit RBAC denial is missing")
 negative = report["kubernetes"]["negative_control"]
 if not negative or not negative["correlation_annotation_absent"]:
     raise SystemExit("cross-plane validation failed: negative control contains a correlation ID")
@@ -255,7 +262,7 @@ pod_images = [
 ]
 if expected_image not in pod_images:
     raise SystemExit(f"cross-plane validation failed: Pod does not retain {expected_image}")
-print("Validated exact correlation, immutable subject digest, negative control, and RBAC denial.")
+print("Validated source-native exact positive correlation, immutable subject digest, negative control, and target-bound adapter-explicit RBAC denial.")
 PY
 
 python3 - "${RESULTS_DIR}/environment.json" \

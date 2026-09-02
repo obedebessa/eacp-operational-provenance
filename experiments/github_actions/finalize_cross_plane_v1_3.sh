@@ -76,6 +76,7 @@ python3 "${SCRIPT_DIR}/eacp_gha_v1_3.py" join \
   --kubernetes-object-json "${SOURCE_RESULTS}/kubernetes/deployment.json" \
   --negative-control-object-json "${SOURCE_RESULTS}/kubernetes/negative_control.json" \
   --kubernetes-pods-json "${SOURCE_RESULTS}/kubernetes/pods.json" \
+  --kubernetes-audit-summary-json "${SOURCE_RESULTS}/kubernetes/audit/audit_summary.json" \
   --output "${FINAL_OUTPUT}/cross_plane_join_completed.json"
 
 python3 - "${FINAL_OUTPUT}/cross_plane_join_completed.json" \
@@ -89,8 +90,9 @@ join_path, source_manifest, output_path = map(Path, sys.argv[1:])
 report = json.loads(join_path.read_text(encoding="utf-8"))
 if report["status"] != "observed_cross_plane_link_with_subject_digest":
     raise SystemExit(f"completed join validation failed: {report['status']}")
-if report["kubernetes"]["rbac_denied_rows_with_exact_id"] < 1:
-    raise SystemExit("completed join is missing the correlated RBAC denial")
+binding = report["kubernetes"]["rbac_denial_binding"]
+if not binding or binding["binding_method"] != "adapter_explicit_exact_target":
+    raise SystemExit("completed join is missing the target-bound adapter-explicit RBAC denial")
 value = {
     "schema_version": "eacp.cross-plane-finalization/1.3.0",
     "source_results_manifest_sha256": hashlib.sha256(source_manifest.read_bytes()).hexdigest(),

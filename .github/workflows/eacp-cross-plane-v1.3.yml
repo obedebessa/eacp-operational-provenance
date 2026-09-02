@@ -3,6 +3,10 @@ name: EACP cross-plane v1.3
 on:
   push:
     branches: ["eacp-v1.3-candidate"]
+    paths:
+      - .github/workflows/eacp-cross-plane-v1.3.yml
+      - experiments/github_actions/**
+      - spec/**
   workflow_dispatch:
 
 permissions:
@@ -94,7 +98,7 @@ jobs:
             echo
             echo "Run/attempt: \`${GITHUB_RUN_ID}/${GITHUB_RUN_ATTEMPT}\`"
             echo
-            echo 'The run observed exact GitHub Actions → Kubernetes correlation, an immutable OCI subject digest, a correlation-free negative control, and an expected RBAC denial.'
+            echo 'The run observed a source-native exact GitHub Actions → Kubernetes positive chain, an immutable OCI subject digest, a correlation-free negative control, and a target-bound adapter-explicit RBAC denial.'
             echo
             echo 'The attestation protects the produced archive digest and builder identity; it does not prove the semantic truth of upstream events. Recapture the completed run metadata after this job finishes, as documented in the experiment README.'
           } >> "${GITHUB_STEP_SUMMARY}"

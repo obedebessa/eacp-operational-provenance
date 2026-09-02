@@ -264,15 +264,40 @@ class GitHubActionsAdapterTests(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
+            audit_summary_path = root / "audit_summary.json"
+            audit_summary_path.write_text(
+                json.dumps(
+                    {
+                        "rbac_denial": {
+                            "expected_target": {
+                                "api_group": "apps",
+                                "resource": "deployments",
+                                "namespace": "fixture-namespace",
+                                "name": "fixture-deployment",
+                            },
+                            "binding_method": "adapter_explicit_exact_target",
+                            "source_native_correlation_required": False,
+                            "source_native_correlation_records": 0,
+                            "matching_http_403_records": 1,
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
             report = adapter.join_report(
                 snapshot,
                 kubernetes_csv=csv_path,
                 kubernetes_object=deployment_path,
                 negative_control_object=negative_path,
                 kubernetes_pods=pods_path,
+                kubernetes_audit_summary=audit_summary_path,
             )
             self.assertEqual(report["status"], "observed_cross_plane_link_with_subject_digest")
-            self.assertEqual(report["kubernetes"]["rbac_denied_rows_with_exact_id"], 1)
+            self.assertEqual(report["kubernetes"]["rbac_denied_rows_in_projection"], 1)
+            self.assertEqual(
+                report["kubernetes"]["rbac_denial_binding"]["binding_method"],
+                "adapter_explicit_exact_target",
+            )
             self.assertTrue(report["kubernetes"]["negative_control"]["correlation_annotation_absent"])
             self.assertTrue(report["kubernetes"]["pods"]["pod_spec_subject_exact_match"])
             self.assertTrue(report["kubernetes"]["pods"]["runtime_image_id_exact_subject_digest_match"])

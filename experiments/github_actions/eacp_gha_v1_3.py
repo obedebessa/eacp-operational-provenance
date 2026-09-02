@@ -1354,6 +1354,7 @@ def join_report(
     kubernetes_object: Path | None,
     negative_control_object: Path | None = None,
     kubernetes_pods: Path | None = None,
+    kubernetes_audit_summary: Path | None = None,
 ) -> dict[str, Any]:
     correlation_id = str(snapshot["projection"]["correlation_id"])
     github_rows = project_evidence(snapshot)
@@ -1472,6 +1473,45 @@ def join_report(
         if str(row.get("outcome", "")).startswith("403")
         or "forbidden" in str(row.get("outcome", "")).lower()
     ]
+    rbac_binding: dict[str, Any] | None = None
+    if kubernetes_audit_summary:
+        audit_summary = require_mapping(
+            load_json(kubernetes_audit_summary, "Kubernetes audit summary"),
+            "Kubernetes audit summary",
+        )
+        denial_summary = require_mapping(
+            audit_summary.get("rbac_denial"), "Kubernetes audit summary.rbac_denial"
+        )
+        expected_target = require_mapping(
+            denial_summary.get("expected_target"),
+            "Kubernetes audit summary.rbac_denial.expected_target",
+        )
+        if denial_summary.get("binding_method") != "adapter_explicit_exact_target":
+            raise AdapterError("Kubernetes target-bound RBAC denial uses an unsupported binding method")
+        matching_denials = denial_summary.get("matching_http_403_records")
+        if not isinstance(matching_denials, int) or matching_denials < 1:
+            raise AdapterError("Kubernetes audit summary has no target-bound HTTP 403")
+        if object_identity:
+            api_version = str(object_identity.get("api_version") or "")
+            observed_target = {
+                "api_group": api_version.split("/", 1)[0] if "/" in api_version else "",
+                "resource": str(object_identity.get("kind") or "").lower() + "s",
+                "namespace": object_identity.get("namespace"),
+                "name": object_identity.get("name"),
+            }
+            if expected_target != observed_target:
+                raise AdapterError(
+                    "Target-bound RBAC denial does not equal the source-native correlated Kubernetes object target"
+                )
+        rbac_binding = {
+            "binding_method": "adapter_explicit_exact_target",
+            "target": expected_target,
+            "matching_http_403_records": matching_denials,
+            "source_native_correlation_records": int(
+                denial_summary.get("source_native_correlation_records") or 0
+            ),
+            "source_native_correlation_required": False,
+        }
     if observed and subject_match and workload_image_match:
         status = "observed_cross_plane_link_with_subject_digest"
     elif observed:
@@ -1480,7 +1520,10 @@ def join_report(
         status = "no_matching_kubernetes_evidence_observed"
     return {
         "schema_version": "eacp.cross-plane-join/1.3.0",
-        "join_rule": "exact equality on eacp.io/correlation-id / EACP correlation_id",
+        "join_rule": (
+            "exact equality on eacp.io/correlation-id / EACP correlation_id for the positive chain; "
+            "RBAC denial is adapter-explicit via exact Kubernetes target equality"
+        ),
         "correlation_id": correlation_id,
         "status": status,
         "github_actions": {
@@ -1497,7 +1540,8 @@ def join_report(
             "kubernetes_source_rows_with_exact_id": len(kubernetes_rows),
             "source_ids": [row["source_id"] for row in kubernetes_rows],
             "principals": sorted({row.get("actor", "unknown") for row in kubernetes_rows}),
-            "rbac_denied_rows_with_exact_id": len(denied_rows),
+            "rbac_denied_rows_in_projection": len(denied_rows),
+            "rbac_denial_binding": rbac_binding,
             "object_supplied": kubernetes_object is not None,
             "object": object_identity,
             "negative_control": negative_control,
@@ -1578,6 +1622,7 @@ def build_parser() -> argparse.ArgumentParser:
     join.add_argument("--kubernetes-object-json", type=Path)
     join.add_argument("--negative-control-object-json", type=Path)
     join.add_argument("--kubernetes-pods-json", type=Path)
+    join.add_argument("--kubernetes-audit-summary-json", type=Path)
     join.add_argument("--output", type=Path)
 
     annotate = subparsers.add_parser(
@@ -1753,6 +1798,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 kubernetes_object=args.kubernetes_object_json,
                 negative_control_object=args.negative_control_object_json,
                 kubernetes_pods=args.kubernetes_pods_json,
+                kubernetes_audit_summary=args.kubernetes_audit_summary_json,
             )
             output_json(report, args.output)
         elif args.command == "annotate":

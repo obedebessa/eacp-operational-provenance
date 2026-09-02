@@ -155,8 +155,11 @@ The workflow performs the following sequence:
 5. Create a Deployment whose metadata, Pod template, and pinned image carry the
    correlation ID, Git commit, run identity, and OCI subject digest.
 6. Create `negative-control-no-correlation` without the correlation annotation.
-7. Attempt a correlated Deployment patch while impersonating the read-only
-   `eacp-observer` service account and require a Kubernetes `Forbidden` result.
+7. Attempt a patch against that exact Deployment while impersonating the
+   read-only `eacp-observer` service account, and require a Kubernetes
+   `Forbidden` result. If authorization rejects before decoding the patch body,
+   bind the 403 by exact API group/resource/namespace/name and label the result
+   adapter-explicit—not source-native correlation.
 8. Sanitize and project Kubernetes audit evidence, then fail closed unless the
    positive match, negative control, and HTTP 403 record all exist.
 9. Capture distinct GitHub actor, triggering actor, Kubernetes administrative
@@ -258,7 +261,8 @@ python3 -m unittest discover -s experiments/github_actions/tests -v
 The committed tests cover deterministic projection, source minimization,
 checksum tamper detection, private-source guardrails, ZIP traversal rejection,
 non-mutating annotation planning, exact and near-miss joins, subject-digest
-linking, the no-ID negative control, and the correlated RBAC denial.
+linking, the no-ID negative control, and the target-bound adapter-explicit RBAC
+denial.
 
 ## Current validation boundary
 

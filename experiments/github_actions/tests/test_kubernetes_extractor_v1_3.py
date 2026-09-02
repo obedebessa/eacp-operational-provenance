@@ -30,6 +30,7 @@ def audit_record(
     actor: str = "kubernetes-admin",
     impersonated: str | None = None,
     namespace: str = NAMESPACE,
+    api_group: str = "",
 ) -> dict:
     annotations = {}
     if correlation is not None:
@@ -52,7 +53,12 @@ def audit_record(
         "verb": verb,
         "user": {"username": actor},
         "sourceIPs": ["192.0.2.10"],
-        "objectRef": {"resource": resource, "namespace": namespace, "name": name},
+        "objectRef": {
+            "apiGroup": api_group,
+            "resource": resource,
+            "namespace": namespace,
+            "name": name,
+        },
         "requestObject": {
             "metadata": {
                 "name": name,
@@ -75,7 +81,7 @@ def audit_record(
 
 class KubernetesExtractorTests(unittest.TestCase):
     def records(self) -> list[dict]:
-        return [
+        records = [
             audit_record(
                 "audit-positive",
                 resource="deployments",
@@ -83,6 +89,7 @@ class KubernetesExtractorTests(unittest.TestCase):
                 verb="patch",
                 code=200,
                 correlation=CORRELATION,
+                api_group="apps",
             ),
             audit_record(
                 "audit-denied",
@@ -90,8 +97,9 @@ class KubernetesExtractorTests(unittest.TestCase):
                 name="fixture-deployment",
                 verb="patch",
                 code=403,
-                correlation=CORRELATION,
+                correlation=None,
                 impersonated=DENIED,
+                api_group="apps",
             ),
             audit_record(
                 "audit-negative",
@@ -111,6 +119,10 @@ class KubernetesExtractorTests(unittest.TestCase):
                 namespace="other-namespace",
             ),
         ]
+        # Kubernetes authorization can reject the request before decoding the
+        # patch body, even under RequestResponse audit level.
+        records[1].pop("requestObject")
+        return records
 
     def write_log(self, path: Path, records: list[dict]) -> None:
         path.write_text(
@@ -130,12 +142,19 @@ class KubernetesExtractorTests(unittest.TestCase):
                 namespace=NAMESPACE,
                 correlation_id=CORRELATION,
                 denied_principal=DENIED,
+                denied_target_api_group="apps",
+                denied_target_resource="deployments",
+                denied_target_name="fixture-deployment",
                 negative_control_name="negative-control-no-correlation",
                 cluster_id="kind://fixture-cluster",
             )
             self.assertEqual(summary["scope"]["namespace_records"], 3)
-            self.assertEqual(summary["positive_control"]["matching_audit_records"], 2)
+            self.assertEqual(summary["positive_control"]["matching_audit_records"], 1)
             self.assertEqual(summary["rbac_denial"]["matching_http_403_records"], 1)
+            self.assertEqual(
+                summary["rbac_denial"]["binding_method"],
+                "adapter_explicit_exact_target",
+            )
             self.assertTrue(summary["negative_control"]["validated"])
             public = (output / "public_filtered_audit.jsonl").read_text(encoding="utf-8")
             self.assertNotIn("sourceIPs", public)
@@ -162,6 +181,21 @@ class KubernetesExtractorTests(unittest.TestCase):
                     "deployment_uid",
                 },
             )
+            denied_profile = next(
+                record for record in profile_records if record["source_id"].startswith("audit-denied")
+            )
+            operational_link = next(
+                link
+                for link in denied_profile["links"]
+                if link["type"] == "operational_correlation"
+            )
+            self.assertEqual(operational_link["evidence_method"], "explicit")
+            self.assertEqual(
+                denied_profile["extensions"]["org.eacp/kubernetes_audit_adapter"][
+                    "correlation_binding"
+                ],
+                "adapter_explicit_exact_target",
+            )
 
     def test_negative_control_with_id_is_rejected(self):
         records = self.records()
@@ -177,6 +211,9 @@ class KubernetesExtractorTests(unittest.TestCase):
                     namespace=NAMESPACE,
                     correlation_id=CORRELATION,
                     denied_principal=DENIED,
+                    denied_target_api_group="apps",
+                    denied_target_resource="deployments",
+                    denied_target_name="fixture-deployment",
                     negative_control_name="negative-control-no-correlation",
                     cluster_id="kind://fixture-cluster",
                 )
