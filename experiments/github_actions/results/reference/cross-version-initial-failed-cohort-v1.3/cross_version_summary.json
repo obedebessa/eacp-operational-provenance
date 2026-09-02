@@ -1,27 +1,35 @@
 {
   "aggregate": {
-    "attested_tar_parity_checks": 0,
-    "capture_time_offline_attestation_verifications": 0,
+    "attested_in_run_tar_parity_checks": 0,
+    "capture_time_captured_root_attestation_verifications": 0,
+    "capture_time_default_trust_attestation_verifications": 0,
+    "completed_finalizations_builder_attested": 0,
+    "completed_finalizations_checksum_and_identity_validated": 0,
     "distinct_successful_correlation_ids": 0,
     "exact_client_server_kubelet_version_checks": 0,
     "external_reproductions": 0,
+    "failure_logs_with_exact_version_validation_marker": 9,
+    "failure_logs_with_premature_artifact_assertion_marker": 9,
     "first_attempt_outcomes_per_version": 3,
     "identifier_discovery_evaluated": false,
     "independent_organizations": 0,
     "non_successful_first_attempt_runs": 9,
     "preserved_first_attempt_outcomes": 9,
+    "sole_exact_tag_invocations_observed_at_capture": 9,
     "successful_adapter_explicit_403_controls": 0,
-    "successful_full_evidence_runs": 0,
     "successful_negative_controls": 0,
     "successful_positive_controls": 0,
+    "successful_runs_satisfying_all_predeclared_criteria": 0,
     "successful_separate_oci_digest_checks": 0
   },
   "attestation_verification_boundary": {
-    "capture_time": "Each stored verification result was produced with gh attestation verify, the downloaded bundle, an on-disk trusted root, exact repository/workflow/source digest/source-ref constraints, and denial of self-hosted runners.",
-    "repository_verify_mode": "The --verify command re-performs cryptographic verification for every successful run archive against its captured trusted root and then enforces exact certificate, Rekor timestamp, statement, subject, builder, source, ref, runner, and invocation fields.",
-    "semantic_limit": "The attestation authenticates the archive digest and builder identity; it does not establish the semantic truth of workflow-controlled predicate or event data."
+    "capture_time": "Each successful run's in-run TAR was verified twice with gh attestation verify: once with GitHub CLI's default trust configuration and once with the downloaded bundle plus a captured trusted root. Both used exact repository, workflow, signer digest, source digest, source ref, predicate, and hosted-runner constraints.",
+    "post_run_finalization": "Completed-state GitHub API recapture and the three-row final join occur after the workflow completes. They are checksum-bound and identity-validated but are not part of the GitHub-builder-attested in-run TAR.",
+    "repository_verify_mode": "The --verify command re-performs cryptographic verification for every successful in-run TAR against its captured trusted root and then enforces exact certificate, Rekor timestamp, statement, subject, builder, source, ref, runner, and invocation fields.",
+    "semantic_limit": "The attestation authenticates the archive digest and builder identity; it does not establish the semantic truth of workflow-controlled predicate or event data.",
+    "trust_bootstrap": "Offline re-verification is reproducible relative to the captured root bytes. The captured root is not self-authenticating; the capture-time default-trust verification and an optional fresh online check provide the external trust bootstrap."
   },
-  "claim_boundary": "Nine preserved, separately identified first-attempt workflow outcomes form a balanced three-version by three-repeat controlled cohort. Successful runs hold one protocol commit, workflow, kind binary, workload, subject digest, and hosted-runner class constant while changing the pinned Kubernetes minor version. The repeats show procedural repeatability only; no confidence interval, failure-rate inference, or production reliability claim is made. The workflow generates the joining identifier. This is not identifier discovery, cross-provider or cross-organization replication, a field deployment, or external reproduction.",
+  "claim_boundary": "Nine preserved, separately identified first-attempt workflow outcomes form a balanced three-version by three-repeat controlled cohort. Successful runs hold one protocol commit, workflow, kind binary, workload, subject digest, and hosted-runner class constant while changing the pinned Kubernetes minor version. The repeats show procedural repeatability only; no confidence interval, failure-rate inference, or production reliability claim is made. A capture-time public API observation records that each exact tag had one workflow invocation; that observation is checksum-bound but not a signed API response. The GitHub attestation authenticates the in-run TAR only. Completed-state recapture and finalization are checksum-bound and identity-validated, not builder-attested. The workflow generates the joining identifier. This is not identifier discovery, cross-provider or cross-organization replication, a field deployment, or external reproduction.",
   "kind_version": "v0.32.0",
   "overall_status": "failed",
   "per_version": {
@@ -44,7 +52,7 @@
         2,
         3
       ],
-      "successful_full_evidence_runs": 0
+      "successful_runs_satisfying_all_predeclared_criteria": 0
     },
     "v1.35.5": {
       "evidence_tags": [
@@ -65,7 +73,7 @@
         2,
         3
       ],
-      "successful_full_evidence_runs": 0
+      "successful_runs_satisfying_all_predeclared_criteria": 0
     },
     "v1.36.1": {
       "evidence_tags": [
@@ -86,172 +94,253 @@
         2,
         3
       ],
-      "successful_full_evidence_runs": 0
+      "successful_runs_satisfying_all_predeclared_criteria": 0
     }
   },
   "protocol_commit": "15d72da095a0c7640b9318b50b28728e76d68928",
   "run_results": [
     {
+      "all_predeclared_criteria_validated": false,
+      "completed_finalization_builder_attested": false,
+      "completed_finalization_checksum_and_identity_validated": false,
       "conclusion": "failure",
       "criteria_status": "not_satisfied",
       "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-01",
-      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
-      "full_evidence_verified": false,
+      "failure_evidence_classification": "frozen_github_run_job_step_and_minimized_log_observation",
+      "full_failed_log_sha256": "21787b598af2170df69d68d7725905ad8c2121d8165b2aba5b0a110ca497fd83",
       "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "in_run_tar_builder_attestation_verified": false,
       "job_conclusion": "failure",
       "kubernetes_version": "v1.34.8",
       "non_success_steps": [
         "Execute real cross-plane chain and controls"
+      ],
+      "recognized_failure_log_markers": [
+        "exact_client_server_kubelet_profile_validated",
+        "premature_completed_artifact_row_assertion"
       ],
       "run_id": 33689275761,
       "run_index": 1,
       "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689275761",
+      "sole_exact_tag_invocation_at_capture": true,
       "status": "completed",
-      "verified_manifest_entries": 2
+      "verified_manifest_entries": 4
     },
     {
+      "all_predeclared_criteria_validated": false,
+      "completed_finalization_builder_attested": false,
+      "completed_finalization_checksum_and_identity_validated": false,
       "conclusion": "failure",
       "criteria_status": "not_satisfied",
       "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-02",
-      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
-      "full_evidence_verified": false,
+      "failure_evidence_classification": "frozen_github_run_job_step_and_minimized_log_observation",
+      "full_failed_log_sha256": "ccb3151cce15ca7f74c7fd3aae2c074e163b0b11a8881071704a10607987e55e",
       "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "in_run_tar_builder_attestation_verified": false,
       "job_conclusion": "failure",
       "kubernetes_version": "v1.34.8",
       "non_success_steps": [
         "Execute real cross-plane chain and controls"
+      ],
+      "recognized_failure_log_markers": [
+        "exact_client_server_kubelet_profile_validated",
+        "premature_completed_artifact_row_assertion"
       ],
       "run_id": 33689284057,
       "run_index": 2,
       "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689284057",
+      "sole_exact_tag_invocation_at_capture": true,
       "status": "completed",
-      "verified_manifest_entries": 2
+      "verified_manifest_entries": 4
     },
     {
+      "all_predeclared_criteria_validated": false,
+      "completed_finalization_builder_attested": false,
+      "completed_finalization_checksum_and_identity_validated": false,
       "conclusion": "failure",
       "criteria_status": "not_satisfied",
       "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-03",
-      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
-      "full_evidence_verified": false,
+      "failure_evidence_classification": "frozen_github_run_job_step_and_minimized_log_observation",
+      "full_failed_log_sha256": "cede86b8b7b2215a99eb82839f8a7388f4174b2abf2286252d81c1b01d767693",
       "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "in_run_tar_builder_attestation_verified": false,
       "job_conclusion": "failure",
       "kubernetes_version": "v1.34.8",
       "non_success_steps": [
         "Execute real cross-plane chain and controls"
       ],
+      "recognized_failure_log_markers": [
+        "exact_client_server_kubelet_profile_validated",
+        "premature_completed_artifact_row_assertion"
+      ],
       "run_id": 33689294904,
       "run_index": 3,
       "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689294904",
+      "sole_exact_tag_invocation_at_capture": true,
       "status": "completed",
-      "verified_manifest_entries": 2
+      "verified_manifest_entries": 4
     },
     {
+      "all_predeclared_criteria_validated": false,
+      "completed_finalization_builder_attested": false,
+      "completed_finalization_checksum_and_identity_validated": false,
       "conclusion": "failure",
       "criteria_status": "not_satisfied",
       "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-01",
-      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
-      "full_evidence_verified": false,
+      "failure_evidence_classification": "frozen_github_run_job_step_and_minimized_log_observation",
+      "full_failed_log_sha256": "253d4c3c985f25d1676769800a27da360765a7e06f64ae50054cb3b8e3ac6fc8",
       "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "in_run_tar_builder_attestation_verified": false,
       "job_conclusion": "failure",
       "kubernetes_version": "v1.35.5",
       "non_success_steps": [
         "Execute real cross-plane chain and controls"
+      ],
+      "recognized_failure_log_markers": [
+        "exact_client_server_kubelet_profile_validated",
+        "premature_completed_artifact_row_assertion"
       ],
       "run_id": 33689279446,
       "run_index": 1,
       "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689279446",
+      "sole_exact_tag_invocation_at_capture": true,
       "status": "completed",
-      "verified_manifest_entries": 2
+      "verified_manifest_entries": 4
     },
     {
+      "all_predeclared_criteria_validated": false,
+      "completed_finalization_builder_attested": false,
+      "completed_finalization_checksum_and_identity_validated": false,
       "conclusion": "failure",
       "criteria_status": "not_satisfied",
       "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-02",
-      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
-      "full_evidence_verified": false,
+      "failure_evidence_classification": "frozen_github_run_job_step_and_minimized_log_observation",
+      "full_failed_log_sha256": "48db803edd479ea545a75d16f8cde93780d3b29b882521fcf497fa9b52128a8b",
       "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "in_run_tar_builder_attestation_verified": false,
       "job_conclusion": "failure",
       "kubernetes_version": "v1.35.5",
       "non_success_steps": [
         "Execute real cross-plane chain and controls"
+      ],
+      "recognized_failure_log_markers": [
+        "exact_client_server_kubelet_profile_validated",
+        "premature_completed_artifact_row_assertion"
       ],
       "run_id": 33689287000,
       "run_index": 2,
       "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689287000",
+      "sole_exact_tag_invocation_at_capture": true,
       "status": "completed",
-      "verified_manifest_entries": 2
+      "verified_manifest_entries": 4
     },
     {
+      "all_predeclared_criteria_validated": false,
+      "completed_finalization_builder_attested": false,
+      "completed_finalization_checksum_and_identity_validated": false,
       "conclusion": "failure",
       "criteria_status": "not_satisfied",
       "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-03",
-      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
-      "full_evidence_verified": false,
+      "failure_evidence_classification": "frozen_github_run_job_step_and_minimized_log_observation",
+      "full_failed_log_sha256": "fecc3de2673d10de8e4dc843d3fac1352c7393145d7e5f813db72b004e38dcb1",
       "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "in_run_tar_builder_attestation_verified": false,
       "job_conclusion": "failure",
       "kubernetes_version": "v1.35.5",
       "non_success_steps": [
         "Execute real cross-plane chain and controls"
       ],
+      "recognized_failure_log_markers": [
+        "exact_client_server_kubelet_profile_validated",
+        "premature_completed_artifact_row_assertion"
+      ],
       "run_id": 33689291864,
       "run_index": 3,
       "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689291864",
+      "sole_exact_tag_invocation_at_capture": true,
       "status": "completed",
-      "verified_manifest_entries": 2
+      "verified_manifest_entries": 4
     },
     {
+      "all_predeclared_criteria_validated": false,
+      "completed_finalization_builder_attested": false,
+      "completed_finalization_checksum_and_identity_validated": false,
       "conclusion": "failure",
       "criteria_status": "not_satisfied",
       "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-01",
-      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
-      "full_evidence_verified": false,
+      "failure_evidence_classification": "frozen_github_run_job_step_and_minimized_log_observation",
+      "full_failed_log_sha256": "57cf57d9e0b90ce96f5fb2bd82379d7aedc566c005439362b87d8f2190d552eb",
       "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "in_run_tar_builder_attestation_verified": false,
       "job_conclusion": "failure",
       "kubernetes_version": "v1.36.1",
       "non_success_steps": [
         "Execute real cross-plane chain and controls"
+      ],
+      "recognized_failure_log_markers": [
+        "exact_client_server_kubelet_profile_validated",
+        "premature_completed_artifact_row_assertion"
       ],
       "run_id": 33689281853,
       "run_index": 1,
       "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689281853",
+      "sole_exact_tag_invocation_at_capture": true,
       "status": "completed",
-      "verified_manifest_entries": 2
+      "verified_manifest_entries": 4
     },
     {
+      "all_predeclared_criteria_validated": false,
+      "completed_finalization_builder_attested": false,
+      "completed_finalization_checksum_and_identity_validated": false,
       "conclusion": "failure",
       "criteria_status": "not_satisfied",
       "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-02",
-      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
-      "full_evidence_verified": false,
+      "failure_evidence_classification": "frozen_github_run_job_step_and_minimized_log_observation",
+      "full_failed_log_sha256": "41cee53a40a3854b48a2595573792cc5ef122a89aa38c77e5f9aa4262ad08cf8",
       "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "in_run_tar_builder_attestation_verified": false,
       "job_conclusion": "failure",
       "kubernetes_version": "v1.36.1",
       "non_success_steps": [
         "Execute real cross-plane chain and controls"
+      ],
+      "recognized_failure_log_markers": [
+        "exact_client_server_kubelet_profile_validated",
+        "premature_completed_artifact_row_assertion"
       ],
       "run_id": 33689288013,
       "run_index": 2,
       "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689288013",
+      "sole_exact_tag_invocation_at_capture": true,
       "status": "completed",
-      "verified_manifest_entries": 2
+      "verified_manifest_entries": 4
     },
     {
+      "all_predeclared_criteria_validated": false,
+      "completed_finalization_builder_attested": false,
+      "completed_finalization_checksum_and_identity_validated": false,
       "conclusion": "failure",
       "criteria_status": "not_satisfied",
       "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-03",
-      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
-      "full_evidence_verified": false,
+      "failure_evidence_classification": "frozen_github_run_job_step_and_minimized_log_observation",
+      "full_failed_log_sha256": "470fd517c99725b4050c8ffa98f4c640ad41c1a459f9a56933749591f4bf077d",
       "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "in_run_tar_builder_attestation_verified": false,
       "job_conclusion": "failure",
       "kubernetes_version": "v1.36.1",
       "non_success_steps": [
         "Execute real cross-plane chain and controls"
       ],
+      "recognized_failure_log_markers": [
+        "exact_client_server_kubelet_profile_validated",
+        "premature_completed_artifact_row_assertion"
+      ],
       "run_id": 33689302997,
       "run_index": 3,
       "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689302997",
+      "sole_exact_tag_invocation_at_capture": true,
       "status": "completed",
-      "verified_manifest_entries": 2
+      "verified_manifest_entries": 4
     }
   ],
   "schema_version": "eacp.cross-version-summary/1.3.0",

@@ -1,2 +1,4 @@
-d6e6fe4a47fe5f08c6d1b51c9acd4891a3a83adc5bb4442aec80af5cf6d8a473  ./job_outcome.json
+51b69909b64d06c0360856e3f7017eab1115a2a84b59020a2a0502bf8c39c715  ./failed_log_observation.json
+387033ae38123a7b2f2600d4d37e8924237f2d56b03c4f7819276f264a5c4461  ./job_outcome.json
 8fa176ff5b61b47ea1db8056455d644a52a96cbeeb23719c3022bfb9b2f7e0fd  ./run_metadata.json
+0283a2b4fb8038a98434f54a265d67baa89faebbcda27aa05411b14c26c5f2d0  ./tag_invocation.json

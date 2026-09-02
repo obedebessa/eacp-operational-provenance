@@ -83,6 +83,13 @@ def load_object(path: Path) -> dict[str, Any]:
     return value
 
 
+def load_json_value(path: Path, label: str) -> Any:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise CohortError(f"invalid JSON at {label}: {path}") from exc
+
+
 def require_object(value: Any, label: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise CohortError(f"expected JSON object at {label}")
@@ -98,6 +105,228 @@ def parse_timestamp(value: Any, label: str) -> None:
         raise CohortError(f"malformed timestamp at {label}: {value!r}") from exc
     if parsed.tzinfo is None:
         raise CohortError(f"timestamp lacks a timezone at {label}: {value!r}")
+
+
+def validate_tag_invocation_observation(
+    path: Path, identity: dict[str, Any]
+) -> dict[str, Any]:
+    value = load_object(path)
+    expected_fields = {
+        "schema_version",
+        "repository",
+        "workflow_path",
+        "evidence_tag",
+        "protocol_commit",
+        "selected_run_id",
+        "captured_at",
+        "source_acquisition",
+        "query",
+        "total_count_at_capture",
+        "sole_exact_tag_invocation_at_capture",
+        "selection_policy",
+        "run",
+        "claim_boundary",
+    }
+    if set(value) != expected_fields:
+        raise CohortError(f"run {identity['run_id']} tag-invocation fields differ")
+    expected = {
+        "schema_version": "eacp.tag-invocation-observation/1.3.0",
+        "repository": REPOSITORY,
+        "workflow_path": WORKFLOW_PATH,
+        "evidence_tag": identity["evidence_tag"],
+        "protocol_commit": identity["head_sha"],
+        "selected_run_id": identity["run_id"],
+        "total_count_at_capture": 1,
+        "sole_exact_tag_invocation_at_capture": True,
+    }
+    for field, expected_value in expected.items():
+        if value.get(field) != expected_value:
+            raise CohortError(
+                f"run {identity['run_id']} tag-invocation {field} differs from the cohort"
+            )
+    parse_timestamp(value.get("captured_at"), f"run {identity['run_id']} invocation capture")
+    if not isinstance(value.get("source_acquisition"), str) or not value["source_acquisition"]:
+        raise CohortError(f"run {identity['run_id']} tag invocation lacks its acquisition method")
+    if "run_attempt=1 alone is not treated as proof" not in str(
+        value.get("selection_policy") or ""
+    ):
+        raise CohortError(f"run {identity['run_id']} tag selection policy is weakened")
+    if "not a signed GitHub API response" not in str(value.get("claim_boundary") or ""):
+        raise CohortError(f"run {identity['run_id']} tag-invocation boundary is missing")
+    expected_query = {
+        "hostname": "github.com",
+        "branch": identity["evidence_tag"],
+        "event": "push",
+        "per_page": 100,
+    }
+    if value.get("query") != expected_query:
+        raise CohortError(f"run {identity['run_id']} tag-invocation query differs")
+    run = require_object(value.get("run"), f"run {identity['run_id']} invocation member")
+    expected_run_fields = {
+        "id",
+        "workflow_id",
+        "run_number",
+        "run_attempt",
+        "event",
+        "head_branch",
+        "head_sha",
+        "path",
+        "status",
+        "conclusion",
+        "created_at",
+        "run_started_at",
+        "updated_at",
+        "head_commit_timestamp",
+        "html_url",
+        "api_url",
+    }
+    if set(run) != expected_run_fields:
+        raise CohortError(f"run {identity['run_id']} tag-invocation run fields differ")
+    expected_run = {
+        "id": identity["run_id"],
+        "run_attempt": 1,
+        "event": "push",
+        "head_branch": identity["evidence_tag"],
+        "head_sha": identity["head_sha"],
+        "path": WORKFLOW_PATH,
+        "status": "completed",
+        "conclusion": identity["conclusion"],
+        "html_url": identity["run_url"],
+        "api_url": f"https://api.github.com/repos/{REPOSITORY}/actions/runs/{identity['run_id']}",
+    }
+    for field, expected_value in expected_run.items():
+        if run.get(field) != expected_value:
+            raise CohortError(f"run {identity['run_id']} tag-invocation run {field} differs")
+    for field in ("workflow_id", "run_number"):
+        if isinstance(run.get(field), bool) or not isinstance(run.get(field), int) or run[field] < 1:
+            raise CohortError(f"run {identity['run_id']} tag-invocation {field} is invalid")
+    for field in ("created_at", "updated_at", "head_commit_timestamp"):
+        parse_timestamp(run.get(field), f"run {identity['run_id']} invocation {field}")
+    if run.get("run_started_at") is not None:
+        parse_timestamp(run["run_started_at"], f"run {identity['run_id']} invocation start")
+    return value
+
+
+def validate_failed_log_observation(
+    path: Path, identity: dict[str, Any]
+) -> dict[str, Any]:
+    value = load_object(path)
+    expected_fields = {
+        "schema_version",
+        "repository",
+        "run_id",
+        "run_attempt",
+        "head_sha",
+        "evidence_tag",
+        "expected_kubernetes_version",
+        "conclusion",
+        "captured_at",
+        "source_acquisition",
+        "gh_cli_version",
+        "full_failed_log_sha256",
+        "full_failed_log_size_bytes",
+        "full_failed_log_retained",
+        "recognized_markers",
+        "diagnostic_boundary",
+    }
+    if set(value) != expected_fields:
+        raise CohortError(f"run {identity['run_id']} failed-log fields differ")
+    expected = {
+        "schema_version": "eacp.failed-log-observation/1.3.0",
+        "repository": REPOSITORY,
+        "run_id": identity["run_id"],
+        "run_attempt": 1,
+        "head_sha": identity["head_sha"],
+        "evidence_tag": identity["evidence_tag"],
+        "expected_kubernetes_version": identity["kubernetes_version"],
+        "conclusion": identity["conclusion"],
+        "full_failed_log_retained": False,
+    }
+    for field, expected_value in expected.items():
+        if value.get(field) != expected_value:
+            raise CohortError(f"run {identity['run_id']} failed-log {field} differs")
+    parse_timestamp(value.get("captured_at"), f"run {identity['run_id']} failed-log capture")
+    for field in ("source_acquisition", "gh_cli_version"):
+        if not isinstance(value.get(field), str) or not value[field]:
+            raise CohortError(f"run {identity['run_id']} failed-log {field} is missing")
+    if (
+        not isinstance(value.get("full_failed_log_sha256"), str)
+        or len(value["full_failed_log_sha256"]) != 64
+        or any(ch not in "0123456789abcdef" for ch in value["full_failed_log_sha256"])
+    ):
+        raise CohortError(f"run {identity['run_id']} failed-log fingerprint is invalid")
+    size = value.get("full_failed_log_size_bytes")
+    if isinstance(size, bool) or not isinstance(size, int) or size < 0:
+        raise CohortError(f"run {identity['run_id']} failed-log byte count is invalid")
+    if (
+        "not a signed origin record" not in str(value.get("diagnostic_boundary") or "")
+        or "do not convert the failed run into partial technical success"
+        not in str(value.get("diagnostic_boundary") or "")
+    ):
+        raise CohortError(f"run {identity['run_id']} failed-log boundary is weakened")
+    markers = value.get("recognized_markers")
+    if not isinstance(markers, list) or len(markers) > 2:
+        raise CohortError(f"run {identity['run_id']} failed-log markers are invalid")
+    expected_marker_fields = {
+        "marker",
+        "job_name",
+        "step_name",
+        "timestamp",
+        "message",
+        "selected_line_sha256",
+    }
+    observed_marker_names = []
+    for index, marker_value in enumerate(markers):
+        marker = require_object(marker_value, f"run {identity['run_id']} marker {index}")
+        if set(marker) != expected_marker_fields:
+            raise CohortError(f"run {identity['run_id']} failed-log marker fields differ")
+        if (
+            marker.get("job_name") != "github-actions-to-kubernetes"
+            or marker.get("step_name") != "Execute real cross-plane chain and controls"
+        ):
+            raise CohortError(f"run {identity['run_id']} failed-log marker source differs")
+        marker_name = marker.get("marker")
+        if marker_name == "exact_client_server_kubelet_profile_validated":
+            expected_message = (
+                "Validated exact client/server/kubelet profile: "
+                f"{identity['kubernetes_version']}"
+            )
+        elif marker_name == "premature_completed_artifact_row_assertion":
+            expected_message = (
+                "cross-plane validation failed: expected three GitHub evidence records"
+            )
+        else:
+            raise CohortError(f"run {identity['run_id']} has an unknown failed-log marker")
+        if marker.get("message") != expected_message:
+            raise CohortError(f"run {identity['run_id']} failed-log marker message differs")
+        parse_timestamp(marker.get("timestamp"), f"run {identity['run_id']} marker timestamp")
+        digest = marker.get("selected_line_sha256")
+        if (
+            not isinstance(digest, str)
+            or len(digest) != 64
+            or any(ch not in "0123456789abcdef" for ch in digest)
+        ):
+            raise CohortError(f"run {identity['run_id']} selected-line digest is invalid")
+        reconstructed_line = (
+            f"{marker['job_name']}\t{marker['step_name']}\t"
+            f"{marker['timestamp']} {marker['message']}"
+        ).encode("utf-8")
+        if hashlib.sha256(reconstructed_line).hexdigest() != digest:
+            raise CohortError(f"run {identity['run_id']} selected-line digest differs")
+        observed_marker_names.append(marker_name)
+    if len(observed_marker_names) != len(set(observed_marker_names)):
+        raise CohortError(f"run {identity['run_id']} repeats a failed-log marker")
+    if (
+        identity["head_sha"] == "15d72da095a0c7640b9318b50b28728e76d68928"
+        and identity["conclusion"] == "failure"
+        and observed_marker_names
+        != [
+            "exact_client_server_kubelet_profile_validated",
+            "premature_completed_artifact_row_assertion",
+        ]
+    ):
+        raise CohortError(f"run {identity['run_id']} lacks the initial failure diagnostics")
+    return value
 
 
 def normalized_tar_path(name: str) -> PurePosixPath:
@@ -461,18 +690,37 @@ def validate_attestation_policy(run_root: Path, protocol_commit: str, tag: str) 
 
     policy = load_object(attestation_root / "verification-policy.json")
     expected_policy = {
-        "schema_version": "eacp.attestation-verification-policy/1.3.0",
+        "schema_version": "eacp.attestation-verification-policy/1.3.1",
         "repository": REPOSITORY,
         "signer_workflow": SIGNER_WORKFLOW,
+        "signer_digest": protocol_commit,
         "source_digest": protocol_commit,
         "source_ref": f"refs/tags/{tag}",
         "predicate_type": PREDICATE_TYPE,
         "deny_self_hosted_runners": True,
         "bundle_on_disk": True,
+        "capture_time_default_trust_verification": True,
+        "capture_time_captured_root_verification": True,
         "custom_trusted_root_on_disk": True,
+        "trusted_root_sha256": sha256(trusted_root),
+        "attested_scope": "in_run_tar_archive_only",
+        "completed_finalization_builder_attested": False,
     }
-    if policy != expected_policy:
+    for field, expected in expected_policy.items():
+        if policy.get(field) != expected:
+            raise CohortError(f"{run_root.name} attestation policy {field} mismatch")
+    if set(policy) != set(expected_policy) | {"gh_cli_version", "trust_bootstrap_boundary"}:
         raise CohortError(f"{run_root.name} attestation verification policy mismatch")
+    gh_version = policy.get("gh_cli_version")
+    if not isinstance(gh_version, str) or not gh_version.startswith("gh version "):
+        raise CohortError(f"{run_root.name} lacks the capture-time GitHub CLI version")
+    boundary = policy.get("trust_bootstrap_boundary")
+    if (
+        not isinstance(boundary, str)
+        or "authenticity is not self-proving" not in boundary
+        or "default trust configuration" not in boundary
+    ):
+        raise CohortError(f"{run_root.name} omits the trusted-root bootstrap boundary")
     return trusted_root
 
 
@@ -492,6 +740,8 @@ def reverify_attestation(
         "attestation",
         "verify",
         str(archive),
+        "--hostname",
+        "github.com",
         "--bundle",
         str(bundle),
         "--custom-trusted-root",
@@ -500,10 +750,14 @@ def reverify_attestation(
         REPOSITORY,
         "--signer-workflow",
         SIGNER_WORKFLOW,
+        "--signer-digest",
+        protocol_commit,
         "--source-digest",
         protocol_commit,
         "--source-ref",
         f"refs/tags/{tag}",
+        "--predicate-type",
+        PREDICATE_TYPE,
         "--deny-self-hosted-runners",
         "--format",
         "json",
@@ -595,21 +849,32 @@ def verify_non_success_outcome(identity: dict[str, Any]) -> dict[str, Any]:
     conclusion = identity["conclusion"]
     if conclusion == "success":
         raise CohortError(f"run {run_id} cannot use the non-success evidence path")
-    expected_inventory = {"run_metadata.json", "job_outcome.json", "OUTCOME_SHA256SUMS"}
+    expected_inventory = {
+        "run_metadata.json",
+        "job_outcome.json",
+        "tag_invocation.json",
+        "failed_log_observation.json",
+        "OUTCOME_SHA256SUMS",
+    }
     inventory = filesystem_inventory(run_root)
     if set(inventory) != expected_inventory:
         raise CohortError(
             f"non-success run {run_id} must contain only the frozen minimal outcome files"
         )
     checks = verify_manifest(run_root, run_root / "OUTCOME_SHA256SUMS")
-    if checks != 2:
-        raise CohortError(f"non-success run {run_id} outcome manifest must bind two JSON files")
+    if checks != 4:
+        raise CohortError(f"non-success run {run_id} outcome manifest must bind four JSON files")
     listed_paths = []
     for raw in (run_root / "OUTCOME_SHA256SUMS").read_text(encoding="utf-8").splitlines():
         if raw.strip():
             _, relative = raw.split(None, 1)
             listed_paths.append(relative.strip().lstrip("*").removeprefix("./"))
-    if sorted(listed_paths) != ["job_outcome.json", "run_metadata.json"]:
+    if sorted(listed_paths) != [
+        "failed_log_observation.json",
+        "job_outcome.json",
+        "run_metadata.json",
+        "tag_invocation.json",
+    ]:
         raise CohortError(
             f"non-success run {run_id} outcome manifest has the wrong exact inventory"
         )
@@ -713,14 +978,31 @@ def verify_non_success_outcome(identity: dict[str, Any]) -> dict[str, Any]:
         for step in steps
         if step.get("conclusion") not in {None, "success", "skipped"}
     ]
+    invocation = validate_tag_invocation_observation(
+        run_root / "tag_invocation.json", identity
+    )
+    failed_log = validate_failed_log_observation(
+        run_root / "failed_log_observation.json", identity
+    )
+    marker_names = [marker["marker"] for marker in failed_log["recognized_markers"]]
     return {
         key: value for key, value in identity.items() if key not in {"run_root", "metadata"}
     } | {
         "criteria_status": "not_satisfied",
-        "full_evidence_verified": False,
-        "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
+        "all_predeclared_criteria_validated": False,
+        "sole_exact_tag_invocation_at_capture": invocation[
+            "sole_exact_tag_invocation_at_capture"
+        ],
+        "in_run_tar_builder_attestation_verified": False,
+        "completed_finalization_checksum_and_identity_validated": False,
+        "completed_finalization_builder_attested": False,
+        "failure_evidence_classification": (
+            "frozen_github_run_job_step_and_minimized_log_observation"
+        ),
         "job_conclusion": job.get("conclusion") if job else None,
         "non_success_steps": failed_steps,
+        "recognized_failure_log_markers": marker_names,
+        "full_failed_log_sha256": failed_log["full_failed_log_sha256"],
         "verified_manifest_entries": checks,
     }
 
@@ -737,6 +1019,9 @@ def verify_cohort_member(
     identity = member_identity(root, row, protocol_commit, targets, tag_run_indices)
     if identity["conclusion"] != "success":
         return verify_non_success_outcome(identity)
+    invocation = validate_tag_invocation_observation(
+        identity["run_root"] / "tag_invocation.json", identity
+    )
     result = verify_run(
         root,
         row,
@@ -750,7 +1035,13 @@ def verify_cohort_member(
             "status": "completed",
             "conclusion": "success",
             "criteria_status": "satisfied",
-            "full_evidence_verified": True,
+            "all_predeclared_criteria_validated": True,
+            "sole_exact_tag_invocation_at_capture": invocation[
+                "sole_exact_tag_invocation_at_capture"
+            ],
+            "in_run_tar_builder_attestation_verified": True,
+            "completed_finalization_checksum_and_identity_validated": True,
+            "completed_finalization_builder_attested": False,
         }
     )
     return result
@@ -982,14 +1273,36 @@ def verify_run(
         raise CohortError(f"run {run_id} attestation subject mismatch")
     if statement.get("predicateType") != PREDICATE_TYPE:
         raise CohortError(f"run {run_id} attestation predicate mismatch")
-    verification_records = validate_verification_file(
-        run_root / "attestation/verification.json",
+    default_verification_path = (
+        run_root / "attestation/verification-default-trust.json"
+    )
+    captured_root_verification_path = (
+        run_root / "attestation/verification-captured-root.json"
+    )
+    default_verification_records = validate_verification_file(
+        default_verification_path,
         sigstore_bundle=sigstore_bundle,
         statement=statement,
         protocol_commit=protocol_commit,
         tag=tag,
         run_id=run_id,
     )
+    captured_root_verification_records = validate_verification_file(
+        captured_root_verification_path,
+        sigstore_bundle=sigstore_bundle,
+        statement=statement,
+        protocol_commit=protocol_commit,
+        tag=tag,
+        run_id=run_id,
+    )
+    if load_json_value(
+        default_verification_path, f"run {run_id} default-trust verification"
+    ) != load_json_value(
+        captured_root_verification_path, f"run {run_id} captured-root verification"
+    ):
+        raise CohortError(
+            f"run {run_id} default-trust and captured-root verification outputs differ"
+        )
     trusted_root = validate_attestation_policy(run_root, protocol_commit, tag)
     if reverify_attestations:
         reverify_attestation(
@@ -1021,7 +1334,12 @@ def verify_run(
         "separate_oci_digest_check": True,
         "archive_sha256": archive_digest,
         "attestation_bundle_sha256": sha256(bundles[0]),
-        "stored_attestation_verification_records": verification_records,
+        "capture_time_default_trust_verification_records": default_verification_records,
+        "capture_time_captured_root_verification_records": (
+            captured_root_verification_records
+        ),
+        "in_run_tar_builder_attestation_scope": True,
+        "completed_finalization_builder_attested": False,
         "attested_tar_matches_sibling_results_tree": True,
         "verified_manifest_entries": (
             outer_checks + archive_checks + public_checks + github_checks + audit_checks + final_checks
@@ -1077,12 +1395,29 @@ def summarize(
     if len({row["run_id"] for row in results}) != EXPECTED_RUNS:
         raise CohortError("cohort run IDs are not distinct")
     successful = [row for row in results if row["conclusion"] == "success"]
+    sole_tag_invocations = sum(
+        1 for row in results if row.get("sole_exact_tag_invocation_at_capture") is True
+    )
+    if sole_tag_invocations != EXPECTED_RUNS:
+        raise CohortError("not every cohort member has a sole exact-tag invocation observation")
     correlations = [row["correlation_id"] for row in successful]
     if len(set(correlations)) != len(correlations):
         raise CohortError("successful cohort correlation IDs are not distinct")
     if len({row["head_sha"] for row in results}) != 1:
         raise CohortError("cohort does not share one protocol commit")
     success_count = len(successful)
+    failure_version_markers = sum(
+        1
+        for row in results
+        if "exact_client_server_kubelet_profile_validated"
+        in row.get("recognized_failure_log_markers", [])
+    )
+    lifecycle_failure_markers = sum(
+        1
+        for row in results
+        if "premature_completed_artifact_row_assertion"
+        in row.get("recognized_failure_log_markers", [])
+    )
     overall_status = (
         "complete_success"
         if success_count == EXPECTED_RUNS
@@ -1095,7 +1430,7 @@ def summarize(
             "first_attempt_outcomes": len(
                 [row for row in results if row["kubernetes_version"] == version]
             ),
-            "successful_full_evidence_runs": len(
+            "successful_runs_satisfying_all_predeclared_criteria": len(
                 [
                     row
                     for row in successful
@@ -1156,7 +1491,7 @@ def summarize(
         "per_version": per_version,
         "aggregate": {
             "preserved_first_attempt_outcomes": EXPECTED_RUNS,
-            "successful_full_evidence_runs": success_count,
+            "successful_runs_satisfying_all_predeclared_criteria": success_count,
             "non_successful_first_attempt_runs": EXPECTED_RUNS - success_count,
             "distinct_successful_correlation_ids": len(correlations),
             "first_attempt_outcomes_per_version": REPEATS_PER_VERSION,
@@ -1165,22 +1500,41 @@ def summarize(
             "successful_negative_controls": success_count,
             "successful_adapter_explicit_403_controls": success_count,
             "successful_separate_oci_digest_checks": success_count,
-            "attested_tar_parity_checks": success_count,
-            "capture_time_offline_attestation_verifications": success_count,
+            "sole_exact_tag_invocations_observed_at_capture": sole_tag_invocations,
+            "failure_logs_with_exact_version_validation_marker": failure_version_markers,
+            "failure_logs_with_premature_artifact_assertion_marker": (
+                lifecycle_failure_markers
+            ),
+            "attested_in_run_tar_parity_checks": success_count,
+            "capture_time_default_trust_attestation_verifications": success_count,
+            "capture_time_captured_root_attestation_verifications": success_count,
+            "completed_finalizations_checksum_and_identity_validated": success_count,
+            "completed_finalizations_builder_attested": 0,
             "external_reproductions": 0,
             "independent_organizations": 0,
             "identifier_discovery_evaluated": False,
         },
         "attestation_verification_boundary": {
             "capture_time": (
-                "Each stored verification result was produced with gh attestation verify, the "
-                "downloaded bundle, an on-disk trusted root, exact repository/workflow/source "
-                "digest/source-ref constraints, and denial of self-hosted runners."
+                "Each successful run's in-run TAR was verified twice with gh attestation verify: "
+                "once with GitHub CLI's default trust configuration and once with the downloaded "
+                "bundle plus a captured trusted root. Both used exact repository, workflow, signer "
+                "digest, source digest, source ref, predicate, and hosted-runner constraints."
             ),
             "repository_verify_mode": (
                 "The --verify command re-performs cryptographic verification for every successful "
-                "run archive against its captured trusted root and then enforces exact certificate, Rekor "
-                "timestamp, statement, subject, builder, source, ref, runner, and invocation fields."
+                "in-run TAR against its captured trusted root and then enforces exact certificate, "
+                "Rekor timestamp, statement, subject, builder, source, ref, runner, and invocation fields."
+            ),
+            "trust_bootstrap": (
+                "Offline re-verification is reproducible relative to the captured root bytes. The "
+                "captured root is not self-authenticating; the capture-time default-trust verification "
+                "and an optional fresh online check provide the external trust bootstrap."
+            ),
+            "post_run_finalization": (
+                "Completed-state GitHub API recapture and the three-row final join occur after the "
+                "workflow completes. They are checksum-bound and identity-validated but are not part "
+                "of the GitHub-builder-attested in-run TAR."
             ),
             "semantic_limit": (
                 "The attestation authenticates the archive digest and builder identity; it does "
@@ -1194,6 +1548,10 @@ def summarize(
             "constant while changing the "
             "pinned Kubernetes minor version. The repeats show procedural repeatability only; no "
             "confidence interval, failure-rate inference, or production reliability claim is made. "
+            "A capture-time public API observation records that each exact tag had one workflow "
+            "invocation; that observation is checksum-bound but not a signed API response. The "
+            "GitHub attestation authenticates the in-run TAR only. Completed-state recapture and "
+            "finalization are checksum-bound and identity-validated, not builder-attested. "
             "The workflow generates the joining identifier. This is not identifier discovery, "
             "cross-provider or cross-organization replication, a field deployment, or external "
             "reproduction."

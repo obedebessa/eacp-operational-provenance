@@ -1,0 +1,60 @@
+{
+  "claim_boundary": "This validates exact identifier propagation and a deliberately denied operation in one isolated cluster. It does not establish production scalability, semantic causality, or artifact identity.",
+  "experiment": "EACP v1.3 GitHub Actions to Kubernetes exact-link observation",
+  "integrity": {
+    "distinct_content_hashes": 52,
+    "unique_source_keys": 52
+  },
+  "negative_control": {
+    "audit_records": 3,
+    "object_name": "negative-control-no-correlation",
+    "records_with_explicit_correlation_id": 0,
+    "validated": true
+  },
+  "positive_control": {
+    "correlation_id": "eacp-gha-1324720646-33690436849-1",
+    "matching_audit_records": 9,
+    "principals": [
+      "kubernetes-admin",
+      "system:node:eacp-v13-33690436849-1-control-plane",
+      "system:serviceaccount:kube-system:deployment-controller",
+      "system:serviceaccount:kube-system:replicaset-controller"
+    ],
+    "verbs": {
+      "create": 3,
+      "get": 6
+    }
+  },
+  "privacy": {
+    "complete_cluster_audit_log_retained": false,
+    "credential_identifiers_removed": true,
+    "manual_publication_review_required": true,
+    "namespace_filtered": true,
+    "source_ips_removed": true,
+    "token_subresource_excluded": true
+  },
+  "rbac_denial": {
+    "binding_method": "adapter_explicit_exact_target",
+    "expected_principal": "system:serviceaccount:eacp-cross-plane-v13:eacp-observer",
+    "expected_target": {
+      "api_group": "apps",
+      "name": "eacp-cross-plane",
+      "namespace": "eacp-cross-plane-v13",
+      "resource": "deployments"
+    },
+    "matching_http_403_records": 1,
+    "source_native_correlation_records": 0,
+    "source_native_correlation_required": false,
+    "validated": true
+  },
+  "scope": {
+    "cluster_id": "kind://eacp-v13-33690436849-1",
+    "evidence_rows": 52,
+    "input_records": 1431,
+    "namespace": "eacp-cross-plane-v13",
+    "namespace_records": 52,
+    "profile": "eacp.profile/1.3",
+    "profile_records": 52
+  },
+  "source_classification": "real_kubernetes_api_server_audit_metadata"
+}

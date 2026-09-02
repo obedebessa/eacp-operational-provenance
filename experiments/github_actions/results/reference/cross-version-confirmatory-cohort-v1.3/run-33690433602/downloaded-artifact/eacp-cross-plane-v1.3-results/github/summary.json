@@ -1,0 +1,66 @@
+{
+  "claim_boundary": [
+    "The adapter records GitHub REST API metadata; it does not independently authenticate GitHub's statements.",
+    "The generated Kubernetes patch is a proposed hand-off until matching Kubernetes evidence is observed.",
+    "Exact correlation-ID equality establishes an observable link, not semantic causality or artifact identity.",
+    "Fixtures under tests/ exercise code paths only and are never empirical observations."
+  ],
+  "experiment": "EACP v1.3 GitHub Actions metadata adapter",
+  "kubernetes_handoff": {
+    "annotation_key": "eacp.io/correlation-id",
+    "annotation_value": "eacp-gha-1324720646-33690433602-1",
+    "status": "patch_generated_not_observed",
+    "target": {
+      "annotation_key": "eacp.io/correlation-id",
+      "name": "eacp-cross-plane",
+      "namespace": "eacp-cross-plane-v13",
+      "resource": "deployment"
+    },
+    "verification_requires": "Apply the generated merge patch to the intended Deployment, capture Kubernetes object or audit evidence, then run the join command."
+  },
+  "privacy": {
+    "actor_login_retained": true,
+    "artifact_contents_retained": false,
+    "event_payload_retained": false,
+    "manual_publication_review_required": true,
+    "raw_api_payload_retained": false,
+    "repository_identity_retained": true,
+    "workflow_logs_retained": false
+  },
+  "projection": {
+    "all_rows_share_exact_correlation_id": true,
+    "correlation_id": "eacp-gha-1324720646-33690433602-1",
+    "evidence_rows": 2,
+    "profile": "eacp.profile/1.3",
+    "profile_records": 2,
+    "rows_by_source_type": {
+      "github.actions.job": 1,
+      "github.actions.run": 1
+    },
+    "service": "obedebessa/eacp-operational-provenance",
+    "subject": {
+      "digest": "sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a",
+      "uri": "registry.k8s.io/pause"
+    },
+    "typed_link_types": [
+      "operational_correlation",
+      "workflow_run",
+      "vcs_revision",
+      "artifact_digest"
+    ],
+    "unique_source_keys": 2
+  },
+  "schema_version": "eacp.github-actions.capture/1.3.0",
+  "source": {
+    "actor": "obedebessa",
+    "captured_at": "2026-09-02T22:28:14Z",
+    "commit_sha": "4cbf7d2fa0bb44585d258a3f37ce0c0d39ddea43",
+    "repository": "obedebessa/eacp-operational-provenance",
+    "run_attempt": 1,
+    "run_id": 33690433602,
+    "source_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33690433602",
+    "transport": "gh",
+    "workflow": "EACP cross-plane v1.3 / eacp-v1.3-evidence/k8s-v1.35.5/run-05 / ref-selected"
+  },
+  "source_classification": "real_github_actions_api_metadata"
+}

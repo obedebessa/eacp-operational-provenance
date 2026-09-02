@@ -214,8 +214,13 @@ class constant. Exact node images and matching kubectl checksums are centralized
 in [`kubernetes_targets_v1.3.json`](kubernetes_targets_v1.3.json).
 
 The first attempt for every tag is retained whether it succeeds or fails. A
-failure must not be silently replaced by a rerun. After a successful completion,
-capture the full evidence and fresh cryptographic verification with:
+failure must not be silently replaced by a rerun. Because GitHub's
+`run_attempt=1` means the first attempt of one run ID—not necessarily the first
+invocation of a reused tag—the capture also queries the exact workflow/tag pair
+and fails unless it finds exactly one invocation at capture time. The minimized
+query observation is checksum-bound as `tag_invocation.json`; it is public API
+evidence, not a signed API response. After a successful completion, capture the
+evidence and fresh cryptographic verification with:
 
 ```bash
 bash experiments/github_actions/capture_completed_run_v1_3.sh \
@@ -233,12 +238,17 @@ python3 experiments/github_actions/capture_run_outcome_v1_3.py \
 ```
 
 The outcome capturer stores no raw logs, tokens, or runner identifiers. It
-creates a checksum-bound failure record that the aggregate verifier includes in
-the cohort outcome rather than substituting a later run.
+retains only allowlisted version-validation and lifecycle-failure messages,
+plus the SHA-256 and byte count of the complete failed-step log. The diagnostic
+explicitly remains an unauthenticated public-log observation and never converts
+a failed run into partial success. The exact-tag invocation observation,
+minimized failure record, and diagnostic are checksum-bound and included in the
+cohort rather than substituting a later run.
 
 The aggregate verifier requires nine distinct run IDs, three first attempts per
-version, one shared source commit, exact client/server/kubelet versions, all
-controls, nested checksums, and fresh offline attestation verification. The
+version, one shared source commit, one observed exact-tag invocation per member,
+exact client/server/kubelet versions, all controls, nested checksums, and fresh
+offline attestation verification of each successful in-run TAR. The
 three runs per version are descriptive procedural repetitions—not inferential
 samples. This remains a compatibility/sensitivity cohort, not a production
 reliability estimate, field deployment, cross-provider study, or external
@@ -262,22 +272,41 @@ new read-only API capture, requires the same run attempt and correlation ID,
 requires GitHub status `completed`, captures the now-visible workflow artifact
 metadata, regenerates the join report against the already checksummed
 Kubernetes evidence, and writes a separate finalization manifest. It never
-rewrites the original runtime evidence.
+rewrites the original runtime evidence. This completed-state recapture is
+checksum-bound and identity-validated, but it is created after the original
+workflow and is therefore not part of that workflow's builder-attested TAR.
 
-Verify the GitHub attestation separately against the downloaded tar archive,
-an on-disk trusted root, and the exact repository/workflow/source constraints:
+At capture time, verify the GitHub attestation twice against the downloaded TAR
+and exact repository/workflow/source constraints. The first pass uses GitHub
+CLI's default trust configuration; the second uses a captured root for later
+offline replay:
 
 ```bash
-gh attestation trusted-root > trusted_root.jsonl
+gh attestation verify eacp-cross-plane-v1.3-RUN-ATTEMPT.tar.gz \
+  --bundle sha256-ARCHIVE_DIGEST.jsonl \
+  --repo OWNER/REPOSITORY \
+  --signer-workflow OWNER/REPOSITORY/.github/workflows/eacp-cross-plane-v1.3.yml \
+  --signer-digest EXACT_COMMIT_SHA \
+  --source-digest EXACT_COMMIT_SHA \
+  --source-ref refs/tags/EXACT_EVIDENCE_TAG \
+  --deny-self-hosted-runners
+
+gh attestation trusted-root --hostname github.com > trusted_root.jsonl
 gh attestation verify eacp-cross-plane-v1.3-RUN-ATTEMPT.tar.gz \
   --bundle sha256-ARCHIVE_DIGEST.jsonl \
   --custom-trusted-root trusted_root.jsonl \
   --repo OWNER/REPOSITORY \
   --signer-workflow OWNER/REPOSITORY/.github/workflows/eacp-cross-plane-v1.3.yml \
+  --signer-digest EXACT_COMMIT_SHA \
   --source-digest EXACT_COMMIT_SHA \
   --source-ref refs/tags/EXACT_EVIDENCE_TAG \
   --deny-self-hosted-runners
 ```
+
+The captured root makes later verification reproducible offline relative to
+those root bytes; it does not authenticate itself. The default-trust pass is the
+capture-time external trust bootstrap, and a reviewer may repeat that pass
+online against the current authenticated trust configuration.
 
 ## Run the protocol outside GitHub
 

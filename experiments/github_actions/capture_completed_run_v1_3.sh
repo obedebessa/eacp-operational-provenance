@@ -66,6 +66,14 @@ if [[ "${RUN_ATTEMPT}" != "1" ]]; then
   echo "Cohort capture accepts only first attempts; observed ${RUN_ATTEMPT}." >&2
   exit 1
 fi
+TAG_INVOCATION="${WORK_DIR}/tag_invocation.json"
+python3 "$(dirname "$0")/capture_tag_invocation_v1_3.py" \
+  --repo "${REPOSITORY}" \
+  --tag "${HEAD_BRANCH}" \
+  --run-id "${RUN_ID}" \
+  --protocol-commit "${HEAD_SHA}" \
+  --conclusion "${CONCLUSION}" \
+  --output "${TAG_INVOCATION}" >/dev/null
 
 ARTIFACT_NAME="eacp-cross-plane-v1.3-${RUN_ID}-${RUN_ATTEMPT}"
 DOWNLOAD_DIR="${WORK_DIR}/downloaded-artifact"
@@ -92,6 +100,7 @@ fi
 mkdir -p "${OUTPUT_DIR}"
 cp -R "${DOWNLOAD_DIR}" "${OUTPUT_DIR}/downloaded-artifact"
 cp "${RUN_METADATA}" "${OUTPUT_DIR}/run_metadata.json"
+cp "${TAG_INVOCATION}" "${OUTPUT_DIR}/tag_invocation.json"
 bash "$(dirname "$0")/finalize_cross_plane_v1_3.sh" \
   "${OUTPUT_DIR}/downloaded-artifact/eacp-cross-plane-v1.3-results" \
   "${OUTPUT_DIR}/finalized"
@@ -102,51 +111,89 @@ mkdir -p "${OUTPUT_DIR}/attestation"
   gh attestation download "../downloaded-artifact/${ARTIFACT_NAME}.tar.gz" \
     --repo "${REPOSITORY}"
 )
-IFS=$'\t' read -r BUNDLE_COUNT BUNDLE < <(
-  python3 - "${OUTPUT_DIR}/attestation" <<'PY'
-import sys
-from pathlib import Path
-
-paths = sorted(Path(sys.argv[1]).glob("sha256-*.jsonl"))
-print(f"{len(paths)}\t{paths[0] if paths else ''}")
-PY
-)
-if [[ "${BUNDLE_COUNT}" != "1" || -z "${BUNDLE}" ]]; then
-  echo "Expected exactly one downloaded attestation bundle; found ${BUNDLE_COUNT}." >&2
-  exit 1
-fi
+BUNDLE=$(python3 "$(dirname "$0")/normalize_attestation_bundle_v1_3.py" \
+  "${OUTPUT_DIR}/attestation")
 SOURCE_REF="refs/tags/${HEAD_BRANCH}"
 TRUSTED_ROOT="${OUTPUT_DIR}/attestation/trusted_root.jsonl"
-gh attestation trusted-root > "${TRUSTED_ROOT}"
+DEFAULT_VERIFICATION="${OUTPUT_DIR}/attestation/verification-default-trust.json"
+CAPTURED_ROOT_VERIFICATION="${OUTPUT_DIR}/attestation/verification-captured-root.json"
 gh attestation verify "${OUTPUT_DIR}/downloaded-artifact/${ARTIFACT_NAME}.tar.gz" \
+  --hostname github.com \
+  --bundle "${BUNDLE}" \
+  --repo "${REPOSITORY}" \
+  --signer-workflow "${SIGNER_WORKFLOW}" \
+  --signer-digest "${HEAD_SHA}" \
+  --source-digest "${HEAD_SHA}" \
+  --source-ref "${SOURCE_REF}" \
+  --predicate-type https://slsa.dev/provenance/v1 \
+  --deny-self-hosted-runners \
+  --format json > "${DEFAULT_VERIFICATION}"
+gh attestation trusted-root --hostname github.com > "${TRUSTED_ROOT}"
+gh attestation verify "${OUTPUT_DIR}/downloaded-artifact/${ARTIFACT_NAME}.tar.gz" \
+  --hostname github.com \
   --bundle "${BUNDLE}" \
   --custom-trusted-root "${TRUSTED_ROOT}" \
   --repo "${REPOSITORY}" \
   --signer-workflow "${SIGNER_WORKFLOW}" \
+  --signer-digest "${HEAD_SHA}" \
   --source-digest "${HEAD_SHA}" \
   --source-ref "${SOURCE_REF}" \
+  --predicate-type https://slsa.dev/provenance/v1 \
   --deny-self-hosted-runners \
-  --format json > "${OUTPUT_DIR}/attestation/verification.json"
+  --format json > "${CAPTURED_ROOT_VERIFICATION}"
 
-python3 - "${OUTPUT_DIR}/attestation/verification-policy.json" \
-  "${REPOSITORY}" "${SIGNER_WORKFLOW}" "${HEAD_SHA}" "${SOURCE_REF}" <<'PY'
+python3 - "${DEFAULT_VERIFICATION}" "${CAPTURED_ROOT_VERIFICATION}" <<'PY'
 import json
 import sys
 from pathlib import Path
 
-output, repository, signer_workflow, source_digest, source_ref = sys.argv[1:]
+default_path, captured_path = map(Path, sys.argv[1:])
+default = json.loads(default_path.read_text(encoding="utf-8"))
+captured = json.loads(captured_path.read_text(encoding="utf-8"))
+if default != captured:
+    raise SystemExit(
+        "default-trust and captured-root verification results differ semantically"
+    )
+PY
+
+GH_VERSION=$(gh --version | sed -n '1p')
+TRUSTED_ROOT_SHA256=$(shasum -a 256 "${TRUSTED_ROOT}" | awk '{print $1}')
+
+python3 - "${OUTPUT_DIR}/attestation/verification-policy.json" \
+  "${REPOSITORY}" "${SIGNER_WORKFLOW}" "${HEAD_SHA}" "${SOURCE_REF}" \
+  "${GH_VERSION}" "${TRUSTED_ROOT_SHA256}" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+(
+    output, repository, signer_workflow, source_digest, source_ref,
+    gh_version, trusted_root_sha256,
+) = sys.argv[1:]
 Path(output).write_text(
     json.dumps(
         {
-            "schema_version": "eacp.attestation-verification-policy/1.3.0",
+            "schema_version": "eacp.attestation-verification-policy/1.3.1",
             "repository": repository,
             "signer_workflow": signer_workflow,
+            "signer_digest": source_digest,
             "source_digest": source_digest,
             "source_ref": source_ref,
             "predicate_type": "https://slsa.dev/provenance/v1",
             "deny_self_hosted_runners": True,
             "bundle_on_disk": True,
+            "capture_time_default_trust_verification": True,
+            "capture_time_captured_root_verification": True,
             "custom_trusted_root_on_disk": True,
+            "trusted_root_sha256": trusted_root_sha256,
+            "gh_cli_version": gh_version,
+            "attested_scope": "in_run_tar_archive_only",
+            "completed_finalization_builder_attested": False,
+            "trust_bootstrap_boundary": (
+                "The captured root makes later verification offline and reproducible relative "
+                "to those root bytes. Its authenticity is not self-proving; capture therefore "
+                "also verifies the same bundle with GitHub CLI's default trust configuration."
+            ),
         },
         indent=2,
         sort_keys=True,

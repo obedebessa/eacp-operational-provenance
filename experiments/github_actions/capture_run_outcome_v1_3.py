@@ -15,6 +15,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Sequence
 
+try:
+    from . import capture_tag_invocation_v1_3 as tag_invocation
+except ImportError:  # Direct script execution.
+    import capture_tag_invocation_v1_3 as tag_invocation
+
 
 SCHEMA_VERSION = "eacp.cross-version-run-outcome/1.3.0"
 DEFAULT_REPOSITORY = "obedebessa/eacp-operational-provenance"
@@ -50,6 +55,16 @@ ALLOWED_CONCLUSIONS = {
 ALLOWED_JOB_STATUSES = {"completed"}
 ALLOWED_STEP_STATUSES = {"completed", "in_progress", "pending", "queued"}
 MAX_STEPS = 100
+INITIAL_PROTOCOL_COMMIT = "15d72da095a0c7640b9318b50b28728e76d68928"
+FAILED_LOG_SCHEMA_VERSION = "eacp.failed-log-observation/1.3.0"
+EXECUTION_STEP = "Execute real cross-plane chain and controls"
+VERSION_MARKER = re.compile(
+    r"^Validated exact client/server/kubelet profile: "
+    r"(?P<version>v1\.(?:34\.8|35\.5|36\.1))$"
+)
+LIFECYCLE_FAILURE_MESSAGE = (
+    "cross-plane validation failed: expected three GitHub evidence records"
+)
 
 
 class OutcomeError(ValueError):
@@ -109,6 +124,151 @@ def command_json(argv: Sequence[str], label: str) -> Any:
         return json.loads(completed.stdout)
     except json.JSONDecodeError as exc:
         raise OutcomeError(f"{label} returned invalid JSON") from exc
+
+
+def command_bytes(argv: Sequence[str], label: str) -> bytes:
+    try:
+        completed = subprocess.run(argv, check=False, capture_output=True)
+    except OSError as exc:
+        raise OutcomeError(f"could not execute {argv[0]!r}: {exc}") from exc
+    if completed.returncode != 0:
+        detail = completed.stderr.decode("utf-8", errors="replace").strip()
+        raise OutcomeError(f"{label} failed: {detail or f'exit status {completed.returncode}'}")
+    return completed.stdout
+
+
+def gh_cli_version() -> str:
+    raw = command_bytes(["gh", "--version"], "gh version")
+    try:
+        first = raw.decode("utf-8").splitlines()[0]
+    except (UnicodeDecodeError, IndexError) as exc:
+        raise OutcomeError("gh version returned no valid UTF-8 version line") from exc
+    return require_string(first, "gh CLI version", maximum=128)
+
+
+def capture_failed_log(repository: str, run_id: int) -> bytes:
+    return command_bytes(
+        [
+            "gh",
+            "run",
+            "view",
+            str(run_id),
+            "--repo",
+            repository,
+            "--attempt",
+            "1",
+            "--log-failed",
+        ],
+        "gh first-attempt failed-log capture",
+    )
+
+
+def build_failed_log_observation(
+    log_bytes: bytes,
+    *,
+    repository: str,
+    run_id: int,
+    protocol_commit: str,
+    evidence_tag: str,
+    conclusion: str,
+    captured_at: str,
+    acquisition: str,
+    gh_version: str,
+) -> dict[str, Any]:
+    """Retain only two exact diagnostic markers plus a fingerprint of the full log."""
+
+    try:
+        text = log_bytes.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise OutcomeError("failed-step log is not valid UTF-8") from exc
+    tag_match = TAG_PATTERN.fullmatch(evidence_tag)
+    if not tag_match:
+        raise OutcomeError("failed-log observation has an invalid evidence tag")
+    expected_version = tag_match.group(1)
+    normalized_captured_at = optional_timestamp(captured_at, "failed-log captured_at")
+    assert normalized_captured_at is not None
+    require_string(acquisition, "failed-log source acquisition", maximum=128)
+    require_string(gh_version, "failed-log gh CLI version", maximum=128)
+
+    retained: list[dict[str, Any]] = []
+    for raw_line in text.splitlines():
+        fields = raw_line.split("\t", 2)
+        if len(fields) != 3:
+            continue
+        job_name, step_name, timestamp_and_message = fields
+        if job_name != JOB_NAME or step_name != EXECUTION_STEP:
+            continue
+        try:
+            observed_timestamp, message = timestamp_and_message.split(" ", 1)
+        except ValueError:
+            continue
+        marker = None
+        version_match = VERSION_MARKER.fullmatch(message)
+        if version_match:
+            if version_match.group("version") != expected_version:
+                raise OutcomeError("failed log reports a Kubernetes version different from its tag")
+            marker = "exact_client_server_kubelet_profile_validated"
+        elif message == LIFECYCLE_FAILURE_MESSAGE:
+            marker = "premature_completed_artifact_row_assertion"
+        if marker is None:
+            continue
+        observed = optional_timestamp(observed_timestamp, f"failed-log {marker} timestamp")
+        assert observed is not None
+        retained.append(
+            {
+                "marker": marker,
+                "job_name": JOB_NAME,
+                "step_name": EXECUTION_STEP,
+                "timestamp": observed,
+                "message": message,
+                "selected_line_sha256": hashlib.sha256(raw_line.encode("utf-8")).hexdigest(),
+            }
+        )
+
+    markers = [row["marker"] for row in retained]
+    if len(markers) != len(set(markers)):
+        raise OutcomeError("failed log contains duplicate recognized diagnostic markers")
+    lifecycle_observed = "premature_completed_artifact_row_assertion" in markers
+    version_observed = "exact_client_server_kubelet_profile_validated" in markers
+    if lifecycle_observed and not version_observed:
+        raise OutcomeError("lifecycle failure marker lacks the preceding exact-version marker")
+    if protocol_commit == INITIAL_PROTOCOL_COMMIT and conclusion == "failure" and not (
+        lifecycle_observed and version_observed
+    ):
+        raise OutcomeError("initial-cohort failure log lacks its two predeclared diagnostic markers")
+    if lifecycle_observed:
+        marker_times = {
+            row["marker"]: datetime.fromisoformat(row["timestamp"].replace("Z", "+00:00"))
+            for row in retained
+        }
+        if marker_times["exact_client_server_kubelet_profile_validated"] >= marker_times[
+            "premature_completed_artifact_row_assertion"
+        ]:
+            raise OutcomeError("failed-log diagnostic markers are out of order")
+
+    return {
+        "schema_version": FAILED_LOG_SCHEMA_VERSION,
+        "repository": repository,
+        "run_id": run_id,
+        "run_attempt": 1,
+        "head_sha": protocol_commit,
+        "evidence_tag": evidence_tag,
+        "expected_kubernetes_version": expected_version,
+        "conclusion": conclusion,
+        "captured_at": normalized_captured_at,
+        "source_acquisition": acquisition,
+        "gh_cli_version": gh_version,
+        "full_failed_log_sha256": hashlib.sha256(log_bytes).hexdigest(),
+        "full_failed_log_size_bytes": len(log_bytes),
+        "full_failed_log_retained": False,
+        "recognized_markers": retained,
+        "diagnostic_boundary": (
+            "Only exact allowlisted program markers are retained; the full failed-step log is "
+            "represented by its SHA-256 fingerprint and byte count. GitHub log text is a public "
+            "API observation, not a signed origin record, and these markers do not convert the "
+            "failed run into partial technical success."
+        ),
+    }
 
 
 def capture_online(repository: str, run_id: int) -> dict[str, Any]:
@@ -318,7 +478,13 @@ def build_outcome(
     return run_metadata, outcome
 
 
-def write_outcome(output_dir: Path, run_metadata: dict[str, Any], outcome: dict[str, Any]) -> None:
+def write_outcome(
+    output_dir: Path,
+    run_metadata: dict[str, Any],
+    outcome: dict[str, Any],
+    invocation: dict[str, Any],
+    failed_log: dict[str, Any],
+) -> None:
     if os.path.lexists(output_dir):
         raise OutcomeError(f"refusing to overwrite existing output: {output_dir}")
     output_dir.parent.mkdir(parents=True, exist_ok=True)
@@ -328,17 +494,25 @@ def write_outcome(output_dir: Path, run_metadata: dict[str, Any], outcome: dict[
     try:
         metadata_path = temporary / "run_metadata.json"
         outcome_path = temporary / "job_outcome.json"
+        invocation_path = temporary / "tag_invocation.json"
+        failed_log_path = temporary / "failed_log_observation.json"
         metadata_path.write_text(
             json.dumps(run_metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
         outcome_path.write_text(
             json.dumps(outcome, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
+        invocation_path.write_text(
+            json.dumps(invocation, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        failed_log_path.write_text(
+            json.dumps(failed_log, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
         manifest = temporary / "OUTCOME_SHA256SUMS"
         manifest.write_text(
             "".join(
                 f"{sha256(path)}  ./{path.name}\n"
-                for path in (outcome_path, metadata_path)
+                for path in (failed_log_path, outcome_path, metadata_path, invocation_path)
             ),
             encoding="utf-8",
         )
@@ -358,6 +532,16 @@ def parser() -> argparse.ArgumentParser:
         "--input-json",
         type=Path,
         help="Read a saved gh-style run object instead of calling GitHub",
+    )
+    value.add_argument(
+        "--input-invocation-json",
+        type=Path,
+        help="Read a saved exact-tag workflow-runs response instead of calling GitHub",
+    )
+    value.add_argument(
+        "--input-failed-log",
+        type=Path,
+        help="Read saved first-attempt failed-step log bytes instead of calling GitHub",
     )
     return value
 
@@ -382,7 +566,50 @@ def main(argv: Sequence[str] | None = None) -> int:
         captured_at=captured_at,
         acquisition=acquisition,
     )
-    write_outcome(args.output_dir, run_metadata, outcome)
+    if outcome["conclusion"] == "success":
+        raise OutcomeError(
+            "successful runs require capture_completed_run_v1_3.sh, not minimized outcome capture"
+        )
+    if args.input_json:
+        if not args.input_invocation_json or not args.input_failed_log:
+            raise OutcomeError(
+                "--input-json requires --input-invocation-json and --input-failed-log"
+            )
+        invocation_source = json.loads(
+            args.input_invocation_json.read_text(encoding="utf-8")
+        )
+        log_bytes = args.input_failed_log.read_bytes()
+        log_acquisition = "provided_failed_log"
+        version = "provided-gh-version"
+    else:
+        if args.input_invocation_json or args.input_failed_log:
+            raise OutcomeError("saved invocation/log inputs require --input-json")
+        invocation_source = tag_invocation.fetch_listing(args.repo, outcome["evidence_tag"])
+        log_bytes = capture_failed_log(args.repo, run_id)
+        log_acquisition = "github_cli_first_attempt_failed_log"
+        version = gh_cli_version()
+    invocation = tag_invocation.build_observation(
+        invocation_source,
+        repository=args.repo,
+        evidence_tag=outcome["evidence_tag"],
+        run_id=run_id,
+        protocol_commit=args.protocol_commit,
+        conclusion=outcome["conclusion"],
+        captured_at=captured_at,
+        acquisition="provided_json" if args.input_json else "github_workflow_runs_api",
+    )
+    failed_log = build_failed_log_observation(
+        log_bytes,
+        repository=args.repo,
+        run_id=run_id,
+        protocol_commit=args.protocol_commit,
+        evidence_tag=outcome["evidence_tag"],
+        conclusion=outcome["conclusion"],
+        captured_at=captured_at,
+        acquisition=log_acquisition,
+        gh_version=version,
+    )
+    write_outcome(args.output_dir, run_metadata, outcome, invocation, failed_log)
     print(
         f"Captured {outcome['conclusion']} outcome for run {run_id} at {args.output_dir}"
     )

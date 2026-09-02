@@ -95,6 +95,7 @@ CANDIDATE_SENTINELS = (
 CANDIDATE_REQUIRED_FILES = (
     ".github/workflows/eacp-cross-plane-v1.3.yml",
     "CLAIMS_AND_EVIDENCE_v1.3.md",
+    "EVIDENCE_BRIEF_v1.3.md",
     "EXPERT_REVIEW_REQUEST_v1.3.md",
     "RELEASE_NOTES_v1.3-candidate.md",
     "REVIEWER_GUIDE_v1.3.md",
@@ -122,6 +123,8 @@ CANDIDATE_REQUIRED_FILES = (
     "experiments/github_actions/EXTERNAL_REPLICATION_PROTOCOL_v1.3.md",
     "experiments/github_actions/capture_completed_run_v1_3.sh",
     "experiments/github_actions/capture_run_outcome_v1_3.py",
+    "experiments/github_actions/capture_tag_invocation_v1_3.py",
+    "experiments/github_actions/normalize_attestation_bundle_v1_3.py",
     "experiments/github_actions/cross_version_protocol_amendment_v1.3.1.json",
     "experiments/github_actions/cross_version_protocol_plan_v1.3.json",
     "experiments/github_actions/kubernetes_targets_v1.3.json",
@@ -131,17 +134,30 @@ CANDIDATE_REQUIRED_FILES = (
     "experiments/github_actions/summarize_reference_run.py",
     "experiments/github_actions/tests/test_kubernetes_versions.py",
     "experiments/github_actions/tests/test_cross_version_run_set.py",
+    "experiments/github_actions/tests/test_attestation_bundle_filename.py",
     "experiments/github_actions/tests/test_run_outcome.py",
+    "experiments/github_actions/tests/test_tag_invocation.py",
     "experiments/github_actions/tests/test_target_resolution.py",
     "experiments/github_actions/verify_kubernetes_versions.py",
     "experiments/github_actions/results/reference/run-33682116347/README.md",
     "experiments/github_actions/results/reference/run-33682116347/REFERENCE_SHA256SUMS",
     "experiments/github_actions/results/reference/run-33682116347/reference_summary.json",
+    "experiments/github_actions/results/reference/cross-version-initial-failed-cohort-v1.3/README.md",
+    "experiments/github_actions/results/reference/cross-version-initial-failed-cohort-v1.3/REFERENCE_SHA256SUMS",
+    "experiments/github_actions/results/reference/cross-version-initial-failed-cohort-v1.3/cross_version_summary.json",
+    "experiments/github_actions/results/reference/cross-version-initial-failed-cohort-v1.3/protocol_plan.json",
+    "experiments/github_actions/results/reference/cross-version-initial-failed-cohort-v1.3/run_set.json",
+    "experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3/README.md",
+    "experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3/REFERENCE_SHA256SUMS",
+    "experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3/cross_version_summary.json",
+    "experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3/protocol_amendment.json",
+    "experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3/run_set.json",
     "figures/README.md",
     "figures/generate_v1_3_figures.py",
     "figures/eacp_architecture_v1_3.png",
     "figures/eacp_correlation_robustness_v1_3.png",
     "figures/eacp_live_cross_plane_v1_3.png",
+    "paper/EACP_preprint_v1.3_candidate.pdf",
 )
 
 CANDIDATE_REQUIRED_DIRECTORIES = (
@@ -152,6 +168,8 @@ CANDIDATE_REQUIRED_DIRECTORIES = (
     "experiments/correlation_robustness/results/reference",
     "experiments/index_ablation/results/reference",
     "experiments/github_actions/results/reference/run-33682116347",
+    "experiments/github_actions/results/reference/cross-version-initial-failed-cohort-v1.3",
+    "experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3",
 )
 
 CORRELATION_RESULT_FILES = {
@@ -268,6 +286,9 @@ EXPECTED_CROSS_VERSION_COHORT = [
 ]
 
 INITIAL_CROSS_VERSION_PROTOCOL_COMMIT = "15d72da095a0c7640b9318b50b28728e76d68928"
+CONFIRMATORY_CROSS_VERSION_PROTOCOL_COMMIT = (
+    "4cbf7d2fa0bb44585d258a3f37ce0c0d39ddea43"
+)
 CROSS_VERSION_AMENDMENT_SHA256 = (
     "ba5bf6fdb21900cdfbcbab66ccd10ab317f38fc688f76112294ed2d8d0998ac8"
 )
@@ -290,6 +311,17 @@ EXPECTED_CONFIRMATORY_CROSS_VERSION_COHORT = [
     for run_index in (4, 5, 6)
     for version in ("v1.34.8", "v1.35.5", "v1.36.1")
 ]
+EXPECTED_CONFIRMATORY_RUN_IDS = {
+    "eacp-v1.3-evidence/k8s-v1.34.8/run-04": 33690426246,
+    "eacp-v1.3-evidence/k8s-v1.35.5/run-04": 33690427562,
+    "eacp-v1.3-evidence/k8s-v1.36.1/run-04": 33690429641,
+    "eacp-v1.3-evidence/k8s-v1.34.8/run-05": 33690432444,
+    "eacp-v1.3-evidence/k8s-v1.35.5/run-05": 33690433602,
+    "eacp-v1.3-evidence/k8s-v1.36.1/run-05": 33690436849,
+    "eacp-v1.3-evidence/k8s-v1.34.8/run-06": 33690438222,
+    "eacp-v1.3-evidence/k8s-v1.35.5/run-06": 33690440169,
+    "eacp-v1.3-evidence/k8s-v1.36.1/run-06": 33690443082,
+}
 EXPECTED_CROSS_VERSION_WORKFLOW_TAGS = {
     *(row["evidence_tag"] for row in EXPECTED_CROSS_VERSION_COHORT),
     *(row["evidence_tag"] for row in EXPECTED_CONFIRMATORY_CROSS_VERSION_COHORT),
@@ -850,8 +882,8 @@ def validate_cross_version_run_set_binding(
     expected_indices: list[int],
     label: str,
     errors: list[str],
-    expected_protocol_commit: str | None = None,
-    expected_run_ids: dict[str, int] | None = None,
+    expected_protocol_commit: str,
+    expected_run_ids: dict[str, int],
 ) -> None:
     """Validate a frozen cohort's exact generation and prospective commit binding."""
 
@@ -879,10 +911,8 @@ def validate_cross_version_run_set_binding(
     ):
         errors.append(f"{label} lacks one lowercase 40-hex protocol commit")
         protocol_commit = None
-    elif expected_protocol_commit is not None and protocol_commit != expected_protocol_commit:
-        errors.append(f"{label} does not bind the frozen initial protocol commit")
-    elif expected_protocol_commit is None and protocol_commit == INITIAL_CROSS_VERSION_PROTOCOL_COMMIT:
-        errors.append(f"{label} reuses the failed initial protocol commit")
+    elif protocol_commit != expected_protocol_commit:
+        errors.append(f"{label} does not bind its exact frozen protocol commit")
 
     rows = run_set.get("runs")
     if not isinstance(rows, list) or len(rows) != 9 or any(
@@ -914,19 +944,19 @@ def validate_cross_version_run_set_binding(
         observed_ids.append(run_id)
         if row.get("run_url") != f"{REPOSITORY_URL}/actions/runs/{run_id}":
             errors.append(f"{label} contains a non-canonical run URL for {run_id}")
-        if expected_run_ids is not None and expected_run_ids.get(tag) != run_id:
+        if expected_run_ids.get(tag) != run_id:
             errors.append(f"{label} changes the preserved run ID for {tag!r}")
     if len(observed_ids) == 9 and len(set(observed_ids)) != 9:
         errors.append(f"{label} workflow run IDs are not distinct")
 
-    if expected_run_ids is not None:
-        expected_rows = expected_cross_version_run_set_rows(
-            expected_members, expected_run_ids
-        )
-        if rows != expected_rows:
-            errors.append(f"{label} does not preserve the exact initial run order and identities")
+    expected_rows = expected_cross_version_run_set_rows(expected_members, expected_run_ids)
+    if rows != expected_rows:
+        errors.append(f"{label} does not preserve the exact run order and identities")
 
-    if protocol_commit is not None and expected_protocol_commit is None and (ROOT / ".git").is_dir():
+    if (
+        protocol_commit == CONFIRMATORY_CROSS_VERSION_PROTOCOL_COMMIT
+        and (ROOT / ".git").is_dir()
+    ):
         amendment_path = "experiments/github_actions/cross_version_protocol_amendment_v1.3.1.json"
         try:
             amendment_at_commit = subprocess.run(
@@ -960,6 +990,261 @@ def validate_cross_version_run_set_binding(
                 errors.append(
                     f"{label} protocol commit is not the single corrective child of the initial protocol"
                 )
+
+
+def validate_cross_version_summary_contract(
+    *,
+    cohort_root: Path,
+    expected_members: list[dict[str, str]],
+    expected_indices: list[int],
+    expected_protocol_commit: str,
+    expected_run_ids: dict[str, int],
+    expected_successes: int,
+    label: str,
+    errors: list[str],
+) -> None:
+    """Validate headline results and epistemic limits independently of the summarizer."""
+
+    summary_path = cohort_root / "cross_version_summary.json"
+    if not summary_path.is_file():
+        return
+    summary = load_json_object(summary_path, relative(summary_path), errors)
+    if summary is None:
+        return
+
+    expected_summary_keys = {
+        "schema_version",
+        "source_classification",
+        "overall_status",
+        "protocol_commit",
+        "tag_run_indices",
+        "kind_version",
+        "target_versions",
+        "run_results",
+        "per_version",
+        "aggregate",
+        "attestation_verification_boundary",
+        "claim_boundary",
+    }
+    if set(summary) != expected_summary_keys:
+        errors.append(f"{label} summary fields differ from the hardened schema")
+
+    expected_failures = 9 - expected_successes
+    expected_status = "complete_success" if expected_successes == 9 else "failed"
+    expected_source = (
+        "controlled_public_github_actions_and_kubernetes_api_evidence"
+        if expected_successes == 9
+        else "preserved_public_github_actions_outcomes_without_successful_kubernetes_evidence"
+    )
+    expected_scalars: dict[str, object] = {
+        "schema_version": "eacp.cross-version-summary/1.3.0",
+        "source_classification": expected_source,
+        "overall_status": expected_status,
+        "protocol_commit": expected_protocol_commit,
+        "tag_run_indices": expected_indices,
+        "kind_version": "v0.32.0",
+        "target_versions": ["v1.34.8", "v1.35.5", "v1.36.1"],
+    }
+    for field, expected in expected_scalars.items():
+        observed = summary.get(field)
+        if observed != expected or type(observed) is not type(expected):
+            errors.append(
+                f"{label} summary {field}={observed!r}; expected {expected!r}"
+            )
+
+    expected_aggregate: dict[str, object] = {
+        "preserved_first_attempt_outcomes": 9,
+        "successful_runs_satisfying_all_predeclared_criteria": expected_successes,
+        "non_successful_first_attempt_runs": expected_failures,
+        "distinct_successful_correlation_ids": expected_successes,
+        "first_attempt_outcomes_per_version": 3,
+        "exact_client_server_kubelet_version_checks": expected_successes,
+        "successful_positive_controls": expected_successes,
+        "successful_negative_controls": expected_successes,
+        "successful_adapter_explicit_403_controls": expected_successes,
+        "successful_separate_oci_digest_checks": expected_successes,
+        "sole_exact_tag_invocations_observed_at_capture": 9,
+        "failure_logs_with_exact_version_validation_marker": expected_failures,
+        "failure_logs_with_premature_artifact_assertion_marker": expected_failures,
+        "attested_in_run_tar_parity_checks": expected_successes,
+        "capture_time_default_trust_attestation_verifications": expected_successes,
+        "capture_time_captured_root_attestation_verifications": expected_successes,
+        "completed_finalizations_checksum_and_identity_validated": expected_successes,
+        "completed_finalizations_builder_attested": 0,
+        "external_reproductions": 0,
+        "independent_organizations": 0,
+        "identifier_discovery_evaluated": False,
+    }
+    aggregate = summary.get("aggregate")
+    if not isinstance(aggregate, dict) or set(aggregate) != set(expected_aggregate):
+        errors.append(f"{label} aggregate fields differ from the hardened schema")
+    elif any(
+        aggregate.get(field) != expected
+        or type(aggregate.get(field)) is not type(expected)
+        for field, expected in expected_aggregate.items()
+    ):
+        errors.append(f"{label} aggregate result or boundary invariant mismatch")
+
+    members_by_version = {
+        version: [
+            member
+            for member in expected_members
+            if member["kubernetes_version"] == version
+        ]
+        for version in ("v1.34.8", "v1.35.5", "v1.36.1")
+    }
+    expected_per_version = {
+        version: {
+            "first_attempt_outcomes": 3,
+            "successful_runs_satisfying_all_predeclared_criteria": (
+                3 if expected_successes == 9 else 0
+            ),
+            "non_successful_runs": 0 if expected_successes == 9 else 3,
+            "predeclared_criteria_satisfied": 3 if expected_successes == 9 else 0,
+            "run_ids": sorted(
+                expected_run_ids[member["evidence_tag"]]
+                for member in members_by_version[version]
+            ),
+            "run_indices": expected_indices,
+            "evidence_tags": sorted(
+                member["evidence_tag"] for member in members_by_version[version]
+            ),
+        }
+        for version in members_by_version
+    }
+    if summary.get("per_version") != expected_per_version:
+        errors.append(f"{label} per-version results differ from the exact 3-by-3 cohort")
+
+    run_results = summary.get("run_results")
+    if not isinstance(run_results, list) or len(run_results) != 9 or any(
+        not isinstance(row, dict) for row in run_results
+    ):
+        errors.append(f"{label} summary must contain exactly nine run-result objects")
+    else:
+        observed_ids = {row.get("run_id") for row in run_results}
+        if observed_ids != set(expected_run_ids.values()):
+            errors.append(f"{label} summary run IDs differ from the frozen cohort")
+        expected_identity_by_id = {
+            expected_run_ids[member["evidence_tag"]]: {
+                "evidence_tag": member["evidence_tag"],
+                "kubernetes_version": member["kubernetes_version"],
+                "run_index": int(member["evidence_tag"].rsplit("-", 1)[1]),
+            }
+            for member in expected_members
+        }
+        for row in run_results:
+            run_id = row.get("run_id")
+            if expected_identity_by_id.get(run_id) is None or any(
+                row.get(field) != expected
+                for field, expected in expected_identity_by_id.get(run_id, {}).items()
+            ):
+                errors.append(f"{label} run {run_id!r} identity mismatch")
+            expected_success = expected_successes == 9
+            expected_conclusion = "success" if expected_success else "failure"
+            expected_criteria = "satisfied" if expected_success else "not_satisfied"
+            required_values: dict[str, object] = {
+                "head_sha": expected_protocol_commit,
+                "status": "completed",
+                "conclusion": expected_conclusion,
+                "criteria_status": expected_criteria,
+                "all_predeclared_criteria_validated": expected_success,
+                "sole_exact_tag_invocation_at_capture": True,
+                "in_run_tar_builder_attestation_verified": expected_success,
+                "completed_finalization_checksum_and_identity_validated": expected_success,
+                "completed_finalization_builder_attested": False,
+            }
+            if any(
+                row.get(field) != expected
+                or type(row.get(field)) is not type(expected)
+                for field, expected in required_values.items()
+            ):
+                errors.append(f"{label} run {run_id!r} result-boundary mismatch")
+            if expected_success:
+                successful_values: dict[str, object] = {
+                    "in_run_tar_builder_attestation_scope": True,
+                    "attested_tar_matches_sibling_results_tree": True,
+                    "capture_time_default_trust_verification_records": 1,
+                    "capture_time_captured_root_verification_records": 1,
+                    "negative_control_unjoined": True,
+                    "rbac_source_native_correlation_records": 0,
+                    "target_bound_http_403_records": 1,
+                    "separate_oci_digest_check": True,
+                }
+                if any(
+                    row.get(field) != expected
+                    or type(row.get(field)) is not type(expected)
+                    for field, expected in successful_values.items()
+                ):
+                    errors.append(f"{label} run {run_id!r} hardened evidence mismatch")
+            else:
+                markers = row.get("recognized_failure_log_markers")
+                if row.get("failure_evidence_classification") != (
+                    "frozen_github_run_job_step_and_minimized_log_observation"
+                ) or not isinstance(markers, list) or any(
+                    not isinstance(marker, str) for marker in markers
+                ) or set(markers) != {
+                    "exact_client_server_kubelet_profile_validated",
+                    "premature_completed_artifact_row_assertion",
+                }:
+                    errors.append(f"{label} run {run_id!r} failure evidence mismatch")
+
+    boundary = summary.get("attestation_verification_boundary")
+    expected_boundary_keys = {
+        "capture_time",
+        "repository_verify_mode",
+        "trust_bootstrap",
+        "post_run_finalization",
+        "semantic_limit",
+    }
+    if not isinstance(boundary, dict) or set(boundary) != expected_boundary_keys:
+        errors.append(f"{label} attestation boundary fields differ from the hardened schema")
+    else:
+        required_boundary_text = {
+            "capture_time": (
+                "verified twice with gh attestation verify",
+                "default trust configuration",
+                "captured trusted root",
+                "exact repository, workflow, signer digest, source digest, source ref, predicate, and hosted-runner constraints",
+            ),
+            "repository_verify_mode": (
+                "re-performs cryptographic verification",
+                "Rekor timestamp",
+            ),
+            "trust_bootstrap": (
+                "captured root is not self-authenticating",
+                "external trust bootstrap",
+            ),
+            "post_run_finalization": (
+                "checksum-bound and identity-validated",
+                "not part of the GitHub-builder-attested in-run TAR",
+            ),
+            "semantic_limit": (
+                "does not establish the semantic truth",
+            ),
+        }
+        for field, phrases in required_boundary_text.items():
+            value = boundary.get(field)
+            if not isinstance(value, str) or any(phrase not in value for phrase in phrases):
+                errors.append(f"{label} weakens attestation boundary {field}")
+
+    claim_boundary = summary.get("claim_boundary")
+    required_claim_boundary = (
+        "procedural repeatability only",
+        "no confidence interval, failure-rate inference, or production reliability claim",
+        "capture-time public API observation",
+        "not a signed API response",
+        "GitHub attestation authenticates the in-run TAR only",
+        "not builder-attested",
+        "workflow generates the joining identifier",
+        "not identifier discovery",
+        "cross-provider or cross-organization replication",
+        "field deployment",
+        "external reproduction",
+    )
+    if not isinstance(claim_boundary, str) or any(
+        phrase not in claim_boundary for phrase in required_claim_boundary
+    ):
+        errors.append(f"{label} weakens the cross-version claim boundary")
 
 
 def validate_cross_version_amendment(errors: list[str]) -> None:
@@ -1379,16 +1664,23 @@ def validate_cross_version_protocol(errors: list[str]) -> None:
     if ledger_path.is_file():
         ledger = ledger_path.read_text(encoding="utf-8")
         claim_ids = [int(match) for match in re.findall(r"(?m)^\| C([0-9]+) \|", ledger)]
-        if claim_ids != list(range(1, 12)):
-            errors.append("v1.3 claims ledger must contain exactly claims C1 through C11")
+        if claim_ids != list(range(1, 14)):
+            errors.append("v1.3 claims ledger must contain exactly claims C1 through C13")
         required_ledger_text = (
-            "The workflow generated and propagated the key",
+            "The workflow generated and planted the key",
             "controlled propagation and composition",
-            "not discovery of naturally occurring identifiers",
+            "not identifier discovery",
             "independent organizational corroboration",
             "A present no-ID Kubernetes control remains unjoined",
             "`adapter_explicit_exact_target`",
             "checked separately from operational correlation",
+            "names only the in-run TAR as its subject",
+            "not builder-attested",
+            "captured root enables offline re-verification relative to captured bytes",
+            "0/9 runs satisfying all predeclared criteria",
+            "neither retained capture is an origin-signed response",
+            "9/9 first-attempt workflow successes",
+            "not pooled",
             "only an external operator can establish independent reproduction",
         )
         missing = [text for text in required_ledger_text if text not in ledger]
@@ -1399,7 +1691,28 @@ def validate_cross_version_protocol(errors: list[str]) -> None:
             )
 
     summarizer = experiment_root / "summarize_cross_version_run_set.py"
-    optional_cohorts = (
+    frozen_protocol_copies = (
+        (
+            plan_path,
+            experiment_root
+            / "results/reference/cross-version-initial-failed-cohort-v1.3/protocol_plan.json",
+            "initial cohort protocol copy",
+        ),
+        (
+            experiment_root / "cross_version_protocol_amendment_v1.3.1.json",
+            experiment_root
+            / "results/reference/cross-version-confirmatory-cohort-v1.3/protocol_amendment.json",
+            "confirmatory cohort amendment copy",
+        ),
+    )
+    for source, frozen_copy, label in frozen_protocol_copies:
+        if source.is_file() and frozen_copy.is_file():
+            source_value = load_json_object(source, relative(source), errors)
+            copy_value = load_json_object(frozen_copy, relative(frozen_copy), errors)
+            if source_value is not None and copy_value is not None and source_value != copy_value:
+                errors.append(f"{label} differs semantically from its repository source")
+
+    required_cohorts = (
         (
             experiment_root
             / "results/reference/cross-version-initial-failed-cohort-v1.3",
@@ -1408,6 +1721,7 @@ def validate_cross_version_protocol(errors: list[str]) -> None:
             "initial failed cross-version cohort",
             INITIAL_CROSS_VERSION_PROTOCOL_COMMIT,
             EXPECTED_INITIAL_FAILED_RUN_IDS,
+            0,
         ),
         (
             experiment_root
@@ -1415,8 +1729,9 @@ def validate_cross_version_protocol(errors: list[str]) -> None:
             EXPECTED_CONFIRMATORY_CROSS_VERSION_COHORT,
             [4, 5, 6],
             "confirmatory cross-version cohort",
-            None,
-            None,
+            CONFIRMATORY_CROSS_VERSION_PROTOCOL_COMMIT,
+            EXPECTED_CONFIRMATORY_RUN_IDS,
+            9,
         ),
     )
     for (
@@ -1426,7 +1741,8 @@ def validate_cross_version_protocol(errors: list[str]) -> None:
         label,
         expected_commit,
         expected_run_ids,
-    ) in optional_cohorts:
+        expected_successes,
+    ) in required_cohorts:
         validate_cross_version_run_set_binding(
             cohort_root=cohort_root,
             expected_members=expected_members,
@@ -1435,6 +1751,16 @@ def validate_cross_version_protocol(errors: list[str]) -> None:
             errors=errors,
             expected_protocol_commit=expected_commit,
             expected_run_ids=expected_run_ids,
+        )
+        validate_cross_version_summary_contract(
+            cohort_root=cohort_root,
+            expected_members=expected_members,
+            expected_indices=expected_indices,
+            expected_protocol_commit=expected_commit,
+            expected_run_ids=expected_run_ids,
+            expected_successes=expected_successes,
+            label=label,
+            errors=errors,
         )
         if cohort_root.is_dir() and summarizer.is_file():
             run_offline_check(

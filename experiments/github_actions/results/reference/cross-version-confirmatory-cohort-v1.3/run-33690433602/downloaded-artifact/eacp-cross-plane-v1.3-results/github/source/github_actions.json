@@ -1,0 +1,201 @@
+{
+  "$schema": "https://raw.githubusercontent.com/obedebessa/eacp-operational-provenance/eacp-v1.3-candidate/experiments/github_actions/schema/github-actions-capture-v1.3.schema.json",
+  "artifacts": [],
+  "capture": {
+    "acquisition": "github-rest-api",
+    "authenticated": true,
+    "captured_at": "2026-09-02T22:28:14Z",
+    "excluded": [
+      "workflow logs",
+      "artifact contents",
+      "event payload",
+      "commit messages and author emails",
+      "runner identifiers and runner group names",
+      "URL credentials, query parameters, and fragments"
+    ],
+    "raw_api_payload_retained": false,
+    "sanitization_profile": "public-metadata-minimal-v1",
+    "transport": "gh"
+  },
+  "jobs": [
+    {
+      "completed_at": null,
+      "conclusion": null,
+      "created_at": "2026-09-02T22:27:13Z",
+      "html_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33690433602/job/100447704782",
+      "id": 100447704782,
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "name": "github-actions-to-kubernetes",
+      "run_attempt": 1,
+      "run_id": 33690433602,
+      "started_at": "2026-09-02T22:27:15Z",
+      "status": "in_progress",
+      "steps": [
+        {
+          "completed_at": "2026-09-02T22:27:18Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "started_at": "2026-09-02T22:27:16Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:27:20Z",
+          "conclusion": "success",
+          "name": "Check out the exact run revision",
+          "number": 2,
+          "started_at": "2026-09-02T22:27:18Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:27:20Z",
+          "conclusion": "success",
+          "name": "Set up Python",
+          "number": 3,
+          "started_at": "2026-09-02T22:27:20Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:27:20Z",
+          "conclusion": "success",
+          "name": "Resolve checksum-pinned Kubernetes target",
+          "number": 4,
+          "started_at": "2026-09-02T22:27:20Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:27:20Z",
+          "conclusion": "success",
+          "name": "Verify adapter unit and negative-control tests",
+          "number": 5,
+          "started_at": "2026-09-02T22:27:20Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:27:22Z",
+          "conclusion": "success",
+          "name": "Install checksum-pinned kind and matching kubectl",
+          "number": 6,
+          "started_at": "2026-09-02T22:27:20Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": null,
+          "conclusion": null,
+          "name": "Execute real cross-plane chain and controls",
+          "number": 7,
+          "started_at": "2026-09-02T22:27:22Z",
+          "status": "in_progress"
+        },
+        {
+          "completed_at": null,
+          "conclusion": null,
+          "name": "Create stable archive subject",
+          "number": 8,
+          "started_at": null,
+          "status": "pending"
+        },
+        {
+          "completed_at": null,
+          "conclusion": null,
+          "name": "Attest the evidence archive",
+          "number": 9,
+          "started_at": null,
+          "status": "pending"
+        },
+        {
+          "completed_at": null,
+          "conclusion": null,
+          "name": "Upload evidence, archive, and digest",
+          "number": 10,
+          "started_at": null,
+          "status": "pending"
+        },
+        {
+          "completed_at": null,
+          "conclusion": null,
+          "name": "Record claim boundary in job summary",
+          "number": 11,
+          "started_at": null,
+          "status": "pending"
+        },
+        {
+          "completed_at": null,
+          "conclusion": null,
+          "name": "Post Set up Python",
+          "number": 21,
+          "started_at": null,
+          "status": "pending"
+        },
+        {
+          "completed_at": null,
+          "conclusion": null,
+          "name": "Post Check out the exact run revision",
+          "number": 22,
+          "started_at": null,
+          "status": "pending"
+        }
+      ],
+      "workflow_name": "EACP cross-plane v1.3 / eacp-v1.3-evidence/k8s-v1.35.5/run-05 / ref-selected"
+    }
+  ],
+  "projection": {
+    "correlation_derivation": "repository-id + run-id + run-attempt",
+    "correlation_id": "eacp-gha-1324720646-33690433602-1",
+    "intent": "software_delivery",
+    "kubernetes_target": {
+      "annotation_key": "eacp.io/correlation-id",
+      "name": "eacp-cross-plane",
+      "namespace": "eacp-cross-plane-v13",
+      "resource": "deployment"
+    },
+    "schema_version": "eacp.evidence/1.3.0",
+    "service": "obedebessa/eacp-operational-provenance",
+    "subject": {
+      "digest": "sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a",
+      "uri": "registry.k8s.io/pause"
+    }
+  },
+  "repository": {
+    "full_name": "obedebessa/eacp-operational-provenance",
+    "html_url": "https://github.com/obedebessa/eacp-operational-provenance",
+    "id": 1324720646,
+    "private": false
+  },
+  "run": {
+    "actor": {
+      "html_url": "https://github.com/obedebessa",
+      "id": 40583383,
+      "login": "obedebessa",
+      "type": "User"
+    },
+    "api_url": "https://api.github.com/repos/obedebessa/eacp-operational-provenance/actions/runs/33690433602",
+    "artifacts_url": "https://api.github.com/repos/obedebessa/eacp-operational-provenance/actions/runs/33690433602/artifacts",
+    "conclusion": null,
+    "created_at": "2026-09-02T22:27:12Z",
+    "event": "push",
+    "head_branch": "eacp-v1.3-evidence/k8s-v1.35.5/run-05",
+    "head_sha": "4cbf7d2fa0bb44585d258a3f37ce0c0d39ddea43",
+    "html_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33690433602",
+    "id": 33690433602,
+    "jobs_url": "https://api.github.com/repos/obedebessa/eacp-operational-provenance/actions/runs/33690433602/jobs",
+    "name": "EACP cross-plane v1.3 / eacp-v1.3-evidence/k8s-v1.35.5/run-05 / ref-selected",
+    "node_id": "WFR_kwLOTvWiBs8AAAAH2Bs4Qg",
+    "path": ".github/workflows/eacp-cross-plane-v1.3.yml",
+    "run_attempt": 1,
+    "run_number": 22,
+    "run_started_at": "2026-09-02T22:27:12Z",
+    "status": "in_progress",
+    "triggering_actor": {
+      "html_url": "https://github.com/obedebessa",
+      "id": 40583383,
+      "login": "obedebessa",
+      "type": "User"
+    },
+    "updated_at": "2026-09-02T22:27:16Z",
+    "workflow_id": 348771431
+  },
+  "schema_version": "eacp.github-actions.capture/1.3.0"
+}

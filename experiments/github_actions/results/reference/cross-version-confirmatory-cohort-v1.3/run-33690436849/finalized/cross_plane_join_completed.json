@@ -1,0 +1,84 @@
+{
+  "claim_boundary": "Exact identifier equality demonstrates an observable cross-plane link. It does not, by itself, prove causal correctness, authorization, or bit-for-bit artifact identity.",
+  "correlation_id": "eacp-gha-1324720646-33690436849-1",
+  "github_actions": {
+    "commit_sha": "4cbf7d2fa0bb44585d258a3f37ce0c0d39ddea43",
+    "evidence_rows": 3,
+    "repository": "obedebessa/eacp-operational-provenance",
+    "run_attempt": 1,
+    "run_id": 33690436849,
+    "source_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33690436849"
+  },
+  "join_rule": "exact equality on eacp.io/correlation-id / EACP correlation_id for the positive chain; RBAC denial is adapter-explicit via exact Kubernetes target equality",
+  "kubernetes": {
+    "csv_rows_with_exact_id": 10,
+    "csv_supplied": true,
+    "kubernetes_source_rows_with_exact_id": 10,
+    "negative_control": {
+      "correlation_annotation_absent": true,
+      "name": "negative-control-no-correlation",
+      "namespace": "eacp-cross-plane-v13",
+      "observed_correlation_id": null
+    },
+    "object": {
+      "api_version": "apps/v1",
+      "exact_match": true,
+      "kind": "Deployment",
+      "name": "eacp-cross-plane",
+      "namespace": "eacp-cross-plane-v13",
+      "observed_correlation_id": "eacp-gha-1324720646-33690436849-1",
+      "observed_subject_digest": "sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a",
+      "observed_subject_uri": "registry.k8s.io/pause",
+      "subject_annotations_exact_match": true,
+      "workload_image_exact_match": true
+    },
+    "object_supplied": true,
+    "pods": {
+      "all_pods_have_exact_correlation_id": true,
+      "pod_count": 1,
+      "pod_spec_subject_exact_match": true,
+      "runtime_digest_interpretation": "exact subject digest observed in runtime imageID",
+      "runtime_image_id_exact_subject_digest_match": true,
+      "runtime_image_ids": [
+        "registry.k8s.io/pause@sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a"
+      ],
+      "spec_images": [
+        "registry.k8s.io/pause@sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a"
+      ]
+    },
+    "principals": [
+      "kubernetes-admin",
+      "system:node:eacp-v13-33690436849-1-control-plane",
+      "system:serviceaccount:eacp-cross-plane-v13:eacp-observer",
+      "system:serviceaccount:kube-system:deployment-controller",
+      "system:serviceaccount:kube-system:replicaset-controller"
+    ],
+    "rbac_denial_binding": {
+      "binding_method": "adapter_explicit_exact_target",
+      "matching_http_403_records": 1,
+      "source_native_correlation_records": 0,
+      "source_native_correlation_required": false,
+      "target": {
+        "api_group": "apps",
+        "name": "eacp-cross-plane",
+        "namespace": "eacp-cross-plane-v13",
+        "resource": "deployments"
+      }
+    },
+    "rbac_denied_rows_in_projection": 1,
+    "source_ids": [
+      "b817e9e9-9280-4dd0-8e5e-a413fafa7aed:ResponseComplete",
+      "dde6449e-0161-46ea-9877-06cf7c2bd9a8:ResponseComplete",
+      "3491054d-e0d1-4db4-9cac-d1c461d0a944:ResponseComplete",
+      "c13cb01c-dce1-496e-9fee-e57d0c8380ab:ResponseComplete",
+      "87c87172-834a-4e30-bccf-6fc21782479f:ResponseComplete",
+      "2eba7579-d273-4d91-b2a9-274c5b71fd90:ResponseComplete",
+      "9c791d44-95c8-4f35-9373-2559367a2a77:ResponseComplete",
+      "e6fee342-c31d-4e4e-a1b6-a80ef0f74f42:ResponseComplete",
+      "42fda429-7694-442f-be4a-3de9838f3d7e:ResponseComplete",
+      "4ee40e91-9ddd-4861-84e7-0a3344ff0588:ResponseComplete"
+    ]
+  },
+  "schema_version": "eacp.cross-plane-join/1.3.0",
+  "status": "observed_cross_plane_link_with_subject_digest"
+}

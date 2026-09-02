@@ -1,0 +1,8 @@
+{
+  "claim_boundary": "Post-run capture closes API timestamps and artifact metadata. It does not retroactively change the already checksummed Kubernetes observation.",
+  "github_run_conclusion": "success",
+  "github_run_status": "completed",
+  "join_status": "observed_cross_plane_link_with_subject_digest",
+  "schema_version": "eacp.cross-plane-finalization/1.3.0",
+  "source_results_manifest_sha256": "731c298171f58f0411d9bb68d9ace45adf59ceade69fc9452dd6828e2ead60b8"
+}

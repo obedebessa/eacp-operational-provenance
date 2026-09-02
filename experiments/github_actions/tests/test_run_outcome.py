@@ -5,8 +5,11 @@ import unittest
 from pathlib import Path
 
 from experiments.github_actions.capture_run_outcome_v1_3 import (
+    EXECUTION_STEP,
+    JOB_NAME,
     RUN_FIELDS,
     OutcomeError,
+    build_failed_log_observation,
     build_outcome,
     write_outcome,
 )
@@ -64,6 +67,29 @@ def completed_job(conclusion="success", tag=TAG):
     }
 
 
+def invocation_observation(conclusion="success", tag=TAG):
+    return {
+        "schema_version": "eacp.tag-invocation-observation/1.3.0",
+        "selected_run_id": RUN_ID,
+        "evidence_tag": tag,
+        "run": {"conclusion": conclusion},
+    }
+
+
+def failed_log_observation(conclusion="success", tag=TAG, log_bytes=b""):
+    return build_failed_log_observation(
+        log_bytes,
+        repository=REPOSITORY,
+        run_id=RUN_ID,
+        protocol_commit=PROTOCOL_COMMIT,
+        evidence_tag=tag,
+        conclusion=conclusion,
+        captured_at="2026-09-02T21:00:00Z",
+        acquisition="saved-test-log",
+        gh_version="gh version test",
+    )
+
+
 class RunOutcomeTests(unittest.TestCase):
     def build(self, value):
         return build_outcome(
@@ -87,10 +113,22 @@ class RunOutcomeTests(unittest.TestCase):
         self.assertNotIn("runner_name", outcome["jobs"][0])
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "run-123456789"
-            write_outcome(output, metadata, outcome)
+            write_outcome(
+                output,
+                metadata,
+                outcome,
+                invocation_observation(),
+                failed_log_observation(),
+            )
             self.assertEqual(
                 {path.name for path in output.iterdir()},
-                {"run_metadata.json", "job_outcome.json", "OUTCOME_SHA256SUMS"},
+                {
+                    "run_metadata.json",
+                    "job_outcome.json",
+                    "tag_invocation.json",
+                    "failed_log_observation.json",
+                    "OUTCOME_SHA256SUMS",
+                },
             )
             retained = "".join(
                 path.read_text(encoding="utf-8") for path in output.iterdir() if path.is_file()
@@ -107,6 +145,37 @@ class RunOutcomeTests(unittest.TestCase):
         self.assertEqual(metadata["conclusion"], "startup_failure")
         self.assertEqual(outcome["conclusion"], "startup_failure")
         self.assertEqual(outcome["jobs"], [])
+
+    def test_failed_log_retains_only_exact_allowlisted_markers_and_full_hash(self):
+        raw = (
+            f"{JOB_NAME}\t{EXECUTION_STEP}\t2026-09-02T22:14:23.8679387Z "
+            "Validated exact client/server/kubelet profile: v1.34.8\n"
+            f"{JOB_NAME}\t{EXECUTION_STEP}\t2026-09-02T22:14:25Z secret=discard-me\n"
+            f"{JOB_NAME}\t{EXECUTION_STEP}\t2026-09-02T22:14:31.5801070Z "
+            "cross-plane validation failed: expected three GitHub evidence records\n"
+        ).encode()
+        diagnostic = failed_log_observation(conclusion="failure", log_bytes=raw)
+        self.assertEqual(
+            [row["marker"] for row in diagnostic["recognized_markers"]],
+            [
+                "exact_client_server_kubelet_profile_validated",
+                "premature_completed_artifact_row_assertion",
+            ],
+        )
+        self.assertNotIn("discard-me", repr(diagnostic))
+        self.assertEqual(diagnostic["full_failed_log_sha256"], hashlib.sha256(raw).hexdigest())
+        self.assertFalse(diagnostic["full_failed_log_retained"])
+
+    def test_failed_log_rejects_mismatched_version_or_duplicate_marker(self):
+        prefix = f"{JOB_NAME}\t{EXECUTION_STEP}\t2026-09-02T22:14:23Z "
+        wrong = (prefix + "Validated exact client/server/kubelet profile: v1.35.5\n").encode()
+        duplicate = (
+            prefix + "Validated exact client/server/kubelet profile: v1.34.8\n"
+            + prefix + "Validated exact client/server/kubelet profile: v1.34.8\n"
+        ).encode()
+        for raw in (wrong, duplicate):
+            with self.subTest(raw=raw), self.assertRaises(OutcomeError):
+                failed_log_observation(conclusion="failure", log_bytes=raw)
 
     def test_confirmatory_tags_run_04_through_06_are_accepted(self):
         for version in ("v1.34.8", "v1.35.5", "v1.36.1"):
@@ -147,7 +216,13 @@ class RunOutcomeTests(unittest.TestCase):
             output = Path(directory) / "existing"
             output.mkdir()
             with self.assertRaises(OutcomeError):
-                write_outcome(output, metadata, outcome)
+                write_outcome(
+                    output,
+                    metadata,
+                    outcome,
+                    invocation_observation(conclusion=outcome["conclusion"]),
+                    failed_log_observation(conclusion=outcome["conclusion"]),
+                )
 
 
 if __name__ == "__main__":

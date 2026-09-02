@@ -1,2 +1,4 @@
-c57f54da705e797ef7080c0d738fa733977160ca27dbb327d1481aec5e1b3545  ./job_outcome.json
+9ed61df3b82d63279c8762bfb1677d410ee98f38b7e7407b4f872712b61e37eb  ./failed_log_observation.json
+bb7f46de76d5ef262bf86d97842a0bc0db0412c8cb5048df105f35ec99f21937  ./job_outcome.json
 f53baebd933e5067a4bd3603f799847993af74bff5219632f84b7b41dcd43091  ./run_metadata.json
+0ec7f3eb2a9797bee2ecb254cf859bdbab8e921b0226995fd89cd037dd27817a  ./tag_invocation.json

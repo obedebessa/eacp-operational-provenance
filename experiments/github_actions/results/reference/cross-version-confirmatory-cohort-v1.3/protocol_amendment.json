@@ -1,0 +1,211 @@
+{
+  "schema_version": "eacp.cross-version-protocol-amendment/1.3.1",
+  "status": "prospective_before_confirmatory_execution",
+  "repository": "obedebessa/eacp-operational-provenance",
+  "workflow_path": ".github/workflows/eacp-cross-plane-v1.3.yml",
+  "initial_protocol": {
+    "plan_path": "experiments/github_actions/cross_version_protocol_plan_v1.3.json",
+    "protocol_commit": "15d72da095a0c7640b9318b50b28728e76d68928",
+    "planned_runs": 9,
+    "observed_outcome": "nine_first_attempt_failures",
+    "preservation": "All nine original first-attempt failures remain part of the record and are not replaced by the confirmatory cohort.",
+    "runs": [
+      {
+        "kubernetes_version": "v1.34.8",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-01",
+        "run_id": 33689275761,
+        "run_attempt": 1,
+        "conclusion": "failure",
+        "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928"
+      },
+      {
+        "kubernetes_version": "v1.35.5",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-01",
+        "run_id": 33689279446,
+        "run_attempt": 1,
+        "conclusion": "failure",
+        "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928"
+      },
+      {
+        "kubernetes_version": "v1.36.1",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-01",
+        "run_id": 33689281853,
+        "run_attempt": 1,
+        "conclusion": "failure",
+        "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928"
+      },
+      {
+        "kubernetes_version": "v1.34.8",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-02",
+        "run_id": 33689284057,
+        "run_attempt": 1,
+        "conclusion": "failure",
+        "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928"
+      },
+      {
+        "kubernetes_version": "v1.35.5",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-02",
+        "run_id": 33689287000,
+        "run_attempt": 1,
+        "conclusion": "failure",
+        "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928"
+      },
+      {
+        "kubernetes_version": "v1.36.1",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-02",
+        "run_id": 33689288013,
+        "run_attempt": 1,
+        "conclusion": "failure",
+        "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928"
+      },
+      {
+        "kubernetes_version": "v1.34.8",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-03",
+        "run_id": 33689294904,
+        "run_attempt": 1,
+        "conclusion": "failure",
+        "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928"
+      },
+      {
+        "kubernetes_version": "v1.35.5",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-03",
+        "run_id": 33689291864,
+        "run_attempt": 1,
+        "conclusion": "failure",
+        "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928"
+      },
+      {
+        "kubernetes_version": "v1.36.1",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-03",
+        "run_id": 33689302997,
+        "run_attempt": 1,
+        "conclusion": "failure",
+        "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928"
+      }
+    ]
+  },
+  "failure_diagnosis": {
+    "classification": "experiment_harness_lifecycle_defect",
+    "common_failure_point": "after_exact_kubernetes_version_validation_before_artifact_creation",
+    "cause": "The in-job acceptance check expected the completed-run GitHub artifact row before the Upload evidence artifact step created that artifact.",
+    "scope": "All nine first attempts reached the same lifecycle assertion after exact kubectl-client, API-server, and kubelet version validation.",
+    "interpretation": "The failures are preserved as failed workflow outcomes; they are not evidence that the cross-plane acceptance criteria passed and they are not silently replaced."
+  },
+  "correction_scope": {
+    "policy": "The scientific correction is limited to relocating the artifact-dependent three-row acceptance check; capture-identity and cohort-generation support do not change scientific inputs, controls, join semantics, target pins, or subject.",
+    "allowed_changes": [
+      {
+        "path": "experiments/github_actions/run_cross_plane_v1_3.sh",
+        "change": "Remove the artifact-dependent three-GitHub-row acceptance assertion from in-job execution."
+      },
+      {
+        "path": "experiments/github_actions/capture_completed_run_v1_3.sh",
+        "change": "Evaluate the exact three-GitHub-row acceptance criterion only during completed-run finalization, after GitHub has created the artifact, and support exact workflow identity capture."
+      },
+      {
+        "path": "experiments/github_actions/capture_run_outcome_v1_3.py",
+        "change": "Support and validate exact workflow and tag identity when preserving non-success outcomes."
+      },
+      {
+        "path": "experiments/github_actions/summarize_cross_version_run_set.py",
+        "change": "Support generation-specific balanced-cohort tag indices while preserving the same verification and summary invariants."
+      }
+    ],
+    "confirmatory_tag_enablement": [
+      "Extend the workflow's exact evidence-tag allowlist from run-01..03 to run-01..06, adding only the nine predeclared run-04..06 tags.",
+      "Extend exact tag parsing in capture and target-resolution support from run-01..03 to run-01..06.",
+      "Update tests and repository verification only to enforce the amendment, both generations, and the unchanged evidence boundaries."
+    ],
+    "unchanged": [
+      "Kubernetes versions, kind node-image digests, kubectl checksums, and kind binary checksum",
+      "workload, OCI subject URI and digest, workflow-generated correlation-key semantics, adapter, and join policy",
+      "positive evidence, present no-ID negative control, adapter-explicit HTTP 403 control, and separate OCI digest check",
+      "first-attempt accounting, failure preservation, offline attestation constraints, and descriptive-only analysis boundary"
+    ]
+  },
+  "amendment_commit_binding": "All nine confirmatory evidence tags must point to the single Git commit containing this amendment and the limited correction. That amendment commit is recorded in the confirmatory run set after the commit is created and is not edited back into this file.",
+  "runner_class": "ubuntu-24.04 GitHub-hosted",
+  "kind_version": "v0.32.0",
+  "target_manifest": "experiments/github_actions/kubernetes_targets_v1.3.json",
+  "target_manifest_sha256": "4f67f91090b4540cec4031b4db793f1cbed2a526688a37fe91b0c95e485bff7e",
+  "design": "balanced 3-by-3 confirmatory controlled procedural-repetition cohort",
+  "execution_order": "round-robin by replicate: v1.34.8, v1.35.5, v1.36.1; repeat for run-05 and run-06",
+  "execution_order_interpretation": "Evidence-tag pushes are issued in this order; GitHub queue and start order are observed rather than controlled.",
+  "planned_runs": 9,
+  "first_attempts_per_version": 3,
+  "inferential_statistics": false,
+  "subject": {
+    "uri": "registry.k8s.io/pause",
+    "digest": "sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a"
+  },
+  "cohort": [
+    {
+      "kubernetes_version": "v1.34.8",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-04"
+    },
+    {
+      "kubernetes_version": "v1.35.5",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-04"
+    },
+    {
+      "kubernetes_version": "v1.36.1",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-04"
+    },
+    {
+      "kubernetes_version": "v1.34.8",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-05"
+    },
+    {
+      "kubernetes_version": "v1.35.5",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-05"
+    },
+    {
+      "kubernetes_version": "v1.36.1",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-05"
+    },
+    {
+      "kubernetes_version": "v1.34.8",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-06"
+    },
+    {
+      "kubernetes_version": "v1.35.5",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-06"
+    },
+    {
+      "kubernetes_version": "v1.36.1",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-06"
+    }
+  ],
+  "held_constant": [
+    "single amendment commit",
+    "workflow path",
+    "kind binary version and checksum",
+    "GitHub-hosted runner label",
+    "workload and subject image digest",
+    "adapter, resolver, controls, and scientific acceptance criteria"
+  ],
+  "varied": [
+    "checksum-pinned kind node image",
+    "matching checksum-pinned kubectl",
+    "Kubernetes minor version"
+  ],
+  "acceptance_criteria": [
+    "nine distinct workflow run IDs at one shared amendment commit, with three first attempts per Kubernetes version",
+    "run attempt one and successful conclusion for every confirmatory evidence tag",
+    "requested Kubernetes version equals kubectl client, API server, and kubelet version",
+    "positive raw Kubernetes audit evidence retains the workflow-generated correlation annotation",
+    "present no-ID negative-control evidence remains unjoined",
+    "one exact-target HTTP 403 is adapter-explicit and has no source-native operational correlation",
+    "Deployment image, Pod specification, and runtime image ID match the OCI digest as a separate check",
+    "exactly three GitHub evidence rows are accepted only during completed-run finalization after artifact creation",
+    "all nested and cohort SHA-256 manifests verify",
+    "each downloaded SLSA bundle verifies offline under exact repository, workflow, source digest, source ref, and hosted-runner constraints"
+  ],
+  "failure_policy": "Preserve and report every confirmatory first-attempt failure. Do not replace a failed confirmatory cohort member with a rerun; any rerun is supplemental, separately tagged, and excluded from the predeclared cohort.",
+  "failure_capture": "A non-successful confirmatory first attempt is frozen with capture_run_outcome_v1_3.py as run metadata, minimized job and step outcome metadata, and a SHA-256 inventory even when no evidence archive exists.",
+  "analysis_policy": "Report the initial nine failures and the nine confirmatory outcomes as separate generations, every run and each version separately. Three confirmatory runs per version are descriptive procedural repetitions, not inferential samples. Do not pool either generation with the earlier three rerun attempts as independent observations.",
+  "claim_boundary": "This confirmatory cohort tests the limited lifecycle correction under controlled cross-version compatibility, sensitivity, and within-version procedural repetition. It is descriptive only: not identifier discovery, cross-provider or cross-organization replication, a managed-cluster or field deployment, third-party reproduction, inferential evidence, a production reliability estimate, or evidence that the initial nine failed runs passed.",
+  "external_reproductions": 0,
+  "independent_organizations": 0,
+  "identifier_discovery_evaluated": false
+}

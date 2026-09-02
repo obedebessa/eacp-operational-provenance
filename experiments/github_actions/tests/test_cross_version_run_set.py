@@ -18,6 +18,7 @@ sys.path.insert(0, str(MODULE_ROOT))
 
 import summarize_cross_version_run_set as cohort  # noqa: E402
 import capture_run_outcome_v1_3 as outcome_capture  # noqa: E402
+import capture_tag_invocation_v1_3 as invocation_capture  # noqa: E402
 
 
 TARGET_MANIFEST = MODULE_ROOT / "kubernetes_targets_v1.3.json"
@@ -25,6 +26,68 @@ PROTOCOL_COMMIT = "a" * 40
 VERSION = "v1.34.8"
 TAG = f"eacp-v1.3-evidence/k8s-{VERSION}/run-01"
 RUN_ID = 123456789
+
+
+def invocation_observation(run_id: int, tag: str, conclusion: str) -> dict:
+    repository = cohort.REPOSITORY
+    name = f"EACP cross-plane v1.3 / {tag} / ref-selected"
+    source = {
+        "total_count": 1,
+        "workflow_runs": [
+            {
+                "id": run_id,
+                "workflow_id": 348771431,
+                "run_number": 18,
+                "run_attempt": 1,
+                "event": "push",
+                "head_branch": tag,
+                "head_sha": PROTOCOL_COMMIT,
+                "path": cohort.WORKFLOW_PATH,
+                "status": "completed",
+                "conclusion": conclusion,
+                "html_url": f"{cohort.REPOSITORY_URL}/actions/runs/{run_id}",
+                "url": f"https://api.github.com/repos/{repository}/actions/runs/{run_id}",
+                "name": name,
+                "display_title": name,
+                "previous_attempt_url": None,
+                "pull_requests": [],
+                "referenced_workflows": [],
+                "repository": {"full_name": repository, "private": False},
+                "head_repository": {"full_name": repository, "private": False},
+                "head_commit": {
+                    "id": PROTOCOL_COMMIT,
+                    "timestamp": "2026-09-02T21:59:00Z",
+                },
+                "created_at": "2026-09-02T22:00:00Z",
+                "run_started_at": "2026-09-02T22:00:00Z",
+                "updated_at": "2026-09-02T22:01:00Z",
+            }
+        ],
+    }
+    return invocation_capture.build_observation(
+        source,
+        repository=repository,
+        evidence_tag=tag,
+        run_id=run_id,
+        protocol_commit=PROTOCOL_COMMIT,
+        conclusion=conclusion,
+        captured_at="2026-09-02T22:02:00Z",
+        acquisition="saved-test-input",
+    )
+
+
+def failed_log_observation(run_id: int, tag: str, conclusion: str) -> dict:
+    return outcome_capture.build_failed_log_observation(
+        b"",
+        repository=cohort.REPOSITORY,
+        run_id=run_id,
+        protocol_commit=PROTOCOL_COMMIT,
+        evidence_tag=tag,
+        conclusion=conclusion,
+        captured_at="2026-09-02T22:02:00Z",
+        acquisition="saved-test-log",
+        gh_version="gh version test",
+    )
 
 
 def write_tar(path: Path, members: list[tuple[str, bytes, bytes | None]]) -> None:
@@ -234,7 +297,60 @@ class AttestationVerificationTests(unittest.TestCase):
         command = run.call_args.args[0]
         self.assertEqual(command[command.index("--custom-trusted-root") + 1], str(trusted_root))
         self.assertEqual(command[command.index("--source-ref") + 1], f"refs/tags/{TAG}")
+        self.assertEqual(command[command.index("--hostname") + 1], "github.com")
+        self.assertEqual(command[command.index("--signer-digest") + 1], PROTOCOL_COMMIT)
+        self.assertEqual(command[command.index("--predicate-type") + 1], cohort.PREDICATE_TYPE)
         self.assertIn("--deny-self-hosted-runners", command)
+
+    def test_captured_root_policy_records_default_trust_bootstrap_and_scope(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            run_root = Path(temporary) / "run-123"
+            attestation = run_root / "attestation"
+            attestation.mkdir(parents=True)
+            trusted_root = attestation / "trusted_root.jsonl"
+            trusted_root.write_text(
+                json.dumps(
+                    {
+                        "mediaType": (
+                            "application/vnd.dev.sigstore.trustedroot+json;version=0.1"
+                        )
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            policy = {
+                "schema_version": "eacp.attestation-verification-policy/1.3.1",
+                "repository": cohort.REPOSITORY,
+                "signer_workflow": cohort.SIGNER_WORKFLOW,
+                "signer_digest": PROTOCOL_COMMIT,
+                "source_digest": PROTOCOL_COMMIT,
+                "source_ref": f"refs/tags/{TAG}",
+                "predicate_type": cohort.PREDICATE_TYPE,
+                "deny_self_hosted_runners": True,
+                "bundle_on_disk": True,
+                "capture_time_default_trust_verification": True,
+                "capture_time_captured_root_verification": True,
+                "custom_trusted_root_on_disk": True,
+                "trusted_root_sha256": cohort.sha256(trusted_root),
+                "gh_cli_version": "gh version 2.97.0",
+                "attested_scope": "in_run_tar_archive_only",
+                "completed_finalization_builder_attested": False,
+                "trust_bootstrap_boundary": (
+                    "The captured root authenticity is not self-proving; capture also uses "
+                    "the default trust configuration."
+                ),
+            }
+            policy_path = attestation / "verification-policy.json"
+            policy_path.write_text(json.dumps(policy), encoding="utf-8")
+            self.assertEqual(
+                cohort.validate_attestation_policy(run_root, PROTOCOL_COMMIT, TAG),
+                trusted_root,
+            )
+            policy["completed_finalization_builder_attested"] = True
+            policy_path.write_text(json.dumps(policy), encoding="utf-8")
+            with self.assertRaises(cohort.CohortError):
+                cohort.validate_attestation_policy(run_root, PROTOCOL_COMMIT, TAG)
 
 
 class BalancedCohortTests(unittest.TestCase):
@@ -282,6 +398,7 @@ class BalancedCohortTests(unittest.TestCase):
                             "correlation_id": f"correlation-{row['run_id']}",
                             "head_sha": protocol_commit,
                             "conclusion": "success",
+                            "sole_exact_tag_invocation_at_capture": True,
                         }
 
                     with patch.object(
@@ -370,7 +487,13 @@ class BalancedCohortTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            outcome_capture.write_outcome(root / f"run-{run_id}", metadata, outcome)
+            outcome_capture.write_outcome(
+                root / f"run-{run_id}",
+                metadata,
+                outcome,
+                invocation_observation(run_id, TAG, "startup_failure"),
+                failed_log_observation(run_id, TAG, "startup_failure"),
+            )
             result = cohort.verify_cohort_member(
                 root,
                 row,
@@ -380,7 +503,9 @@ class BalancedCohortTests(unittest.TestCase):
             )
         self.assertEqual(result["conclusion"], "startup_failure")
         self.assertEqual(result["criteria_status"], "not_satisfied")
-        self.assertFalse(result["full_evidence_verified"])
+        self.assertFalse(result["all_predeclared_criteria_validated"])
+        self.assertTrue(result["sole_exact_tag_invocation_at_capture"])
+        self.assertFalse(result["completed_finalization_builder_attested"])
         self.assertIsNone(result["job_conclusion"])
         self.assertEqual(result["run_index"], 1)
         self.assertEqual(result["evidence_tag"], TAG)
@@ -415,7 +540,13 @@ class BalancedCohortTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            outcome_capture.write_outcome(root / f"run-{run_id}", metadata, outcome)
+            outcome_capture.write_outcome(
+                root / f"run-{run_id}",
+                metadata,
+                outcome,
+                invocation_observation(run_id, tag, "startup_failure"),
+                failed_log_observation(run_id, tag, "startup_failure"),
+            )
             result = cohort.verify_cohort_member(
                 root,
                 row,
@@ -470,6 +601,7 @@ class BalancedCohortTests(unittest.TestCase):
                         "run_id": row["run_id"],
                         "head_sha": protocol_commit,
                         "conclusion": "failure",
+                        "sole_exact_tag_invocation_at_capture": True,
                     }
                 return {
                     "kubernetes_version": row["kubernetes_version"],
@@ -479,12 +611,16 @@ class BalancedCohortTests(unittest.TestCase):
                     "correlation_id": f"correlation-{row['run_id']}",
                     "head_sha": protocol_commit,
                     "conclusion": "success",
+                    "sole_exact_tag_invocation_at_capture": True,
                 }
 
             with patch.object(cohort, "verify_cohort_member", side_effect=fake_verify):
                 summary = cohort.summarize(root, TARGET_MANIFEST)
         self.assertEqual(summary["overall_status"], "partial")
-        self.assertEqual(summary["aggregate"]["successful_full_evidence_runs"], 8)
+        self.assertEqual(
+            summary["aggregate"]["successful_runs_satisfying_all_predeclared_criteria"],
+            8,
+        )
         self.assertEqual(summary["aggregate"]["non_successful_first_attempt_runs"], 1)
 
 

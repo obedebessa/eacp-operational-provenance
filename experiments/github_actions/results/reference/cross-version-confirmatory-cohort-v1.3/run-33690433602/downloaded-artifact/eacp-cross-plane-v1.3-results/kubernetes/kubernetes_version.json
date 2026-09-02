@@ -1,0 +1,29 @@
+{
+  "clientVersion": {
+    "major": "1",
+    "minor": "35",
+    "gitVersion": "v1.35.5",
+    "gitCommit": "6636cbce3bbef91ff61d36658757179426f9e1b2",
+    "gitTreeState": "clean",
+    "buildDate": "2026-05-12T09:53:48Z",
+    "goVersion": "go1.25.9",
+    "compiler": "gc",
+    "platform": "linux/amd64"
+  },
+  "kustomizeVersion": "v5.7.1",
+  "serverVersion": {
+    "major": "1",
+    "minor": "35",
+    "emulationMajor": "1",
+    "emulationMinor": "35",
+    "minCompatibilityMajor": "1",
+    "minCompatibilityMinor": "34",
+    "gitVersion": "v1.35.5",
+    "gitCommit": "6636cbce3bbef91ff61d36658757179426f9e1b2",
+    "gitTreeState": "clean",
+    "buildDate": "2026-05-12T09:50:51Z",
+    "goVersion": "go1.25.9",
+    "compiler": "gc",
+    "platform": "linux/amd64"
+  }
+}
