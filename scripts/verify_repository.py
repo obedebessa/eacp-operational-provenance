@@ -94,6 +94,8 @@ CANDIDATE_SENTINELS = (
 
 CANDIDATE_REQUIRED_FILES = (
     ".github/workflows/eacp-cross-plane-v1.3.yml",
+    "CLAIMS_AND_EVIDENCE_v1.3.md",
+    "EXPERT_REVIEW_REQUEST_v1.3.md",
     "RELEASE_NOTES_v1.3-candidate.md",
     "REVIEWER_GUIDE_v1.3.md",
     "spec/EACP_PROFILE_v1.3.md",
@@ -117,7 +119,20 @@ CANDIDATE_REQUIRED_FILES = (
     "experiments/index_ablation/results/reference/method.json",
     "experiments/index_ablation/results/reference/summary_results.json",
     "experiments/github_actions/README.md",
+    "experiments/github_actions/EXTERNAL_REPLICATION_PROTOCOL_v1.3.md",
+    "experiments/github_actions/capture_completed_run_v1_3.sh",
+    "experiments/github_actions/capture_run_outcome_v1_3.py",
+    "experiments/github_actions/cross_version_protocol_plan_v1.3.json",
+    "experiments/github_actions/kubernetes_targets_v1.3.json",
+    "experiments/github_actions/replication-report.template.json",
+    "experiments/github_actions/resolve_kubernetes_target.py",
+    "experiments/github_actions/summarize_cross_version_run_set.py",
     "experiments/github_actions/summarize_reference_run.py",
+    "experiments/github_actions/tests/test_kubernetes_versions.py",
+    "experiments/github_actions/tests/test_cross_version_run_set.py",
+    "experiments/github_actions/tests/test_run_outcome.py",
+    "experiments/github_actions/tests/test_target_resolution.py",
+    "experiments/github_actions/verify_kubernetes_versions.py",
     "experiments/github_actions/results/reference/run-33682116347/README.md",
     "experiments/github_actions/results/reference/run-33682116347/REFERENCE_SHA256SUMS",
     "experiments/github_actions/results/reference/run-33682116347/reference_summary.json",
@@ -172,6 +187,84 @@ GITHUB_ACTIONS_HEAD_SHA = "76b2ed54381ae52cf0f54cd22a20341c3216b77b"
 GITHUB_ACTIONS_SUBJECT_DIGEST = (
     "sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a"
 )
+
+EXPECTED_CROSS_VERSION_TARGETS = {
+    "schema_version": "eacp.kubernetes-targets/1.3.0",
+    "kind": {
+        "version": "v0.32.0",
+        "linux_amd64_sha256": (
+            "50030de23cf40a18505f20426f6a8506bedf13c6e509244bd1fa9463721b0f54"
+        ),
+    },
+    "targets": {
+        "v1.34.8": {
+            "node_image": (
+                "kindest/node:v1.34.8@sha256:"
+                "02722c2dedddcfc00febf5d27fbeb9b7b2c14294c82109ff4a85d89ac9ba3256"
+            ),
+            "kubectl_linux_amd64_sha256": (
+                "f6249132865c13abe3c9dd5038f5da65849cb86eee1608c001831504e481aa8c"
+            ),
+        },
+        "v1.35.5": {
+            "node_image": (
+                "kindest/node:v1.35.5@sha256:"
+                "ce977ae6d65918d0b58a5f8b5e940429c2ce42fa3a5619ec2bbc60b949c0ac95"
+            ),
+            "kubectl_linux_amd64_sha256": (
+                "90f75ea6ecc9ea5633262e1c0b83a40560003b30fc94a04cb099404fcef0c224"
+            ),
+        },
+        "v1.36.1": {
+            "node_image": (
+                "kindest/node:v1.36.1@sha256:"
+                "3489c7674813ba5d8b1a9977baea8a6e553784dab7b84759d1014dbd78f7ebd5"
+            ),
+            "kubectl_linux_amd64_sha256": (
+                "629d3f410e09bf49b64ae7079f7f0bda1191efed311f7d37fdbab0ad5b0ec2b7"
+            ),
+        },
+    },
+}
+
+EXPECTED_CROSS_VERSION_COHORT = [
+    {
+        "kubernetes_version": "v1.34.8",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-01",
+    },
+    {
+        "kubernetes_version": "v1.35.5",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-01",
+    },
+    {
+        "kubernetes_version": "v1.36.1",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-01",
+    },
+    {
+        "kubernetes_version": "v1.34.8",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-02",
+    },
+    {
+        "kubernetes_version": "v1.35.5",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-02",
+    },
+    {
+        "kubernetes_version": "v1.36.1",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-02",
+    },
+    {
+        "kubernetes_version": "v1.34.8",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-03",
+    },
+    {
+        "kubernetes_version": "v1.35.5",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-03",
+    },
+    {
+        "kubernetes_version": "v1.36.1",
+        "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-03",
+    },
+]
 
 EXPECTED_CANDIDATE_FIGURES = {
     "figures/eacp_architecture_v1_3.png": (2400, 1500),
@@ -703,6 +796,232 @@ def validate_github_actions_candidate(errors: list[str]) -> None:
                 errors.append(f"GitHub Actions attempt {expected_attempt} invariants mismatch")
 
 
+def validate_cross_version_protocol(errors: list[str]) -> None:
+    """Validate the predeclared cross-version protocol and its claim boundaries."""
+
+    experiment_root = ROOT / "experiments/github_actions"
+    target_path = experiment_root / "kubernetes_targets_v1.3.json"
+    plan_path = experiment_root / "cross_version_protocol_plan_v1.3.json"
+    workflow_path = ROOT / ".github/workflows/eacp-cross-plane-v1.3.yml"
+    ledger_path = ROOT / "CLAIMS_AND_EVIDENCE_v1.3.md"
+
+    if target_path.is_file():
+        targets = load_json_object(target_path, relative(target_path), errors)
+        if targets is not None and targets != EXPECTED_CROSS_VERSION_TARGETS:
+            errors.append(
+                "cross-version Kubernetes target manifest differs from the exact "
+                "kind, node-image, or kubectl checksum pins"
+            )
+
+    plan = None
+    if plan_path.is_file():
+        plan = load_json_object(plan_path, relative(plan_path), errors)
+    if plan is not None:
+        expected_scalars = {
+            "schema_version": "eacp.cross-version-protocol-plan/1.3.0",
+            "status": "prospective_before_execution",
+            "repository": "obedebessa/eacp-operational-provenance",
+            "workflow_path": ".github/workflows/eacp-cross-plane-v1.3.yml",
+            "runner_class": "ubuntu-24.04 GitHub-hosted",
+            "kind_version": "v0.32.0",
+            "target_manifest": "experiments/github_actions/kubernetes_targets_v1.3.json",
+            "design": "balanced 3-by-3 controlled procedural-repetition cohort",
+            "execution_order": (
+                "round-robin by replicate: v1.34.8, v1.35.5, v1.36.1; "
+                "repeat for run-02 and run-03"
+            ),
+            "execution_order_interpretation": (
+                "Evidence-tag pushes are issued in this order; GitHub queue and start order "
+                "are observed rather than controlled."
+            ),
+            "planned_runs": 9,
+            "first_attempts_per_version": 3,
+            "inferential_statistics": False,
+            "external_reproductions": 0,
+            "independent_organizations": 0,
+            "identifier_discovery_evaluated": False,
+        }
+        for key, expected in expected_scalars.items():
+            observed = plan.get(key)
+            if observed != expected or type(observed) is not type(expected):
+                errors.append(
+                    f"cross-version prospective plan {key}={observed!r}; "
+                    f"expected {expected!r}"
+                )
+
+        expected_subject = {
+            "uri": "registry.k8s.io/pause",
+            "digest": GITHUB_ACTIONS_SUBJECT_DIGEST,
+        }
+        if plan.get("subject") != expected_subject:
+            errors.append("cross-version prospective plan subject URI or digest differs")
+
+        if plan.get("cohort") != EXPECTED_CROSS_VERSION_COHORT:
+            errors.append("cross-version prospective plan cohort or evidence tags differ")
+
+        expected_held_constant = {
+            "protocol commit",
+            "workflow path",
+            "kind binary version and checksum",
+            "GitHub-hosted runner label",
+            "workload and subject image digest",
+            "adapter, resolver, controls, and acceptance criteria",
+        }
+        held_constant = plan.get("held_constant")
+        if (
+            not isinstance(held_constant, list)
+            or len(held_constant) != len(expected_held_constant)
+            or not all(isinstance(value, str) for value in held_constant)
+            or set(held_constant) != expected_held_constant
+        ):
+            errors.append("cross-version prospective plan does not freeze the declared constants")
+
+        expected_varied = {
+            "checksum-pinned kind node image",
+            "matching checksum-pinned kubectl",
+            "Kubernetes minor version",
+        }
+        varied = plan.get("varied")
+        if (
+            not isinstance(varied, list)
+            or len(varied) != len(expected_varied)
+            or not all(isinstance(value, str) for value in varied)
+            or set(varied) != expected_varied
+        ):
+            errors.append("cross-version prospective plan varies undeclared factors")
+
+        acceptance = plan.get("acceptance_criteria")
+        expected_acceptance = [
+            "nine distinct workflow run IDs at one shared protocol commit, with three first attempts per Kubernetes version",
+            "run attempt one and successful conclusion for every evidence tag",
+            "requested Kubernetes version equals kubectl client, API server, and kubelet version",
+            "positive raw Kubernetes audit evidence retains the workflow-generated correlation annotation",
+            "present no-ID negative-control evidence remains unjoined",
+            "one exact-target HTTP 403 is adapter-explicit and has no source-native operational correlation",
+            "Deployment image, Pod specification, and runtime image ID match the OCI digest as a separate check",
+            "all nested and cohort SHA-256 manifests verify",
+            "each downloaded SLSA bundle verifies offline under exact repository, workflow, source digest, source ref, and hosted-runner constraints",
+        ]
+        if acceptance != expected_acceptance:
+            errors.append("cross-version prospective plan acceptance criteria differ")
+
+        protocol_binding = plan.get("protocol_commit_binding")
+        if not isinstance(protocol_binding, str) or any(
+            phrase not in protocol_binding
+            for phrase in (
+                "single Git commit containing this plan",
+                "not edited into this file",
+            )
+        ):
+            errors.append("cross-version plan does not bind evidence tags prospectively")
+
+        policy_requirements = {
+            "failure_policy": (
+                "Preserve and report every first-run failure",
+                "Do not replace a failed cohort member with a rerun",
+            ),
+            "failure_capture": (
+                "capture_run_outcome_v1_3.py",
+                "minimized job/step outcome metadata",
+                "even when no evidence archive exists",
+            ),
+            "analysis_policy": (
+                "Report every run and each version separately",
+                "Three runs per version are descriptive procedural repetitions",
+                "not inferential samples",
+                "earlier three rerun attempts",
+            ),
+            "claim_boundary": (
+                "controlled cross-version compatibility, sensitivity, and within-version procedural-repetition cohort",
+                "not identifier discovery",
+                "cross-provider or cross-organization replication",
+                "managed-cluster or field deployment",
+                "third-party reproduction",
+                "inferential evidence",
+                "production reliability estimate",
+            ),
+        }
+        for field, phrases in policy_requirements.items():
+            value = plan.get(field)
+            if not isinstance(value, str) or any(phrase not in value for phrase in phrases):
+                errors.append(f"cross-version prospective plan weakens {field}")
+
+    if workflow_path.is_file():
+        workflow = workflow_path.read_text(encoding="utf-8")
+        expected_workflow_tags = {
+            row["evidence_tag"] for row in EXPECTED_CROSS_VERSION_COHORT
+        }
+        workflow_tags = re.findall(
+            r'(?m)^\s*-\s+"(eacp-v1\.3-evidence/k8s-[^"]+)"\s*$', workflow
+        )
+        if (
+            len(workflow_tags) != len(expected_workflow_tags)
+            or set(workflow_tags) != expected_workflow_tags
+        ):
+            errors.append("cross-version workflow evidence-tag allowlist differs from the 3-by-3 plan")
+        if re.search(r"(?m)^\s+branches(?:-ignore)?:", workflow):
+            errors.append("cross-version evidence workflow must not run on branch pushes")
+        required_workflow_text = (
+            "resolve_kubernetes_target.py",
+            "kubernetes_targets_v1.3.json",
+            "Install checksum-pinned kind and matching kubectl",
+            "KIND_LINUX_AMD64_SHA256",
+            "KUBECTL_LINUX_AMD64_SHA256",
+            "The workflow generated the correlation key",
+            "controlled propagation and exact composition of an introduced key",
+            "not discovery of a naturally occurring identifier",
+            "A present no-ID control remained unjoined",
+            "adapter-explicit rather than source-native",
+            "the OCI digest is checked separately",
+            "does not prove the semantic truth of upstream events",
+        )
+        missing = [text for text in required_workflow_text if text not in workflow]
+        if missing:
+            errors.append(
+                "cross-version workflow omits pinning or claim-boundary text: "
+                + ", ".join(repr(text) for text in missing)
+            )
+
+    if ledger_path.is_file():
+        ledger = ledger_path.read_text(encoding="utf-8")
+        claim_ids = [int(match) for match in re.findall(r"(?m)^\| C([0-9]+) \|", ledger)]
+        if claim_ids != list(range(1, 12)):
+            errors.append("v1.3 claims ledger must contain exactly claims C1 through C11")
+        required_ledger_text = (
+            "The workflow generated and propagated the key",
+            "controlled propagation and composition",
+            "not discovery of naturally occurring identifiers",
+            "independent organizational corroboration",
+            "A present no-ID Kubernetes control remains unjoined",
+            "`adapter_explicit_exact_target`",
+            "checked separately from operational correlation",
+            "only an external operator can establish independent reproduction",
+        )
+        missing = [text for text in required_ledger_text if text not in ledger]
+        if missing:
+            errors.append(
+                "v1.3 claims ledger omits evidence boundaries: "
+                + ", ".join(repr(text) for text in missing)
+            )
+
+    cohort_root = experiment_root / "results/reference/cross-version-cohort-v1.3"
+    summarizer = experiment_root / "summarize_cross_version_run_set.py"
+    if cohort_root.is_dir() and summarizer.is_file():
+        run_offline_check(
+            [
+                sys.executable,
+                str(summarizer),
+                "--root",
+                str(cohort_root),
+                "--target-manifest",
+                str(target_path),
+                "--verify",
+            ],
+            "cross-version cohort checksum and invariant verification",
+            errors,
+        )
+
+
 def png_dimensions(path: Path, errors: list[str]) -> tuple[int, int] | None:
     try:
         with path.open("rb") as stream:
@@ -757,6 +1076,7 @@ def validate_candidate_additions(errors: list[str]) -> None:
     validate_correlation_candidate(errors)
     validate_index_ablation_candidate(errors)
     validate_github_actions_candidate(errors)
+    validate_cross_version_protocol(errors)
     validate_candidate_figures_and_docs(errors)
 
 

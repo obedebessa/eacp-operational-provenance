@@ -89,8 +89,26 @@ report = json.loads(join_path.read_text(encoding="utf-8"))
 if report["status"] != "observed_cross_plane_link_with_subject_digest":
     raise SystemExit(f"completed join validation failed: {report['status']}")
 binding = report["kubernetes"]["rbac_denial_binding"]
-if not binding or binding["binding_method"] != "adapter_explicit_exact_target":
-    raise SystemExit("completed join is missing the target-bound adapter-explicit RBAC denial")
+if not binding or (
+    binding["binding_method"] != "adapter_explicit_exact_target"
+    or binding["matching_http_403_records"] != 1
+    or binding["source_native_correlation_records"] != 0
+):
+    raise SystemExit(
+        "completed join lacks exactly one adapter-explicit, source-native-ID-free RBAC denial"
+    )
+negative = report["kubernetes"]["negative_control"]
+if not negative or not negative["correlation_annotation_absent"]:
+    raise SystemExit("completed join failed the present no-ID negative control")
+pods = report["kubernetes"]["pods"]
+if not (
+    pods["all_pods_have_exact_correlation_id"]
+    and pods["pod_spec_subject_exact_match"]
+    and pods["runtime_image_id_exact_subject_digest_match"]
+):
+    raise SystemExit("completed join failed a Pod correlation or separate OCI digest check")
+if report["github_actions"]["evidence_rows"] != 3:
+    raise SystemExit("completed join does not contain the expected three GitHub evidence records")
 value = {
     "schema_version": "eacp.cross-plane-finalization/1.3.0",
     "source_results_manifest_sha256": hashlib.sha256(source_manifest.read_bytes()).hexdigest(),

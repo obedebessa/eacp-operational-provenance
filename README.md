@@ -23,11 +23,13 @@ manuscript is a **preprint / technical report** and has **not undergone peer rev
 
 - [Read the v1.3 reviewer-candidate paper (PDF)](paper/EACP_preprint_v1.3_candidate.pdf)
 - [Copy-ready expert review request](EXPERT_REVIEW_REQUEST_v1.3.md)
+- [Claim-to-evidence and falsification ledger](CLAIMS_AND_EVIDENCE_v1.3.md)
 - [Reviewer guide and verification path](REVIEWER_GUIDE_v1.3.md)
 - [Candidate release notes](RELEASE_NOTES_v1.3-candidate.md)
 - [Normative EACP Profile 1.3](spec/EACP_PROFILE_v1.3.md)
 - [Correlation-robustness experiment](experiments/correlation_robustness/README.md)
 - [Live GitHub Actions → Kubernetes experiment](experiments/github_actions/README.md)
+- [Prospective external replication protocol](experiments/github_actions/EXTERNAL_REPLICATION_PROTOCOL_v1.3.md)
 - [Frozen public run 33682116347](experiments/github_actions/results/reference/run-33682116347/README.md)
 - [SQLite index ablation](experiments/index_ablation/README.md)
 
@@ -253,6 +255,13 @@ whole. Its warm and cold-open timings are host- and cache-dependent, sequential
 SQLite measurements; cold-open does not mean cold disk I/O.
 
 The three live attempts demonstrate repeatability of one controlled workflow.
+They are rerun attempts under one run ID in one repository, not independent
+replications. The workflow generated the identifier and wrote it into the
+positive Deployment and Pod-template annotations; “source-native” describes its
+presence in retained raw Kubernetes audit records, not an independently arising
+key. The experiment evaluates controlled propagation and composition, not
+identifier discovery. No field deployment or third-party reproduction has yet
+occurred, and the OCI digest is checked separately from correlation.
 The HTTP 403 audit record contains no source-native correlation; its link is an
 adapter-explicit assertion bound by exact API group, resource, namespace, name,
 principal, and outcome. The archive attestation authenticates builder provenance

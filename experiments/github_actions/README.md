@@ -177,21 +177,72 @@ artifact integrity and builder provenance; it does not certify the semantic
 truth of GitHub or Kubernetes source events.
 
 The workflow pins checkout, Python setup, artifact upload, attestation action,
-kind binary checksum, kind node image, and workload image by commit or digest.
+kind binary checksum, kind node image, matching kubectl binary, and workload
+image by commit or digest. For manually selected or evidence-tag-selected
+Kubernetes v1.34.8, v1.35.5, or v1.36.1, the runner fails unless kubectl
+client, API server, and kubelet all report the exact selected version.
 The complete API-server audit log remains in transient runner storage. Only the
 namespace-filtered, sanitized subset is uploaded.
 
-### Three independent attempts
+### Three controlled rerun attempts
 
-For the intended evaluation, push the candidate branch once and then use
-GitHub's **Re-run all jobs** twice. This produces attempts 1, 2, and 3 under one
+The frozen earlier evaluation pushed the candidate branch once and then used
+GitHub's **Re-run all jobs** twice. It produced attempts 1, 2, and 3 under one
 run ID, with three distinct correlation IDs because `run_attempt` participates
-in the key. Preserve all three artifacts and attestation verification outputs;
-do not pool them until each individual bundle validates.
+in the key. All three artifacts and attestation verification outputs were
+preserved and validated individually.
 
-The initial branch run is possible before merging because `push` is restricted
-to `eacp-v1.3-candidate`. No workflow has been dispatched by the adapter or by
-the preparation of this repository.
+These are procedural reruns, not independent replications. They share one
+repository, source revision, workflow, GitHub-hosted runner class, and protocol;
+each creates a fresh ephemeral single-node kind cluster. A separate manual
+dispatch can select checksum-pinned Kubernetes v1.34.8, v1.35.5, or v1.36.1 to
+produce a new workflow-run ID. Those separate runs still do not constitute a
+field deployment or third-party reproduction.
+
+### Prospective separate-run cross-version cohort
+
+The machine-readable
+[`cross_version_protocol_plan_v1.3.json`](cross_version_protocol_plan_v1.3.json)
+was added before execution. Branch pushes no longer trigger this evidence
+workflow, so committing the protocol cannot create an unplanned preview run. It
+predeclares a balanced 3×3 cohort: three exact
+evidence tags for each of Kubernetes v1.34.8, v1.35.5, and v1.36.1, all pointing
+to the same protocol commit. The tags are triggered in round-robin order by
+replicate. Each produces a distinct workflow-run ID while holding the workflow,
+kind binary, workload, subject digest, resolver, controls, and hosted-runner
+class constant. Exact node images and matching kubectl checksums are centralized
+in [`kubernetes_targets_v1.3.json`](kubernetes_targets_v1.3.json).
+
+The first attempt for every tag is retained whether it succeeds or fails. A
+failure must not be silently replaced by a rerun. After a successful completion,
+capture the full evidence and fresh cryptographic verification with:
+
+```bash
+bash experiments/github_actions/capture_completed_run_v1_3.sh \
+  RUN_ID /path/to/cross-version-cohort-v1.3/run-RUN_ID
+```
+
+If the first attempt does not succeed or produces no evidence artifact, freeze
+its canonical run identity and minimized job/step outcome instead:
+
+```bash
+python3 experiments/github_actions/capture_run_outcome_v1_3.py \
+  --run-id RUN_ID \
+  --protocol-commit EXACT_40_HEX_COMMIT \
+  --output-dir /path/to/cross-version-cohort-v1.3/run-RUN_ID
+```
+
+The outcome capturer stores no raw logs, tokens, or runner identifiers. It
+creates a checksum-bound failure record that the aggregate verifier includes in
+the cohort outcome rather than substituting a later run.
+
+The aggregate verifier requires nine distinct run IDs, three first attempts per
+version, one shared source commit, exact client/server/kubelet versions, all
+controls, nested checksums, and fresh offline attestation verification. The
+three runs per version are descriptive procedural repetitions—not inferential
+samples. This remains a compatibility/sensitivity cohort, not a production
+reliability estimate, field deployment, cross-provider study, or external
+replication.
 
 ### Why post-run finalization exists
 
@@ -213,11 +264,19 @@ metadata, regenerates the join report against the already checksummed
 Kubernetes evidence, and writes a separate finalization manifest. It never
 rewrites the original runtime evidence.
 
-Verify the GitHub attestation separately against the downloaded tar archive:
+Verify the GitHub attestation separately against the downloaded tar archive,
+an on-disk trusted root, and the exact repository/workflow/source constraints:
 
 ```bash
+gh attestation trusted-root > trusted_root.jsonl
 gh attestation verify eacp-cross-plane-v1.3-RUN-ATTEMPT.tar.gz \
-  --repo OWNER/REPOSITORY
+  --bundle sha256-ARCHIVE_DIGEST.jsonl \
+  --custom-trusted-root trusted_root.jsonl \
+  --repo OWNER/REPOSITORY \
+  --signer-workflow OWNER/REPOSITORY/.github/workflows/eacp-cross-plane-v1.3.yml \
+  --source-digest EXACT_COMMIT_SHA \
+  --source-ref refs/tags/EXACT_EVIDENCE_TAG \
+  --deny-self-hosted-runners
 ```
 
 ## Run the protocol outside GitHub
@@ -229,9 +288,16 @@ Python, and `shasum`. It will refuse to replace an existing kind cluster.
 ```bash
 EACP_REPOSITORY=OWNER/REPOSITORY \
 EACP_RUN_ID=RUN_ID \
+EACP_EXPECTED_KUBERNETES_VERSION=v1.36.1 \
+KIND_NODE_IMAGE=kindest/node:v1.36.1@sha256:3489c7674813ba5d8b1a9977baea8a6e553784dab7b84759d1014dbd78f7ebd5 \
 RESULTS_DIR=/tmp/eacp-cross-plane-result \
 bash experiments/github_actions/run_cross_plane_v1_3.sh
 ```
+
+The local `kubectl` must be the matching checksum-pinned binary in
+`kubernetes_targets_v1.3.json`; the runner rejects client, server, or kubelet
+version skew and rechecks the requested version/image pair against that
+committed allowlist.
 
 Cluster deletion is limited to the unique cluster created by the runner. Set
 `KEEP_CLUSTER=1` to retain it. A caller-supplied `WORK_DIR` is never removed by

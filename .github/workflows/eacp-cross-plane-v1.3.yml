@@ -1,13 +1,29 @@
 name: EACP cross-plane v1.3
+run-name: EACP cross-plane v1.3 / ${{ github.ref_name }} / ${{ inputs.kubernetes_profile || 'ref-selected' }}
 
 on:
   push:
-    branches: ["eacp-v1.3-candidate"]
-    paths:
-      - .github/workflows/eacp-cross-plane-v1.3.yml
-      - experiments/github_actions/**
-      - spec/**
+    tags:
+      - "eacp-v1.3-evidence/k8s-v1.34.8/run-01"
+      - "eacp-v1.3-evidence/k8s-v1.34.8/run-02"
+      - "eacp-v1.3-evidence/k8s-v1.34.8/run-03"
+      - "eacp-v1.3-evidence/k8s-v1.35.5/run-01"
+      - "eacp-v1.3-evidence/k8s-v1.35.5/run-02"
+      - "eacp-v1.3-evidence/k8s-v1.35.5/run-03"
+      - "eacp-v1.3-evidence/k8s-v1.36.1/run-01"
+      - "eacp-v1.3-evidence/k8s-v1.36.1/run-02"
+      - "eacp-v1.3-evidence/k8s-v1.36.1/run-03"
   workflow_dispatch:
+    inputs:
+      kubernetes_profile:
+        description: Exact checksum-pinned Kubernetes target for this separate run
+        required: true
+        default: v1.36.1
+        type: choice
+        options:
+          - v1.34.8
+          - v1.35.5
+          - v1.36.1
 
 permissions:
   actions: read
@@ -23,24 +39,35 @@ jobs:
   github-actions-to-kubernetes:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
-    env:
-      KIND_VERSION: v0.32.0
-      KIND_LINUX_AMD64_SHA256: 50030de23cf40a18505f20426f6a8506bedf13c6e509244bd1fa9463721b0f54
     steps:
       - name: Check out the exact run revision
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.0.2
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # immutable commit
 
       - name: Set up Python
-        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.0.0
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # immutable commit
         with:
           python-version: "3.11"
+
+      - name: Resolve checksum-pinned Kubernetes target
+        env:
+          REQUESTED_PROFILE: ${{ inputs.kubernetes_profile }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python experiments/github_actions/resolve_kubernetes_target.py \
+            --manifest experiments/github_actions/kubernetes_targets_v1.3.json \
+            --event "${GITHUB_EVENT_NAME}" \
+            --ref-type "${GITHUB_REF_TYPE}" \
+            --ref-name "${GITHUB_REF_NAME}" \
+            --requested "${REQUESTED_PROFILE}" \
+            --github-env "${GITHUB_ENV}"
 
       - name: Verify adapter unit and negative-control tests
         run: |
           python -m compileall -q experiments/github_actions
           python -m unittest discover -s experiments/github_actions/tests -v
 
-      - name: Install checksum-pinned kind
+      - name: Install checksum-pinned kind and matching kubectl
         shell: bash
         run: |
           set -euo pipefail
@@ -50,7 +77,15 @@ jobs:
             --output "${KIND_PATH}"
           printf '%s  %s\n' "${KIND_LINUX_AMD64_SHA256}" "${KIND_PATH}" | sha256sum --check --strict
           chmod 0755 "${KIND_PATH}"
+          KUBECTL_PATH="${RUNNER_TEMP}/kubectl"
+          curl --fail --silent --show-error --location \
+            "https://dl.k8s.io/release/${KUBERNETES_PROFILE}/bin/linux/amd64/kubectl" \
+            --output "${KUBECTL_PATH}"
+          printf '%s  %s\n' "${KUBECTL_LINUX_AMD64_SHA256}" "${KUBECTL_PATH}" \
+            | sha256sum --check --strict
+          chmod 0755 "${KUBECTL_PATH}"
           echo "${RUNNER_TEMP}" >> "${GITHUB_PATH}"
+          "${KUBECTL_PATH}" version --client=true -o json
 
       - name: Execute real cross-plane chain and controls
         env:
@@ -99,7 +134,11 @@ jobs:
             echo
             echo "Run/attempt: \`${GITHUB_RUN_ID}/${GITHUB_RUN_ATTEMPT}\`"
             echo
-            echo 'The run observed a source-native exact GitHub Actions → Kubernetes positive chain, an immutable OCI subject digest, a correlation-free negative control, and a target-bound adapter-explicit RBAC denial.'
+            echo "Kubernetes profile: \`${KUBERNETES_PROFILE}\`; node image: \`${KIND_NODE_IMAGE}\`"
+            echo
+            echo 'The workflow generated the correlation key and wrote it into the positive Kubernetes annotations. The run therefore tests controlled propagation and exact composition of an introduced key—not discovery of a naturally occurring identifier.'
+            echo
+            echo 'The retained Kubernetes audit records natively contain that workflow-injected annotation. A present no-ID control remained unjoined, the HTTP 403 association is adapter-explicit rather than source-native, and the OCI digest is checked separately.'
             echo
             echo 'The attestation protects the produced archive digest and builder identity; it does not prove the semantic truth of upstream events. Recapture the completed run metadata after this job finishes, as documented in the experiment README.'
           } >> "${GITHUB_STEP_SUMMARY}"

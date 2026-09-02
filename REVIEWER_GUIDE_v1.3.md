@@ -37,6 +37,11 @@ authoritative systems that emitted the evidence.
 5. Use the original v1.2 Kubernetes and OpenTelemetry materials only as the
    continuity baseline; they are not substitutes for the v1.3 experiments.
 
+For a claim-by-claim audit, use the
+[claims and evidence ledger](CLAIMS_AND_EVIDENCE_v1.3.md). A prospective
+[external replication protocol](experiments/github_actions/EXTERNAL_REPLICATION_PROTOCOL_v1.3.md)
+predeclares acceptance and failure criteria; no external replication is claimed.
+
 ## What changed materially after v1.2
 
 | Review question | v1.3 evidence |
@@ -67,6 +72,14 @@ asserted by the adapter. The 403 record did **not** carry a source-native
 correlation ID and is therefore labeled `adapter_explicit_exact_target`. Three
 audit records for the no-ID negative control remained unjoined. The Deployment,
 Pod specification, and runtime image ID matched the pinned OCI subject digest.
+
+The workflow itself generated the attempt-specific correlation identifier and
+wrote it into the positive Deployment and Pod-template annotations. The live
+study therefore evaluates controlled propagation and exact composition of an
+introduced key; it does not evaluate discovery of naturally occurring
+identifiers. Here, “source-native” means that the retained raw Kubernetes audit
+record contains the workflow-injected annotation—not that the identifier arose
+independently. The OCI digest match is checked separately from correlation.
 
 ![Correlation robustness summary](figures/eacp_correlation_robustness_v1_3.png)
 
@@ -117,6 +130,7 @@ does not certify the semantic truth, completeness, or causality of source events
 - The live experiment establishes observable composition in a controlled case,
   not semantic causation, source truth, managed-cluster behavior, or production
   reliability.
+- No field deployment or external independent reproduction has yet occurred.
 - The SQLite measurements are descriptive for one host, database engine,
   configuration, workload, and cache definition. “Cold-open” resets the SQLite
   connection-local page cache; it does not claim cold disk I/O.

@@ -33,6 +33,19 @@ The new evaluation includes:
   including a no-ID negative control, an exact-target denied action, pinned OCI
   digests, frozen checksums, and offline-verifiable attestations.
 
+All three executions are rerun attempts of the same public workflow run in one
+repository, each using a fresh ephemeral single-node kind cluster. The workflow
+itself generated the correlation key and wrote it into the positive Kubernetes
+annotations; the study therefore evaluates controlled propagation and
+composition, not identifier discovery, cross-site replication, or independent
+reproduction. “Source-native” means that the retained raw Kubernetes audit
+record contains the workflow-injected annotation; it does not mean that the key
+arose independently. The present no-ID control remained unjoined, the HTTP 403
+association is adapter-explicit rather than source-native, and OCI digest
+verification is a separate check. Zero false joins were observed only under the
+declared synthetic invariants. No field deployment or third-party reproduction
+has yet been performed.
+
 I would value a skeptical assessment rather than an endorsement. In particular:
 
 1. Does the manuscript distinguish its operational-provenance scope clearly

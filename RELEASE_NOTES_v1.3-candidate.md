@@ -74,6 +74,9 @@ source systems.
   Schemas, checksum verification, and 13 deterministic tests.
 - Added an isolated workflow that binds an attempt-specific correlation ID and
   pinned OCI subject across GitHub Actions metadata and Kubernetes resources.
+- The workflow deliberately generates that ID and writes it into the positive
+  Deployment and Pod-template annotations. This evaluates controlled key
+  propagation and exact composition, not identifier discovery.
 - Frozen public run
   [`33682116347`](https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33682116347)
   completed successfully in three attempts at commit
@@ -85,8 +88,11 @@ source systems.
   declared OCI subject digest.
 - Each attempt includes deterministic archive checksums and an offline Sigstore
   bundle whose DSSE subject names the exact archive digest. All three archives
-  were independently verified against the repository, signer workflow, source
+  were verified offline against the repository, signer workflow, source
   commit, Git ref, and the prohibition on self-hosted runners.
+- The three attempts are reruns of one public workflow run in one repository,
+  not third-party or cross-site replications. No field deployment or external
+  independent reproduction has yet occurred.
 
 ### Reviewer-facing presentation
 

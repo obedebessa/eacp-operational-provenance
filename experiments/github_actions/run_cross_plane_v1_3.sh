@@ -12,7 +12,8 @@ DENIED_PRINCIPAL="system:serviceaccount:${NAMESPACE}:eacp-observer"
 SUBJECT_URI=registry.k8s.io/pause
 SUBJECT_DIGEST=sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a
 SUBJECT_IMAGE="registry.k8s.io/pause@${SUBJECT_DIGEST}"
-KIND_NODE_IMAGE=${KIND_NODE_IMAGE:-kindest/node:v1.36.1@sha256:3489c7674813ba5d8b1a9977baea8a6e553784dab7b84759d1014dbd78f7ebd5}
+KIND_NODE_IMAGE=${KIND_NODE_IMAGE:?Set KIND_NODE_IMAGE through the pinned target resolver}
+EXPECTED_KUBERNETES_VERSION=${EACP_EXPECTED_KUBERNETES_VERSION:?Set EACP_EXPECTED_KUBERNETES_VERSION through the pinned target resolver}
 KEEP_CLUSTER=${KEEP_CLUSTER:-0}
 RUN_STAMP=$(date -u +%Y%m%dT%H%M%SZ)
 RESULTS_DIR=${RESULTS_DIR:-"${SCRIPT_DIR}/results/${RUN_ID}-${RUN_STAMP}"}
@@ -69,24 +70,23 @@ python3 "${SCRIPT_DIR}/eacp_gha_v1_3.py" capture \
   --subject-uri "${SUBJECT_URI}" \
   --subject-digest "${SUBJECT_DIGEST}" >/dev/null
 
-readarray -t SOURCE_FIELDS < <(python3 - "${STAGING_BUNDLE}/source/github_actions.json" <<'PY'
+IFS=$'\t' read -r REPOSITORY_ID RUN_ATTEMPT HEAD_SHA SOURCE_URL CORRELATION_ID < <(
+python3 - "${STAGING_BUNDLE}/source/github_actions.json" <<'PY'
 import json
 import sys
 from pathlib import Path
 
 value = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-print(value["repository"]["id"])
-print(value["run"]["run_attempt"])
-print(value["run"]["head_sha"])
-print(value["run"]["html_url"])
-print(value["projection"]["correlation_id"])
+fields = [
+    value["repository"]["id"],
+    value["run"]["run_attempt"],
+    value["run"]["head_sha"],
+    value["run"]["html_url"],
+    value["projection"]["correlation_id"],
+]
+print("\t".join(str(field) for field in fields))
 PY
 )
-REPOSITORY_ID=${SOURCE_FIELDS[0]}
-RUN_ATTEMPT=${SOURCE_FIELDS[1]}
-HEAD_SHA=${SOURCE_FIELDS[2]}
-SOURCE_URL=${SOURCE_FIELDS[3]}
-CORRELATION_ID=${SOURCE_FIELDS[4]}
 if [[ -n "${EXPECTED_ATTEMPT}" && "${RUN_ATTEMPT}" != "${EXPECTED_ATTEMPT}" ]]; then
   echo "API run attempt ${RUN_ATTEMPT} does not match EACP_RUN_ATTEMPT=${EXPECTED_ATTEMPT}." >&2
   exit 1
@@ -96,6 +96,29 @@ if [[ "${CHECKED_OUT_SHA}" != "${HEAD_SHA}" ]]; then
   echo "Checked-out commit ${CHECKED_OUT_SHA} does not match source run head SHA ${HEAD_SHA}." >&2
   exit 1
 fi
+
+# Re-read the committed allowlist at execution time and fail if any resolved
+# environment value is inconsistent with it.
+python3 - "${SCRIPT_DIR}/kubernetes_targets_v1.3.json" \
+  "${EXPECTED_KUBERNETES_VERSION}" "${KIND_NODE_IMAGE}" <<'PY'
+import sys
+from pathlib import Path
+
+manifest_file = Path(sys.argv[1])
+sys.path.insert(0, str(manifest_file.parent))
+from resolve_kubernetes_target import load_manifest
+
+manifest_path, version, node_image = sys.argv[1:]
+manifest = load_manifest(Path(manifest_path))
+expected = manifest["targets"].get(version)
+if expected is None:
+    raise SystemExit(f"Kubernetes version is not in the committed allowlist: {version}")
+if expected["node_image"] != node_image:
+    raise SystemExit(
+        f"resolved node image {node_image!r} does not match committed target "
+        f"{expected['node_image']!r}"
+    )
+PY
 CLUSTER_NAME="eacp-v13-${RUN_ID}-${RUN_ATTEMPT}"
 if kind get clusters 2>/dev/null | grep -Fxq "${CLUSTER_NAME}"; then
   echo "Refusing to replace existing kind cluster: ${CLUSTER_NAME}" >&2
@@ -147,6 +170,15 @@ kind create cluster \
   --config "${KIND_CONFIG}" \
   --wait 120s
 CONTEXT="kind-${CLUSTER_NAME}"
+VERSION_SNAPSHOT="${WORK_DIR}/kubernetes_version.json"
+KUBELET_VERSION_SNAPSHOT="${WORK_DIR}/kubelet_version.txt"
+kubectl --context "${CONTEXT}" version -o json > "${VERSION_SNAPSHOT}"
+docker exec "${CLUSTER_NAME}-control-plane" kubelet --version \
+  > "${KUBELET_VERSION_SNAPSHOT}"
+python3 "${SCRIPT_DIR}/verify_kubernetes_versions.py" \
+  --version-json "${VERSION_SNAPSHOT}" \
+  --kubelet-file "${KUBELET_VERSION_SNAPSHOT}" \
+  --expected "${EXPECTED_KUBERNETES_VERSION}"
 kubectl --context "${CONTEXT}" apply -f "${WORKLOAD}"
 kubectl --context "${CONTEXT}" --namespace "${NAMESPACE}" \
   wait --for=condition=Available "deployment/${DEPLOYMENT}" --timeout=120s
@@ -184,32 +216,50 @@ kubectl --context "${CONTEXT}" --namespace "${NAMESPACE}" get pods \
 kubectl --context "${CONTEXT}" --namespace "${NAMESPACE}" get \
   "configmap/${NEGATIVE_CONTROL}" -o json \
   > "${RESULTS_DIR}/kubernetes/negative_control.json"
-kubectl --context "${CONTEXT}" version -o json \
-  > "${RESULTS_DIR}/kubernetes/kubernetes_version.json"
+cp "${VERSION_SNAPSHOT}" "${RESULTS_DIR}/kubernetes/kubernetes_version.json"
+cp "${KUBELET_VERSION_SNAPSHOT}" "${RESULTS_DIR}/kubernetes/kubelet_version.txt"
 
-sleep 3
-docker exec "${CLUSTER_NAME}-control-plane" sync
-# kube-apiserver creates the bind-mounted audit log as root with restrictive
-# permissions. Stream it through the already-required Docker control channel
-# so the unprivileged Actions runner receives a readable, byte-for-byte copy.
 AUDIT_LOG="${WORK_DIR}/audit-readable.log"
-docker exec "${CLUSTER_NAME}-control-plane" \
-  cat /var/log/kubernetes/audit.log > "${AUDIT_LOG}"
-if [[ ! -s "${AUDIT_LOG}" ]]; then
-  echo "Kubernetes API server did not emit the expected audit log." >&2
+AUDIT_OUTPUT="${RESULTS_DIR}/kubernetes/audit"
+AUDIT_LAST_ERROR="${WORK_DIR}/audit-extraction-last-error.txt"
+AUDIT_READY=0
+# Audit delivery is asynchronous. Poll the structured extractor for at most
+# 30 seconds; success requires a native positive record, the present no-ID
+# control, and the exact-target HTTP 403 under the extractor's fail-closed
+# invariants. This avoids treating a fixed sleep as evidence completeness.
+for _ in $(seq 1 15); do
+  docker exec "${CLUSTER_NAME}-control-plane" sync
+  # kube-apiserver creates the bind-mounted log as root. Stream it through the
+  # already-required Docker channel so the runner receives a readable copy.
+  docker exec "${CLUSTER_NAME}-control-plane" \
+    cat /var/log/kubernetes/audit.log > "${AUDIT_LOG}"
+  rm -rf -- "${AUDIT_OUTPUT}"
+  set +e
+  python3 "${SCRIPT_DIR}/extract_kubernetes_audit_v1_3.py" \
+    --audit-log "${AUDIT_LOG}" \
+    --output-dir "${AUDIT_OUTPUT}" \
+    --namespace "${NAMESPACE}" \
+    --correlation-id "${CORRELATION_ID}" \
+    --denied-principal "${DENIED_PRINCIPAL}" \
+    --denied-target-api-group apps \
+    --denied-target-resource deployments \
+    --denied-target-name "${DEPLOYMENT}" \
+    --negative-control-name "${NEGATIVE_CONTROL}" \
+    --cluster-id "kind://${CLUSTER_NAME}" \
+    > /dev/null 2> "${AUDIT_LAST_ERROR}"
+  AUDIT_STATUS=$?
+  set -e
+  if [[ "${AUDIT_STATUS}" == "0" ]]; then
+    AUDIT_READY=1
+    break
+  fi
+  sleep 2
+done
+if [[ "${AUDIT_READY}" != "1" ]]; then
+  echo "Timed out waiting for all predeclared audit observations." >&2
+  cat "${AUDIT_LAST_ERROR}" >&2
   exit 1
 fi
-python3 "${SCRIPT_DIR}/extract_kubernetes_audit_v1_3.py" \
-  --audit-log "${AUDIT_LOG}" \
-  --output-dir "${RESULTS_DIR}/kubernetes/audit" \
-  --namespace "${NAMESPACE}" \
-  --correlation-id "${CORRELATION_ID}" \
-  --denied-principal "${DENIED_PRINCIPAL}" \
-  --denied-target-api-group apps \
-  --denied-target-resource deployments \
-  --denied-target-name "${DEPLOYMENT}" \
-  --negative-control-name "${NEGATIVE_CONTROL}" \
-  --cluster-id "kind://${CLUSTER_NAME}" >/dev/null
 
 # Capture again after the Kubernetes work so the API snapshot includes the
 # current job and its available timestamps. The run itself is necessarily
@@ -247,11 +297,29 @@ expected_image = sys.argv[3]
 if report["status"] != "observed_cross_plane_link_with_subject_digest":
     raise SystemExit(f"cross-plane validation failed: {report['status']}")
 binding = report["kubernetes"]["rbac_denial_binding"]
-if not binding or binding["binding_method"] != "adapter_explicit_exact_target":
-    raise SystemExit("cross-plane validation failed: target-bound adapter-explicit RBAC denial is missing")
+if not binding or (
+    binding["binding_method"] != "adapter_explicit_exact_target"
+    or binding["matching_http_403_records"] != 1
+    or binding["source_native_correlation_records"] != 0
+):
+    raise SystemExit(
+        "cross-plane validation failed: expected exactly one adapter-explicit, "
+        "source-native-ID-free RBAC denial"
+    )
 negative = report["kubernetes"]["negative_control"]
 if not negative or not negative["correlation_annotation_absent"]:
     raise SystemExit("cross-plane validation failed: negative control contains a correlation ID")
+pod_checks = report["kubernetes"]["pods"]
+if not (
+    pod_checks["all_pods_have_exact_correlation_id"]
+    and pod_checks["pod_spec_subject_exact_match"]
+    and pod_checks["runtime_image_id_exact_subject_digest_match"]
+):
+    raise SystemExit(
+        "cross-plane validation failed: correlation, Pod-spec digest, or runtime imageID mismatch"
+    )
+if report["github_actions"]["evidence_rows"] != 3:
+    raise SystemExit("cross-plane validation failed: expected three GitHub evidence records")
 items = pods.get("items") or []
 if not items:
     raise SystemExit("cross-plane validation failed: no workload Pod was captured")
@@ -269,8 +337,10 @@ python3 - "${RESULTS_DIR}/environment.json" \
   "${RUN_STAMP}" "${REPOSITORY}" "${REPOSITORY_ID}" "${RUN_ID}" "${RUN_ATTEMPT}" \
   "${HEAD_SHA}" "${CORRELATION_ID}" "${GITHUB_ACTOR:-unavailable-outside-actions}" \
   "${GITHUB_TRIGGERING_ACTOR:-unavailable-outside-actions}" "${DENIED_PRINCIPAL}" \
-  "${SUBJECT_URI}" "${SUBJECT_DIGEST}" "${KIND_NODE_IMAGE}" "${KEEP_CLUSTER}" <<'PY'
+  "${SUBJECT_URI}" "${SUBJECT_DIGEST}" "${KIND_NODE_IMAGE}" \
+  "${EXPECTED_KUBERNETES_VERSION}" "${KEEP_CLUSTER}" <<'PY'
 import json
+import os
 import platform
 import subprocess
 import sys
@@ -283,8 +353,19 @@ def version(argv):
 (
     output_path, run_stamp, repository, repository_id, run_id, attempt,
     head_sha, correlation, github_actor, triggering_actor, denied_principal,
-    subject_uri, subject_digest, kind_node_image, keep_cluster,
+    subject_uri, subject_digest, kind_node_image, expected_kubernetes_version,
+    keep_cluster,
 ) = sys.argv[1:]
+output = Path(output_path)
+versions = json.loads(
+    (output.parent / "kubernetes/kubernetes_version.json").read_text(encoding="utf-8")
+)
+kubelet_version = (
+    (output.parent / "kubernetes/kubelet_version.txt")
+    .read_text(encoding="utf-8")
+    .strip()
+    .removeprefix("Kubernetes ")
+)
 value = {
     "run_started_utc": run_stamp,
     "repository": repository,
@@ -300,6 +381,19 @@ value = {
     "subject_uri": subject_uri,
     "subject_digest": subject_digest,
     "kind_node_image": kind_node_image,
+    "expected_kubernetes_version": expected_kubernetes_version or None,
+    "observed_kubectl_version": versions.get("clientVersion", {}).get("gitVersion"),
+    "observed_kubernetes_server_version": versions.get("serverVersion", {}).get("gitVersion"),
+    "observed_kubelet_versions": [kubelet_version],
+    "github_ref": os.environ.get("GITHUB_REF"),
+    "github_ref_name": os.environ.get("GITHUB_REF_NAME"),
+    "github_ref_type": os.environ.get("GITHUB_REF_TYPE"),
+    "runner_os": os.environ.get("RUNNER_OS"),
+    "runner_arch": os.environ.get("RUNNER_ARCH"),
+    "runner_image_os": os.environ.get("ImageOS"),
+    "runner_image_version": os.environ.get("ImageVersion"),
+    "correlation_origin": "workflow_generated",
+    "identifier_discovery_evaluated": False,
     "python": platform.python_version(),
     "platform": platform.platform(),
     "kind": version(["kind", "version"]),
@@ -307,7 +401,7 @@ value = {
     "docker": version(["docker", "version", "--format", "{{.Client.Version}}"]),
     "cluster_retained": keep_cluster == "1",
 }
-Path(output_path).write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+output.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 PY
 
 (
