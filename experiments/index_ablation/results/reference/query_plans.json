@@ -1,0 +1,270 @@
+{
+  "result_schema_version": "1.0",
+  "capture_rule": "first trial at each event count",
+  "plans": [
+    {
+      "event_count": 10000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "full_indexes",
+      "user_indexes": [
+        "ev_correlation",
+        "ev_service_time",
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SEARCH evidence USING INDEX ev_service_time (service=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "service_uses_target_index": 1,
+      "correlation_key": "corr-9238-00001113",
+      "correlation_plan": [
+        "SEARCH evidence USING INDEX ev_correlation (correlation_id=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "correlation_uses_target_index": 1
+    },
+    {
+      "event_count": 10000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "no_service_index",
+      "user_indexes": [
+        "ev_correlation",
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "service_uses_target_index": 0,
+      "correlation_key": "corr-9238-00001113",
+      "correlation_plan": [
+        "SEARCH evidence USING INDEX ev_correlation (correlation_id=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "correlation_uses_target_index": 1
+    },
+    {
+      "event_count": 10000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "no_correlation_index",
+      "user_indexes": [
+        "ev_service_time",
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SEARCH evidence USING INDEX ev_service_time (service=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "service_uses_target_index": 1,
+      "correlation_key": "corr-9238-00001113",
+      "correlation_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "correlation_uses_target_index": 0
+    },
+    {
+      "event_count": 10000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "no_lookup_indexes",
+      "user_indexes": [
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "service_uses_target_index": 0,
+      "correlation_key": "corr-9238-00001113",
+      "correlation_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "correlation_uses_target_index": 0
+    },
+    {
+      "event_count": 50000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "full_indexes",
+      "user_indexes": [
+        "ev_correlation",
+        "ev_service_time",
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SEARCH evidence USING INDEX ev_service_time (service=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "service_uses_target_index": 1,
+      "correlation_key": "corr-9238-00005743",
+      "correlation_plan": [
+        "SEARCH evidence USING INDEX ev_correlation (correlation_id=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "correlation_uses_target_index": 1
+    },
+    {
+      "event_count": 50000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "no_service_index",
+      "user_indexes": [
+        "ev_correlation",
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "service_uses_target_index": 0,
+      "correlation_key": "corr-9238-00005743",
+      "correlation_plan": [
+        "SEARCH evidence USING INDEX ev_correlation (correlation_id=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "correlation_uses_target_index": 1
+    },
+    {
+      "event_count": 50000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "no_correlation_index",
+      "user_indexes": [
+        "ev_service_time",
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SEARCH evidence USING INDEX ev_service_time (service=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "service_uses_target_index": 1,
+      "correlation_key": "corr-9238-00005743",
+      "correlation_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "correlation_uses_target_index": 0
+    },
+    {
+      "event_count": 50000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "no_lookup_indexes",
+      "user_indexes": [
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "service_uses_target_index": 0,
+      "correlation_key": "corr-9238-00005743",
+      "correlation_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "correlation_uses_target_index": 0
+    },
+    {
+      "event_count": 100000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "full_indexes",
+      "user_indexes": [
+        "ev_correlation",
+        "ev_service_time",
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SEARCH evidence USING INDEX ev_service_time (service=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "service_uses_target_index": 1,
+      "correlation_key": "corr-9238-00011487",
+      "correlation_plan": [
+        "SEARCH evidence USING INDEX ev_correlation (correlation_id=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "correlation_uses_target_index": 1
+    },
+    {
+      "event_count": 100000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "no_service_index",
+      "user_indexes": [
+        "ev_correlation",
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "service_uses_target_index": 0,
+      "correlation_key": "corr-9238-00011487",
+      "correlation_plan": [
+        "SEARCH evidence USING INDEX ev_correlation (correlation_id=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "correlation_uses_target_index": 1
+    },
+    {
+      "event_count": 100000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "no_correlation_index",
+      "user_indexes": [
+        "ev_service_time",
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SEARCH evidence USING INDEX ev_service_time (service=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ],
+      "service_uses_target_index": 1,
+      "correlation_key": "corr-9238-00011487",
+      "correlation_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "correlation_uses_target_index": 0
+    },
+    {
+      "event_count": 100000,
+      "trial": 1,
+      "seed": 9238,
+      "variant": "no_lookup_indexes",
+      "user_indexes": [
+        "ev_source_time"
+      ],
+      "service_key": "svc-0177",
+      "service_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "service_uses_target_index": 0,
+      "correlation_key": "corr-9238-00011487",
+      "correlation_plan": [
+        "SCAN evidence",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ],
+      "correlation_uses_target_index": 0
+    }
+  ]
+}
