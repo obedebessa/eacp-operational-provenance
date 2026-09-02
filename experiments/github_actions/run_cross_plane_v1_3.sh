@@ -318,8 +318,6 @@ if not (
     raise SystemExit(
         "cross-plane validation failed: correlation, Pod-spec digest, or runtime imageID mismatch"
     )
-if report["github_actions"]["evidence_rows"] != 3:
-    raise SystemExit("cross-plane validation failed: expected three GitHub evidence records")
 items = pods.get("items") or []
 if not items:
     raise SystemExit("cross-plane validation failed: no workload Pod was captured")

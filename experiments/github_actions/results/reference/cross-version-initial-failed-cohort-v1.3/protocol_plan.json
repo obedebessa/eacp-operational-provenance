@@ -1,0 +1,62 @@
+{
+  "schema_version": "eacp.cross-version-protocol-plan/1.3.0",
+  "status": "prospective_before_execution",
+  "protocol_commit_binding": "All evidence tags must point to the single Git commit containing this plan; the commit is recorded after it is created and is not edited into this file.",
+  "repository": "obedebessa/eacp-operational-provenance",
+  "workflow_path": ".github/workflows/eacp-cross-plane-v1.3.yml",
+  "runner_class": "ubuntu-24.04 GitHub-hosted",
+  "kind_version": "v0.32.0",
+  "target_manifest": "experiments/github_actions/kubernetes_targets_v1.3.json",
+  "design": "balanced 3-by-3 controlled procedural-repetition cohort",
+  "execution_order": "round-robin by replicate: v1.34.8, v1.35.5, v1.36.1; repeat for run-02 and run-03",
+  "execution_order_interpretation": "Evidence-tag pushes are issued in this order; GitHub queue and start order are observed rather than controlled.",
+  "planned_runs": 9,
+  "first_attempts_per_version": 3,
+  "inferential_statistics": false,
+  "subject": {
+    "uri": "registry.k8s.io/pause",
+    "digest": "sha256:ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a"
+  },
+  "cohort": [
+    {"kubernetes_version": "v1.34.8", "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-01"},
+    {"kubernetes_version": "v1.35.5", "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-01"},
+    {"kubernetes_version": "v1.36.1", "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-01"},
+    {"kubernetes_version": "v1.34.8", "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-02"},
+    {"kubernetes_version": "v1.35.5", "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-02"},
+    {"kubernetes_version": "v1.36.1", "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-02"},
+    {"kubernetes_version": "v1.34.8", "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-03"},
+    {"kubernetes_version": "v1.35.5", "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-03"},
+    {"kubernetes_version": "v1.36.1", "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-03"}
+  ],
+  "held_constant": [
+    "protocol commit",
+    "workflow path",
+    "kind binary version and checksum",
+    "GitHub-hosted runner label",
+    "workload and subject image digest",
+    "adapter, resolver, controls, and acceptance criteria"
+  ],
+  "varied": [
+    "checksum-pinned kind node image",
+    "matching checksum-pinned kubectl",
+    "Kubernetes minor version"
+  ],
+  "acceptance_criteria": [
+    "nine distinct workflow run IDs at one shared protocol commit, with three first attempts per Kubernetes version",
+    "run attempt one and successful conclusion for every evidence tag",
+    "requested Kubernetes version equals kubectl client, API server, and kubelet version",
+    "positive raw Kubernetes audit evidence retains the workflow-generated correlation annotation",
+    "present no-ID negative-control evidence remains unjoined",
+    "one exact-target HTTP 403 is adapter-explicit and has no source-native operational correlation",
+    "Deployment image, Pod specification, and runtime image ID match the OCI digest as a separate check",
+    "all nested and cohort SHA-256 manifests verify",
+    "each downloaded SLSA bundle verifies offline under exact repository, workflow, source digest, source ref, and hosted-runner constraints"
+  ],
+  "failure_policy": "Preserve and report every first-run failure. Do not replace a failed cohort member with a rerun; any rerun is supplemental and separately labeled.",
+  "failure_capture": "A non-successful first attempt is frozen with capture_run_outcome_v1_3.py as run metadata, minimized job/step outcome metadata, and a SHA-256 inventory even when no evidence archive exists.",
+  "analysis_policy": "Report every run and each version separately, including the count satisfying all predeclared criteria. Three runs per version are descriptive procedural repetitions, not inferential samples. Do not pool this cohort with the earlier three rerun attempts as independent observations.",
+  "claim_boundary": "This is a controlled cross-version compatibility, sensitivity, and within-version procedural-repetition cohort, not identifier discovery, cross-provider or cross-organization replication, a managed-cluster or field deployment, third-party reproduction, inferential evidence, or a production reliability estimate.",
+  "external_reproductions": 0,
+  "independent_organizations": 0,
+  "identifier_discovery_evaluated": false
+}

@@ -238,56 +238,89 @@ class AttestationVerificationTests(unittest.TestCase):
 
 
 class BalancedCohortTests(unittest.TestCase):
-    def rows(self) -> list[dict]:
+    def rows(self, tag_run_indices=(1, 2, 3)) -> list[dict]:
         versions = ["v1.34.8", "v1.35.5", "v1.36.1"]
         return [
             {
                 "kubernetes_version": version,
-                "evidence_tag": f"eacp-v1.3-evidence/k8s-{version}/run-{repeat:02d}",
+                "evidence_tag": f"eacp-v1.3-evidence/k8s-{version}/run-{run_index:02d}",
                 "run_id": 1000 + index,
                 "run_url": f"{cohort.REPOSITORY_URL}/actions/runs/{1000 + index}",
             }
-            for index, (repeat, version) in enumerate(
-                (repeat, version)
-                for repeat in range(1, 4)
+            for index, (run_index, version) in enumerate(
+                (run_index, version)
+                for run_index in tag_run_indices
                 for version in versions
             )
         ]
 
-    def test_exact_nine_run_design_aggregates_three_per_version(self):
-        rows = self.rows()
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            (root / "run_set.json").write_text(
-                json.dumps(
+    def test_both_exact_nine_run_generations_aggregate_three_per_version(self):
+        for tag_run_indices in ((1, 2, 3), (4, 5, 6)):
+            with self.subTest(tag_run_indices=tag_run_indices):
+                rows = self.rows(tag_run_indices)
+                with tempfile.TemporaryDirectory() as temporary:
+                    root = Path(temporary)
+                    (root / "run_set.json").write_text(
+                        json.dumps(
+                            {
+                                "schema_version": "eacp.cross-version-run-set/1.3.0",
+                                "protocol_commit": PROTOCOL_COMMIT,
+                                "tag_run_indices": list(tag_run_indices),
+                                "runs": rows,
+                            }
+                        ),
+                        encoding="utf-8",
+                    )
+
+                    def fake_verify(_root, row, protocol_commit, _targets, **kwargs):
+                        self.assertEqual(tuple(kwargs["tag_run_indices"]), tag_run_indices)
+                        return {
+                            "kubernetes_version": row["kubernetes_version"],
+                            "run_index": int(row["evidence_tag"].rsplit("-", 1)[1]),
+                            "evidence_tag": row["evidence_tag"],
+                            "run_id": row["run_id"],
+                            "correlation_id": f"correlation-{row['run_id']}",
+                            "head_sha": protocol_commit,
+                            "conclusion": "success",
+                        }
+
+                    with patch.object(
+                        cohort, "verify_cohort_member", side_effect=fake_verify
+                    ):
+                        summary = cohort.summarize(root, TARGET_MANIFEST)
+                self.assertEqual(summary["tag_run_indices"], list(tag_run_indices))
+                self.assertEqual(
+                    summary["aggregate"]["preserved_first_attempt_outcomes"], 9
+                )
+                self.assertEqual(
                     {
-                        "schema_version": "eacp.cross-version-run-set/1.3.0",
-                        "protocol_commit": PROTOCOL_COMMIT,
-                        "runs": rows,
-                    }
-                ),
-                encoding="utf-8",
-            )
+                        key: value["first_attempt_outcomes"]
+                        for key, value in summary["per_version"].items()
+                    },
+                    {"v1.34.8": 3, "v1.35.5": 3, "v1.36.1": 3},
+                )
+                for value in summary["per_version"].values():
+                    self.assertEqual(value["run_indices"], list(tag_run_indices))
+                    self.assertEqual(
+                        [int(tag.rsplit("-", 1)[1]) for tag in value["evidence_tags"]],
+                        list(tag_run_indices),
+                    )
 
-            def fake_verify(_root, row, protocol_commit, _targets, **_kwargs):
-                return {
-                    "kubernetes_version": row["kubernetes_version"],
-                    "run_id": row["run_id"],
-                    "correlation_id": f"correlation-{row['run_id']}",
-                    "head_sha": protocol_commit,
-                    "conclusion": "success",
+    def test_missing_or_invalid_tag_run_indices_are_rejected(self):
+        cases = [None, [1, 2], [1, 2, 4], [1, 2, 3, 4], [3, 2, 1], [True, 2, 3], "1,2,3"]
+        for tag_run_indices in cases:
+            with self.subTest(tag_run_indices=tag_run_indices), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                run_set = {
+                    "schema_version": "eacp.cross-version-run-set/1.3.0",
+                    "protocol_commit": PROTOCOL_COMMIT,
+                    "runs": self.rows(),
                 }
-
-            with patch.object(cohort, "verify_cohort_member", side_effect=fake_verify):
-                summary = cohort.summarize(root, TARGET_MANIFEST)
-        self.assertEqual(summary["aggregate"]["preserved_first_attempt_outcomes"], 9)
-        self.assertEqual(
-            {
-                key: value["first_attempt_outcomes"]
-                for key, value in summary["per_version"].items()
-            },
-            {"v1.34.8": 3, "v1.35.5": 3, "v1.36.1": 3},
-        )
+                if tag_run_indices is not None:
+                    run_set["tag_run_indices"] = tag_run_indices
+                (root / "run_set.json").write_text(json.dumps(run_set), encoding="utf-8")
+                with self.assertRaisesRegex(cohort.CohortError, "tag_run_indices"):
+                    cohort.summarize(root, TARGET_MANIFEST)
 
     def test_unbalanced_nine_row_design_is_rejected(self):
         rows = self.rows()
@@ -299,6 +332,7 @@ class BalancedCohortTests(unittest.TestCase):
                     {
                         "schema_version": "eacp.cross-version-run-set/1.3.0",
                         "protocol_commit": PROTOCOL_COMMIT,
+                        "tag_run_indices": [1, 2, 3],
                         "runs": rows,
                     }
                 ),
@@ -323,7 +357,7 @@ class BalancedCohortTests(unittest.TestCase):
             "headSha": PROTOCOL_COMMIT,
             "status": "completed",
             "url": row["run_url"],
-            "workflowName": "EACP cross-plane v1.3",
+            "workflowName": ".github/workflows/eacp-cross-plane-v1.3.yml",
             "jobs": [],
         }
         metadata, outcome = outcome_capture.build_outcome(
@@ -342,11 +376,73 @@ class BalancedCohortTests(unittest.TestCase):
                 row,
                 PROTOCOL_COMMIT,
                 cohort.load_manifest(TARGET_MANIFEST)["targets"],
+                tag_run_indices=[1, 2, 3],
             )
         self.assertEqual(result["conclusion"], "startup_failure")
         self.assertEqual(result["criteria_status"], "not_satisfied")
         self.assertFalse(result["full_evidence_verified"])
         self.assertIsNone(result["job_conclusion"])
+        self.assertEqual(result["run_index"], 1)
+        self.assertEqual(result["evidence_tag"], TAG)
+
+    def test_corrective_failure_preserves_run_index_and_tag_identity(self):
+        run_id = 778900
+        tag = f"eacp-v1.3-evidence/k8s-{VERSION}/run-04"
+        row = {
+            "kubernetes_version": VERSION,
+            "evidence_tag": tag,
+            "run_id": run_id,
+            "run_url": f"{cohort.REPOSITORY_URL}/actions/runs/{run_id}",
+        }
+        source = {
+            "attempt": 1,
+            "conclusion": "startup_failure",
+            "event": "push",
+            "headBranch": tag,
+            "headSha": PROTOCOL_COMMIT,
+            "status": "completed",
+            "url": row["run_url"],
+            "workflowName": ".github/workflows/eacp-cross-plane-v1.3.yml",
+            "jobs": [],
+        }
+        metadata, outcome = outcome_capture.build_outcome(
+            source,
+            repository=cohort.REPOSITORY,
+            run_id=run_id,
+            protocol_commit=PROTOCOL_COMMIT,
+            captured_at="2026-09-02T22:00:00Z",
+            acquisition="saved-test-input",
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            outcome_capture.write_outcome(root / f"run-{run_id}", metadata, outcome)
+            result = cohort.verify_cohort_member(
+                root,
+                row,
+                PROTOCOL_COMMIT,
+                cohort.load_manifest(TARGET_MANIFEST)["targets"],
+                tag_run_indices=[4, 5, 6],
+            )
+        self.assertEqual(result["conclusion"], "startup_failure")
+        self.assertEqual(result["run_index"], 4)
+        self.assertEqual(result["evidence_tag"], tag)
+
+    def test_declared_generation_must_match_every_tag_identity(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "run_set.json").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "eacp.cross-version-run-set/1.3.0",
+                        "protocol_commit": PROTOCOL_COMMIT,
+                        "tag_run_indices": [4, 5, 6],
+                        "runs": self.rows((1, 2, 3)),
+                    }
+                ),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(cohort.CohortError, "balanced 3-by-3"):
+                cohort.summarize(root, TARGET_MANIFEST)
 
     def test_mixed_outcomes_are_reported_as_partial(self):
         rows = self.rows()
@@ -358,6 +454,7 @@ class BalancedCohortTests(unittest.TestCase):
                     {
                         "schema_version": "eacp.cross-version-run-set/1.3.0",
                         "protocol_commit": PROTOCOL_COMMIT,
+                        "tag_run_indices": [1, 2, 3],
                         "runs": rows,
                     }
                 ),
@@ -368,12 +465,16 @@ class BalancedCohortTests(unittest.TestCase):
                 if row["run_id"] == failed_run:
                     return {
                         "kubernetes_version": row["kubernetes_version"],
+                        "run_index": int(row["evidence_tag"].rsplit("-", 1)[1]),
+                        "evidence_tag": row["evidence_tag"],
                         "run_id": row["run_id"],
                         "head_sha": protocol_commit,
                         "conclusion": "failure",
                     }
                 return {
                     "kubernetes_version": row["kubernetes_version"],
+                    "run_index": int(row["evidence_tag"].rsplit("-", 1)[1]),
+                    "evidence_tag": row["evidence_tag"],
                     "run_id": row["run_id"],
                     "correlation_id": f"correlation-{row['run_id']}",
                     "head_sha": protocol_commit,

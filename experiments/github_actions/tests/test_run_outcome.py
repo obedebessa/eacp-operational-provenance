@@ -27,20 +27,20 @@ def source(*, conclusion="failure", tag=TAG, jobs=None):
         "headSha": PROTOCOL_COMMIT,
         "status": "completed",
         "url": f"https://github.com/{REPOSITORY}/actions/runs/{RUN_ID}",
-        "workflowName": "EACP cross-plane v1.3",
+        "workflowName": ".github/workflows/eacp-cross-plane-v1.3.yml",
         "jobs": [] if jobs is None else jobs,
         "untrusted_extra": "must-not-be-retained",
     }
 
 
-def completed_job(conclusion="success"):
+def completed_job(conclusion="success", tag=TAG):
     return {
         "id": 987654321,
         "run_id": RUN_ID,
         "run_attempt": 1,
         "head_sha": PROTOCOL_COMMIT,
-        "head_branch": TAG,
-        "workflow_name": "EACP cross-plane v1.3",
+        "head_branch": tag,
+        "workflow_name": f"EACP cross-plane v1.3 / {tag} / ref-selected",
         "name": "github-actions-to-kubernetes",
         "labels": ["ubuntu-24.04"],
         "status": "completed",
@@ -108,6 +108,21 @@ class RunOutcomeTests(unittest.TestCase):
         self.assertEqual(outcome["conclusion"], "startup_failure")
         self.assertEqual(outcome["jobs"], [])
 
+    def test_confirmatory_tags_run_04_through_06_are_accepted(self):
+        for version in ("v1.34.8", "v1.35.5", "v1.36.1"):
+            for run_index in range(4, 7):
+                tag = f"eacp-v1.3-evidence/k8s-{version}/run-{run_index:02d}"
+                with self.subTest(tag=tag):
+                    _, outcome = self.build(
+                        source(
+                            conclusion="success",
+                            tag=tag,
+                            jobs=[completed_job(tag=tag)],
+                        )
+                    )
+                    self.assertEqual(outcome["kubernetes_version"], version)
+                    self.assertEqual(outcome["run_index"], run_index)
+
     def test_unapproved_identity_or_rerun_is_rejected(self):
         cases = []
         wrong_attempt = source()
@@ -119,7 +134,8 @@ class RunOutcomeTests(unittest.TestCase):
         wrong_workflow = source()
         wrong_workflow["workflowName"] = "Other workflow"
         cases.append(wrong_workflow)
-        cases.append(source(tag="eacp-v1.3-evidence/k8s-v1.34.8/run-04"))
+        cases.append(source(tag="eacp-v1.3-evidence/k8s-v1.34.8/run-00"))
+        cases.append(source(tag="eacp-v1.3-evidence/k8s-v1.34.8/run-07"))
         cases.append(source(tag="eacp-v1.3-evidence/k8s-v1.37.0/run-01"))
         for value in cases:
             with self.subTest(value=value), self.assertRaises(OutcomeError):

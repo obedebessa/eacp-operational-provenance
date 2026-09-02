@@ -35,6 +35,7 @@ MAX_ARCHIVE_FILE_SIZE = 64 * 1024 * 1024
 MAX_ARCHIVE_TOTAL_SIZE = 128 * 1024 * 1024
 REPEATS_PER_VERSION = 3
 EXPECTED_RUNS = 9
+ALLOWED_TAG_RUN_INDEX_SETS = ((1, 2, 3), (4, 5, 6))
 RUN_CONCLUSIONS = {
     "action_required",
     "cancelled",
@@ -51,6 +52,20 @@ DEFAULT_ROOT = Path(__file__).resolve().parent / "results/reference/cross-versio
 
 class CohortError(ValueError):
     pass
+
+
+def validate_tag_run_indices(value: Any) -> tuple[int, int, int]:
+    """Accept one complete, ordered evidence-tag generation and nothing else."""
+
+    if (
+        not isinstance(value, list)
+        or any(isinstance(index, bool) or not isinstance(index, int) for index in value)
+        or tuple(value) not in ALLOWED_TAG_RUN_INDEX_SETS
+    ):
+        raise CohortError(
+            "run set tag_run_indices must be exactly [1, 2, 3] or [4, 5, 6]"
+        )
+    return tuple(value)
 
 
 def sha256(path: Path) -> str:
@@ -519,6 +534,7 @@ def member_identity(
     row: dict[str, Any],
     protocol_commit: str,
     targets: dict[str, Any],
+    tag_run_indices: Sequence[int],
 ) -> dict[str, Any]:
     version = row.get("kubernetes_version")
     run_id = row.get("run_id")
@@ -529,13 +545,14 @@ def member_identity(
         raise CohortError(f"invalid workflow run ID in run-set row: {run_id!r}")
     if not isinstance(tag, str):
         raise CohortError(f"invalid evidence tag in run-set row for run {run_id}")
+    validated_indices = validate_tag_run_indices(list(tag_run_indices))
     allowed_tags = {
-        f"eacp-v1.3-evidence/k8s-{version}/run-{repeat:02d}"
-        for repeat in range(1, REPEATS_PER_VERSION + 1)
+        f"eacp-v1.3-evidence/k8s-{version}/run-{run_index:02d}"
+        for run_index in validated_indices
     }
     if tag not in allowed_tags:
         raise CohortError(f"unexpected evidence tag for {version}: {tag}")
-    repeat = int(tag.rsplit("-", 1)[1])
+    run_index = int(tag.rsplit("-", 1)[1])
     run_url = f"{REPOSITORY_URL}/actions/runs/{run_id}"
     if row.get("run_url") != run_url:
         raise CohortError(f"run {run_id} has a non-canonical predeclared run URL")
@@ -548,7 +565,7 @@ def member_identity(
         "headSha": protocol_commit,
         "status": "completed",
         "url": run_url,
-        "workflowName": "EACP cross-plane v1.3",
+        "workflowName": WORKFLOW_PATH,
     }
     for field, expected in expected_metadata.items():
         if metadata.get(field) != expected:
@@ -560,7 +577,7 @@ def member_identity(
         raise CohortError(f"run {run_id} has unsupported completed conclusion {conclusion!r}")
     return {
         "kubernetes_version": version,
-        "repeat": repeat,
+        "run_index": run_index,
         "run_id": run_id,
         "run_url": run_url,
         "evidence_tag": tag,
@@ -630,7 +647,7 @@ def verify_non_success_outcome(identity: dict[str, Any]) -> dict[str, Any]:
         "event": "push",
         "status": "completed",
         "conclusion": conclusion,
-        "run_index": identity["repeat"],
+        "run_index": identity["run_index"],
     }
     for field, value in expected.items():
         if outcome.get(field) != value:
@@ -714,9 +731,10 @@ def verify_cohort_member(
     protocol_commit: str,
     targets: dict[str, Any],
     *,
+    tag_run_indices: Sequence[int],
     reverify_attestations: bool = False,
 ) -> dict[str, Any]:
-    identity = member_identity(root, row, protocol_commit, targets)
+    identity = member_identity(root, row, protocol_commit, targets, tag_run_indices)
     if identity["conclusion"] != "success":
         return verify_non_success_outcome(identity)
     result = verify_run(
@@ -724,6 +742,7 @@ def verify_cohort_member(
         row,
         protocol_commit,
         targets,
+        tag_run_indices=tag_run_indices,
         reverify_attestations=reverify_attestations,
     )
     result.update(
@@ -743,18 +762,20 @@ def verify_run(
     protocol_commit: str,
     targets: dict[str, Any],
     *,
+    tag_run_indices: Sequence[int],
     reverify_attestations: bool = False,
 ) -> dict[str, Any]:
     version = str(row["kubernetes_version"])
     run_id = int(row["run_id"])
     tag = str(row["evidence_tag"])
+    validated_indices = validate_tag_run_indices(list(tag_run_indices))
     allowed_tags = {
-        f"eacp-v1.3-evidence/k8s-{version}/run-{repeat:02d}"
-        for repeat in range(1, REPEATS_PER_VERSION + 1)
+        f"eacp-v1.3-evidence/k8s-{version}/run-{run_index:02d}"
+        for run_index in validated_indices
     }
     if tag not in allowed_tags:
         raise CohortError(f"unexpected evidence tag for {version}: {tag}")
-    repeat = int(tag.rsplit("-", 1)[1])
+    run_index = int(tag.rsplit("-", 1)[1])
     run_root = root / f"run-{run_id}"
     outer_checks = verify_manifest(run_root, run_root / "RUN_SHA256SUMS")
     downloaded = run_root / "downloaded-artifact"
@@ -847,7 +868,7 @@ def verify_run(
         or run_metadata.get("status") != "completed"
         or run_metadata.get("conclusion") != "success"
         or run_metadata.get("url") != run_url
-        or run_metadata.get("workflowName") != "EACP cross-plane v1.3"
+        or run_metadata.get("workflowName") != WORKFLOW_PATH
     ):
         raise CohortError(f"run {run_id} public metadata mismatch")
 
@@ -862,7 +883,7 @@ def verify_run(
         "run_attempt": 1,
         "status": "completed",
         "conclusion": "success",
-        "workflow_name": "EACP cross-plane v1.3",
+        "workflow_name": f"EACP cross-plane v1.3 / {tag} / ref-selected",
     }
     for key, expected in expected_job.items():
         if job.get(key) != expected:
@@ -984,7 +1005,7 @@ def verify_run(
 
     return {
         "kubernetes_version": version,
-        "repeat": repeat,
+        "run_index": run_index,
         "run_id": run_id,
         "run_url": row["run_url"],
         "evidence_tag": tag,
@@ -1021,6 +1042,7 @@ def summarize(
     if len(protocol_commit) != 40 or any(ch not in "0123456789abcdef" for ch in protocol_commit):
         raise CohortError("run set lacks a lowercase 40-hex protocol commit")
     manifest = load_manifest(target_manifest)
+    tag_run_indices = validate_tag_run_indices(run_set.get("tag_run_indices"))
     rows = run_set.get("runs")
     if not isinstance(rows, list) or len(rows) != EXPECTED_RUNS:
         raise CohortError(f"run set must contain exactly {EXPECTED_RUNS} cohort members")
@@ -1029,10 +1051,10 @@ def summarize(
     expected_members = {
         (
             version,
-            f"eacp-v1.3-evidence/k8s-{version}/run-{repeat:02d}",
+            f"eacp-v1.3-evidence/k8s-{version}/run-{run_index:02d}",
         )
         for version in manifest["targets"]
-        for repeat in range(1, REPEATS_PER_VERSION + 1)
+        for run_index in tag_run_indices
     }
     observed_members = {
         (str(row.get("kubernetes_version")), str(row.get("evidence_tag"))) for row in rows
@@ -1045,6 +1067,7 @@ def summarize(
             row,
             protocol_commit,
             manifest["targets"],
+            tag_run_indices=tag_run_indices,
             reverify_attestations=reverify_attestations,
         )
         for row in sorted(
@@ -1096,6 +1119,16 @@ def summarize(
             "run_ids": [
                 row["run_id"] for row in results if row["kubernetes_version"] == version
             ],
+            "run_indices": [
+                row["run_index"]
+                for row in results
+                if row["kubernetes_version"] == version
+            ],
+            "evidence_tags": [
+                row["evidence_tag"]
+                for row in results
+                if row["kubernetes_version"] == version
+            ],
         }
         for version in sorted(manifest["targets"])
     }
@@ -1116,6 +1149,7 @@ def summarize(
         "source_classification": source_classification,
         "overall_status": overall_status,
         "protocol_commit": protocol_commit,
+        "tag_run_indices": list(tag_run_indices),
         "kind_version": manifest["kind"]["version"],
         "target_versions": sorted(manifest["targets"]),
         "run_results": results,

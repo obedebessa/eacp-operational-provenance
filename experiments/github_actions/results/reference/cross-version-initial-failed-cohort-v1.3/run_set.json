@@ -1,0 +1,61 @@
+{
+  "schema_version": "eacp.cross-version-run-set/1.3.0",
+  "protocol_commit": "15d72da095a0c7640b9318b50b28728e76d68928",
+  "tag_run_indices": [1, 2, 3],
+  "runs": [
+    {
+      "kubernetes_version": "v1.34.8",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-01",
+      "run_id": 33689275761,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689275761"
+    },
+    {
+      "kubernetes_version": "v1.35.5",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-01",
+      "run_id": 33689279446,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689279446"
+    },
+    {
+      "kubernetes_version": "v1.36.1",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-01",
+      "run_id": 33689281853,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689281853"
+    },
+    {
+      "kubernetes_version": "v1.34.8",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-02",
+      "run_id": 33689284057,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689284057"
+    },
+    {
+      "kubernetes_version": "v1.35.5",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-02",
+      "run_id": 33689287000,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689287000"
+    },
+    {
+      "kubernetes_version": "v1.36.1",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-02",
+      "run_id": 33689288013,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689288013"
+    },
+    {
+      "kubernetes_version": "v1.34.8",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-03",
+      "run_id": 33689294904,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689294904"
+    },
+    {
+      "kubernetes_version": "v1.35.5",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-03",
+      "run_id": 33689291864,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689291864"
+    },
+    {
+      "kubernetes_version": "v1.36.1",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-03",
+      "run_id": 33689302997,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689302997"
+    }
+  ]
+}

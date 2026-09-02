@@ -1,2 +1,4 @@
 # Preserve checksum- and attestation-bound public-run bytes exactly as captured.
 experiments/github_actions/results/reference/run-33682116347/** binary
+experiments/github_actions/results/reference/cross-version-initial-failed-cohort-v1.3/** binary
+experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3/** binary

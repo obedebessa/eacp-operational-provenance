@@ -1,0 +1,269 @@
+{
+  "aggregate": {
+    "attested_tar_parity_checks": 0,
+    "capture_time_offline_attestation_verifications": 0,
+    "distinct_successful_correlation_ids": 0,
+    "exact_client_server_kubelet_version_checks": 0,
+    "external_reproductions": 0,
+    "first_attempt_outcomes_per_version": 3,
+    "identifier_discovery_evaluated": false,
+    "independent_organizations": 0,
+    "non_successful_first_attempt_runs": 9,
+    "preserved_first_attempt_outcomes": 9,
+    "successful_adapter_explicit_403_controls": 0,
+    "successful_full_evidence_runs": 0,
+    "successful_negative_controls": 0,
+    "successful_positive_controls": 0,
+    "successful_separate_oci_digest_checks": 0
+  },
+  "attestation_verification_boundary": {
+    "capture_time": "Each stored verification result was produced with gh attestation verify, the downloaded bundle, an on-disk trusted root, exact repository/workflow/source digest/source-ref constraints, and denial of self-hosted runners.",
+    "repository_verify_mode": "The --verify command re-performs cryptographic verification for every successful run archive against its captured trusted root and then enforces exact certificate, Rekor timestamp, statement, subject, builder, source, ref, runner, and invocation fields.",
+    "semantic_limit": "The attestation authenticates the archive digest and builder identity; it does not establish the semantic truth of workflow-controlled predicate or event data."
+  },
+  "claim_boundary": "Nine preserved, separately identified first-attempt workflow outcomes form a balanced three-version by three-repeat controlled cohort. Successful runs hold one protocol commit, workflow, kind binary, workload, subject digest, and hosted-runner class constant while changing the pinned Kubernetes minor version. The repeats show procedural repeatability only; no confidence interval, failure-rate inference, or production reliability claim is made. The workflow generates the joining identifier. This is not identifier discovery, cross-provider or cross-organization replication, a field deployment, or external reproduction.",
+  "kind_version": "v0.32.0",
+  "overall_status": "failed",
+  "per_version": {
+    "v1.34.8": {
+      "evidence_tags": [
+        "eacp-v1.3-evidence/k8s-v1.34.8/run-01",
+        "eacp-v1.3-evidence/k8s-v1.34.8/run-02",
+        "eacp-v1.3-evidence/k8s-v1.34.8/run-03"
+      ],
+      "first_attempt_outcomes": 3,
+      "non_successful_runs": 3,
+      "predeclared_criteria_satisfied": 0,
+      "run_ids": [
+        33689275761,
+        33689284057,
+        33689294904
+      ],
+      "run_indices": [
+        1,
+        2,
+        3
+      ],
+      "successful_full_evidence_runs": 0
+    },
+    "v1.35.5": {
+      "evidence_tags": [
+        "eacp-v1.3-evidence/k8s-v1.35.5/run-01",
+        "eacp-v1.3-evidence/k8s-v1.35.5/run-02",
+        "eacp-v1.3-evidence/k8s-v1.35.5/run-03"
+      ],
+      "first_attempt_outcomes": 3,
+      "non_successful_runs": 3,
+      "predeclared_criteria_satisfied": 0,
+      "run_ids": [
+        33689279446,
+        33689287000,
+        33689291864
+      ],
+      "run_indices": [
+        1,
+        2,
+        3
+      ],
+      "successful_full_evidence_runs": 0
+    },
+    "v1.36.1": {
+      "evidence_tags": [
+        "eacp-v1.3-evidence/k8s-v1.36.1/run-01",
+        "eacp-v1.3-evidence/k8s-v1.36.1/run-02",
+        "eacp-v1.3-evidence/k8s-v1.36.1/run-03"
+      ],
+      "first_attempt_outcomes": 3,
+      "non_successful_runs": 3,
+      "predeclared_criteria_satisfied": 0,
+      "run_ids": [
+        33689281853,
+        33689288013,
+        33689302997
+      ],
+      "run_indices": [
+        1,
+        2,
+        3
+      ],
+      "successful_full_evidence_runs": 0
+    }
+  },
+  "protocol_commit": "15d72da095a0c7640b9318b50b28728e76d68928",
+  "run_results": [
+    {
+      "conclusion": "failure",
+      "criteria_status": "not_satisfied",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-01",
+      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
+      "full_evidence_verified": false,
+      "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "job_conclusion": "failure",
+      "kubernetes_version": "v1.34.8",
+      "non_success_steps": [
+        "Execute real cross-plane chain and controls"
+      ],
+      "run_id": 33689275761,
+      "run_index": 1,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689275761",
+      "status": "completed",
+      "verified_manifest_entries": 2
+    },
+    {
+      "conclusion": "failure",
+      "criteria_status": "not_satisfied",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-02",
+      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
+      "full_evidence_verified": false,
+      "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "job_conclusion": "failure",
+      "kubernetes_version": "v1.34.8",
+      "non_success_steps": [
+        "Execute real cross-plane chain and controls"
+      ],
+      "run_id": 33689284057,
+      "run_index": 2,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689284057",
+      "status": "completed",
+      "verified_manifest_entries": 2
+    },
+    {
+      "conclusion": "failure",
+      "criteria_status": "not_satisfied",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-03",
+      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
+      "full_evidence_verified": false,
+      "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "job_conclusion": "failure",
+      "kubernetes_version": "v1.34.8",
+      "non_success_steps": [
+        "Execute real cross-plane chain and controls"
+      ],
+      "run_id": 33689294904,
+      "run_index": 3,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689294904",
+      "status": "completed",
+      "verified_manifest_entries": 2
+    },
+    {
+      "conclusion": "failure",
+      "criteria_status": "not_satisfied",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-01",
+      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
+      "full_evidence_verified": false,
+      "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "job_conclusion": "failure",
+      "kubernetes_version": "v1.35.5",
+      "non_success_steps": [
+        "Execute real cross-plane chain and controls"
+      ],
+      "run_id": 33689279446,
+      "run_index": 1,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689279446",
+      "status": "completed",
+      "verified_manifest_entries": 2
+    },
+    {
+      "conclusion": "failure",
+      "criteria_status": "not_satisfied",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-02",
+      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
+      "full_evidence_verified": false,
+      "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "job_conclusion": "failure",
+      "kubernetes_version": "v1.35.5",
+      "non_success_steps": [
+        "Execute real cross-plane chain and controls"
+      ],
+      "run_id": 33689287000,
+      "run_index": 2,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689287000",
+      "status": "completed",
+      "verified_manifest_entries": 2
+    },
+    {
+      "conclusion": "failure",
+      "criteria_status": "not_satisfied",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.35.5/run-03",
+      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
+      "full_evidence_verified": false,
+      "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "job_conclusion": "failure",
+      "kubernetes_version": "v1.35.5",
+      "non_success_steps": [
+        "Execute real cross-plane chain and controls"
+      ],
+      "run_id": 33689291864,
+      "run_index": 3,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689291864",
+      "status": "completed",
+      "verified_manifest_entries": 2
+    },
+    {
+      "conclusion": "failure",
+      "criteria_status": "not_satisfied",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-01",
+      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
+      "full_evidence_verified": false,
+      "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "job_conclusion": "failure",
+      "kubernetes_version": "v1.36.1",
+      "non_success_steps": [
+        "Execute real cross-plane chain and controls"
+      ],
+      "run_id": 33689281853,
+      "run_index": 1,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689281853",
+      "status": "completed",
+      "verified_manifest_entries": 2
+    },
+    {
+      "conclusion": "failure",
+      "criteria_status": "not_satisfied",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-02",
+      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
+      "full_evidence_verified": false,
+      "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "job_conclusion": "failure",
+      "kubernetes_version": "v1.36.1",
+      "non_success_steps": [
+        "Execute real cross-plane chain and controls"
+      ],
+      "run_id": 33689288013,
+      "run_index": 2,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689288013",
+      "status": "completed",
+      "verified_manifest_entries": 2
+    },
+    {
+      "conclusion": "failure",
+      "criteria_status": "not_satisfied",
+      "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-03",
+      "failure_evidence_classification": "frozen_github_run_job_and_step_outcome",
+      "full_evidence_verified": false,
+      "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+      "job_conclusion": "failure",
+      "kubernetes_version": "v1.36.1",
+      "non_success_steps": [
+        "Execute real cross-plane chain and controls"
+      ],
+      "run_id": 33689302997,
+      "run_index": 3,
+      "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689302997",
+      "status": "completed",
+      "verified_manifest_entries": 2
+    }
+  ],
+  "schema_version": "eacp.cross-version-summary/1.3.0",
+  "source_classification": "preserved_public_github_actions_outcomes_without_successful_kubernetes_evidence",
+  "tag_run_indices": [
+    1,
+    2,
+    3
+  ],
+  "target_versions": [
+    "v1.34.8",
+    "v1.35.5",
+    "v1.36.1"
+  ]
+}

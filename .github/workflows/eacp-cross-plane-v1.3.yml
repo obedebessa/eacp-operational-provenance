@@ -7,12 +7,21 @@ on:
       - "eacp-v1.3-evidence/k8s-v1.34.8/run-01"
       - "eacp-v1.3-evidence/k8s-v1.34.8/run-02"
       - "eacp-v1.3-evidence/k8s-v1.34.8/run-03"
+      - "eacp-v1.3-evidence/k8s-v1.34.8/run-04"
+      - "eacp-v1.3-evidence/k8s-v1.34.8/run-05"
+      - "eacp-v1.3-evidence/k8s-v1.34.8/run-06"
       - "eacp-v1.3-evidence/k8s-v1.35.5/run-01"
       - "eacp-v1.3-evidence/k8s-v1.35.5/run-02"
       - "eacp-v1.3-evidence/k8s-v1.35.5/run-03"
+      - "eacp-v1.3-evidence/k8s-v1.35.5/run-04"
+      - "eacp-v1.3-evidence/k8s-v1.35.5/run-05"
+      - "eacp-v1.3-evidence/k8s-v1.35.5/run-06"
       - "eacp-v1.3-evidence/k8s-v1.36.1/run-01"
       - "eacp-v1.3-evidence/k8s-v1.36.1/run-02"
       - "eacp-v1.3-evidence/k8s-v1.36.1/run-03"
+      - "eacp-v1.3-evidence/k8s-v1.36.1/run-04"
+      - "eacp-v1.3-evidence/k8s-v1.36.1/run-05"
+      - "eacp-v1.3-evidence/k8s-v1.36.1/run-06"
   workflow_dispatch:
     inputs:
       kubernetes_profile:

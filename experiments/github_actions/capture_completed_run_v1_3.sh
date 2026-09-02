@@ -54,11 +54,11 @@ if [[ "${STATUS}" != "completed" || "${CONCLUSION}" != "success" ]]; then
   echo "Run ${RUN_ID} is not completed/success: ${STATUS}/${CONCLUSION}" >&2
   exit 1
 fi
-if [[ "${EVENT}" != "push" ]] || ! [[ "${HEAD_BRANCH}" =~ ^eacp-v1\.3-evidence/k8s-v1\.(34\.8|35\.5|36\.1)/run-0[1-3]$ ]]; then
+if [[ "${EVENT}" != "push" ]] || ! [[ "${HEAD_BRANCH}" =~ ^eacp-v1\.3-evidence/k8s-v1\.(34\.8|35\.5|36\.1)/run-0[1-6]$ ]]; then
   echo "Run ${RUN_ID} is not an approved evidence-tag push: ${EVENT}/${HEAD_BRANCH}" >&2
   exit 1
 fi
-if [[ "${WORKFLOW_NAME}" != "EACP cross-plane v1.3" ]]; then
+if [[ "${WORKFLOW_NAME}" != ".github/workflows/eacp-cross-plane-v1.3.yml" ]]; then
   echo "Run ${RUN_ID} came from an unexpected workflow: ${WORKFLOW_NAME}" >&2
   exit 1
 fi

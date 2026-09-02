@@ -19,6 +19,7 @@ from typing import Any, Sequence
 SCHEMA_VERSION = "eacp.cross-version-run-outcome/1.3.0"
 DEFAULT_REPOSITORY = "obedebessa/eacp-operational-provenance"
 WORKFLOW_NAME = "EACP cross-plane v1.3"
+WORKFLOW_PATH = ".github/workflows/eacp-cross-plane-v1.3.yml"
 JOB_NAME = "github-actions-to-kubernetes"
 RUN_FIELDS = (
     "attempt",
@@ -31,7 +32,7 @@ RUN_FIELDS = (
     "workflowName",
 )
 TAG_PATTERN = re.compile(
-    r"^eacp-v1\.3-evidence/k8s-(v1\.(?:34\.8|35\.5|36\.1))/run-(0[1-3])$"
+    r"^eacp-v1\.3-evidence/k8s-(v1\.(?:34\.8|35\.5|36\.1))/run-(0[1-6])$"
 )
 REPOSITORY_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
@@ -204,7 +205,7 @@ def normalized_job(
         ("run_attempt", 1),
         ("head_sha", protocol_commit),
         ("head_branch", evidence_tag),
-        ("workflow_name", WORKFLOW_NAME),
+        ("workflow_name", f"{WORKFLOW_NAME} / {evidence_tag} / ref-selected"),
     ):
         if field in job and job[field] != expected:
             raise OutcomeError(f"jobs[{index}].{field} differs from the selected run")
@@ -261,7 +262,7 @@ def build_outcome(
         "headSha": protocol_commit,
         "status": "completed",
         "url": expected_url,
-        "workflowName": WORKFLOW_NAME,
+        "workflowName": WORKFLOW_PATH,
     }
     for field, expected_value in expected.items():
         if value.get(field) != expected_value:
@@ -274,7 +275,7 @@ def build_outcome(
     evidence_tag = require_string(value.get("headBranch"), "run headBranch", maximum=128)
     tag_match = TAG_PATTERN.fullmatch(evidence_tag)
     if not tag_match:
-        raise OutcomeError(f"run is not one of the nine predeclared evidence tags: {evidence_tag!r}")
+        raise OutcomeError(f"run is not an approved evidence tag: {evidence_tag!r}")
     kubernetes_version, run_index_text = tag_match.groups()
     jobs_value = value.get("jobs")
     if not isinstance(jobs_value, list) or len(jobs_value) > 1:

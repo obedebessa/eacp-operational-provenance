@@ -122,6 +122,7 @@ CANDIDATE_REQUIRED_FILES = (
     "experiments/github_actions/EXTERNAL_REPLICATION_PROTOCOL_v1.3.md",
     "experiments/github_actions/capture_completed_run_v1_3.sh",
     "experiments/github_actions/capture_run_outcome_v1_3.py",
+    "experiments/github_actions/cross_version_protocol_amendment_v1.3.1.json",
     "experiments/github_actions/cross_version_protocol_plan_v1.3.json",
     "experiments/github_actions/kubernetes_targets_v1.3.json",
     "experiments/github_actions/replication-report.template.json",
@@ -265,6 +266,34 @@ EXPECTED_CROSS_VERSION_COHORT = [
         "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-03",
     },
 ]
+
+INITIAL_CROSS_VERSION_PROTOCOL_COMMIT = "15d72da095a0c7640b9318b50b28728e76d68928"
+CROSS_VERSION_AMENDMENT_SHA256 = (
+    "ba5bf6fdb21900cdfbcbab66ccd10ab317f38fc688f76112294ed2d8d0998ac8"
+)
+EXPECTED_INITIAL_FAILED_RUN_IDS = {
+    "eacp-v1.3-evidence/k8s-v1.34.8/run-01": 33689275761,
+    "eacp-v1.3-evidence/k8s-v1.35.5/run-01": 33689279446,
+    "eacp-v1.3-evidence/k8s-v1.36.1/run-01": 33689281853,
+    "eacp-v1.3-evidence/k8s-v1.34.8/run-02": 33689284057,
+    "eacp-v1.3-evidence/k8s-v1.35.5/run-02": 33689287000,
+    "eacp-v1.3-evidence/k8s-v1.36.1/run-02": 33689288013,
+    "eacp-v1.3-evidence/k8s-v1.34.8/run-03": 33689294904,
+    "eacp-v1.3-evidence/k8s-v1.35.5/run-03": 33689291864,
+    "eacp-v1.3-evidence/k8s-v1.36.1/run-03": 33689302997,
+}
+EXPECTED_CONFIRMATORY_CROSS_VERSION_COHORT = [
+    {
+        "kubernetes_version": version,
+        "evidence_tag": f"eacp-v1.3-evidence/k8s-{version}/run-{run_index:02d}",
+    }
+    for run_index in (4, 5, 6)
+    for version in ("v1.34.8", "v1.35.5", "v1.36.1")
+]
+EXPECTED_CROSS_VERSION_WORKFLOW_TAGS = {
+    *(row["evidence_tag"] for row in EXPECTED_CROSS_VERSION_COHORT),
+    *(row["evidence_tag"] for row in EXPECTED_CONFIRMATORY_CROSS_VERSION_COHORT),
+}
 
 EXPECTED_CANDIDATE_FIGURES = {
     "figures/eacp_architecture_v1_3.png": (2400, 1500),
@@ -796,14 +825,379 @@ def validate_github_actions_candidate(errors: list[str]) -> None:
                 errors.append(f"GitHub Actions attempt {expected_attempt} invariants mismatch")
 
 
+def expected_cross_version_run_set_rows(
+    cohort: list[dict[str, str]], run_ids: dict[str, int] | None = None
+) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for member in cohort:
+        tag = member["evidence_tag"]
+        run_id = run_ids[tag] if run_ids is not None else 0
+        rows.append(
+            {
+                "kubernetes_version": member["kubernetes_version"],
+                "evidence_tag": tag,
+                "run_id": run_id,
+                "run_url": f"{REPOSITORY_URL}/actions/runs/{run_id}",
+            }
+        )
+    return rows
+
+
+def validate_cross_version_run_set_binding(
+    *,
+    cohort_root: Path,
+    expected_members: list[dict[str, str]],
+    expected_indices: list[int],
+    label: str,
+    errors: list[str],
+    expected_protocol_commit: str | None = None,
+    expected_run_ids: dict[str, int] | None = None,
+) -> None:
+    """Validate a frozen cohort's exact generation and prospective commit binding."""
+
+    if not cohort_root.is_dir():
+        return
+    run_set_path = cohort_root / "run_set.json"
+    if not run_set_path.is_file():
+        errors.append(f"{label} is present without run_set.json")
+        return
+    run_set = load_json_object(run_set_path, relative(run_set_path), errors)
+    if run_set is None:
+        return
+    expected_keys = {"schema_version", "protocol_commit", "tag_run_indices", "runs"}
+    if set(run_set) != expected_keys:
+        errors.append(f"{label} run set fields differ from the exact schema")
+    if run_set.get("schema_version") != "eacp.cross-version-run-set/1.3.0":
+        errors.append(f"{label} run set schema version mismatch")
+    if run_set.get("tag_run_indices") != expected_indices:
+        errors.append(f"{label} run set evidence-tag generation mismatch")
+
+    protocol_commit = run_set.get("protocol_commit")
+    if (
+        not isinstance(protocol_commit, str)
+        or re.fullmatch(r"[0-9a-f]{40}", protocol_commit) is None
+    ):
+        errors.append(f"{label} lacks one lowercase 40-hex protocol commit")
+        protocol_commit = None
+    elif expected_protocol_commit is not None and protocol_commit != expected_protocol_commit:
+        errors.append(f"{label} does not bind the frozen initial protocol commit")
+    elif expected_protocol_commit is None and protocol_commit == INITIAL_CROSS_VERSION_PROTOCOL_COMMIT:
+        errors.append(f"{label} reuses the failed initial protocol commit")
+
+    rows = run_set.get("runs")
+    if not isinstance(rows, list) or len(rows) != 9 or any(
+        not isinstance(row, dict) for row in rows
+    ):
+        errors.append(f"{label} run set must contain nine object rows")
+        return
+    expected_row_keys = {"kubernetes_version", "evidence_tag", "run_id", "run_url"}
+    if any(set(row) != expected_row_keys for row in rows):
+        errors.append(f"{label} run rows differ from the exact schema")
+
+    expected_pairs = {
+        (member["kubernetes_version"], member["evidence_tag"])
+        for member in expected_members
+    }
+    observed_pairs = {
+        (row.get("kubernetes_version"), row.get("evidence_tag")) for row in rows
+    }
+    if observed_pairs != expected_pairs or len(observed_pairs) != 9:
+        errors.append(f"{label} members differ from the exact balanced 3-by-3 generation")
+
+    observed_ids: list[int] = []
+    for row in rows:
+        run_id = row.get("run_id")
+        tag = row.get("evidence_tag")
+        if isinstance(run_id, bool) or not isinstance(run_id, int) or run_id <= 0:
+            errors.append(f"{label} contains an invalid workflow run ID: {run_id!r}")
+            continue
+        observed_ids.append(run_id)
+        if row.get("run_url") != f"{REPOSITORY_URL}/actions/runs/{run_id}":
+            errors.append(f"{label} contains a non-canonical run URL for {run_id}")
+        if expected_run_ids is not None and expected_run_ids.get(tag) != run_id:
+            errors.append(f"{label} changes the preserved run ID for {tag!r}")
+    if len(observed_ids) == 9 and len(set(observed_ids)) != 9:
+        errors.append(f"{label} workflow run IDs are not distinct")
+
+    if expected_run_ids is not None:
+        expected_rows = expected_cross_version_run_set_rows(
+            expected_members, expected_run_ids
+        )
+        if rows != expected_rows:
+            errors.append(f"{label} does not preserve the exact initial run order and identities")
+
+    if protocol_commit is not None and expected_protocol_commit is None and (ROOT / ".git").is_dir():
+        amendment_path = "experiments/github_actions/cross_version_protocol_amendment_v1.3.1.json"
+        try:
+            amendment_at_commit = subprocess.run(
+                ["git", "show", f"{protocol_commit}:{amendment_path}"],
+                cwd=ROOT,
+                capture_output=True,
+                check=False,
+                timeout=30,
+            )
+            parent_at_commit = subprocess.run(
+                ["git", "rev-parse", f"{protocol_commit}^"],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=30,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            errors.append(f"could not verify {label} amendment commit binding: {exc}")
+        else:
+            if (
+                amendment_at_commit.returncode != 0
+                or hashlib.sha256(amendment_at_commit.stdout).hexdigest()
+                != CROSS_VERSION_AMENDMENT_SHA256
+            ):
+                errors.append(f"{label} protocol commit does not contain the frozen amendment")
+            if (
+                parent_at_commit.returncode != 0
+                or parent_at_commit.stdout.strip() != INITIAL_CROSS_VERSION_PROTOCOL_COMMIT
+            ):
+                errors.append(
+                    f"{label} protocol commit is not the single corrective child of the initial protocol"
+                )
+
+
+def validate_cross_version_amendment(errors: list[str]) -> None:
+    """Validate the frozen prospective correction, failures, and confirmatory design."""
+
+    path = (
+        ROOT
+        / "experiments/github_actions/cross_version_protocol_amendment_v1.3.1.json"
+    )
+    if not path.is_file():
+        return
+    if sha256(path) != CROSS_VERSION_AMENDMENT_SHA256:
+        errors.append("cross-version protocol amendment differs from the frozen candidate")
+    amendment = load_json_object(path, relative(path), errors)
+    if amendment is None:
+        return
+
+    expected_keys = {
+        "schema_version",
+        "status",
+        "repository",
+        "workflow_path",
+        "initial_protocol",
+        "failure_diagnosis",
+        "correction_scope",
+        "amendment_commit_binding",
+        "runner_class",
+        "kind_version",
+        "target_manifest",
+        "target_manifest_sha256",
+        "design",
+        "execution_order",
+        "execution_order_interpretation",
+        "planned_runs",
+        "first_attempts_per_version",
+        "inferential_statistics",
+        "subject",
+        "cohort",
+        "held_constant",
+        "varied",
+        "acceptance_criteria",
+        "failure_policy",
+        "failure_capture",
+        "analysis_policy",
+        "claim_boundary",
+        "external_reproductions",
+        "independent_organizations",
+        "identifier_discovery_evaluated",
+    }
+    if set(amendment) != expected_keys:
+        errors.append("cross-version amendment fields differ from the exact schema")
+
+    expected_scalars = {
+        "schema_version": "eacp.cross-version-protocol-amendment/1.3.1",
+        "status": "prospective_before_confirmatory_execution",
+        "repository": "obedebessa/eacp-operational-provenance",
+        "workflow_path": ".github/workflows/eacp-cross-plane-v1.3.yml",
+        "runner_class": "ubuntu-24.04 GitHub-hosted",
+        "kind_version": "v0.32.0",
+        "target_manifest": "experiments/github_actions/kubernetes_targets_v1.3.json",
+        "target_manifest_sha256": (
+            "4f67f91090b4540cec4031b4db793f1cbed2a526688a37fe91b0c95e485bff7e"
+        ),
+        "design": "balanced 3-by-3 confirmatory controlled procedural-repetition cohort",
+        "execution_order": (
+            "round-robin by replicate: v1.34.8, v1.35.5, v1.36.1; "
+            "repeat for run-05 and run-06"
+        ),
+        "execution_order_interpretation": (
+            "Evidence-tag pushes are issued in this order; GitHub queue and start order "
+            "are observed rather than controlled."
+        ),
+        "planned_runs": 9,
+        "first_attempts_per_version": 3,
+        "inferential_statistics": False,
+        "external_reproductions": 0,
+        "independent_organizations": 0,
+        "identifier_discovery_evaluated": False,
+    }
+    for key, expected in expected_scalars.items():
+        observed = amendment.get(key)
+        if observed != expected or type(observed) is not type(expected):
+            errors.append(
+                f"cross-version amendment {key}={observed!r}; expected {expected!r}"
+            )
+
+    target_path = ROOT / "experiments/github_actions/kubernetes_targets_v1.3.json"
+    if target_path.is_file() and amendment.get("target_manifest_sha256") != sha256(target_path):
+        errors.append("cross-version amendment does not bind the exact unchanged target manifest")
+    if amendment.get("subject") != {
+        "uri": "registry.k8s.io/pause",
+        "digest": GITHUB_ACTIONS_SUBJECT_DIGEST,
+    }:
+        errors.append("cross-version amendment changes the OCI subject")
+    if amendment.get("cohort") != EXPECTED_CONFIRMATORY_CROSS_VERSION_COHORT:
+        errors.append("cross-version amendment confirmatory cohort or tags differ")
+
+    expected_initial_runs = [
+        {
+            **member,
+            "run_id": EXPECTED_INITIAL_FAILED_RUN_IDS[member["evidence_tag"]],
+            "run_attempt": 1,
+            "conclusion": "failure",
+            "head_sha": INITIAL_CROSS_VERSION_PROTOCOL_COMMIT,
+        }
+        for member in EXPECTED_CROSS_VERSION_COHORT
+    ]
+    expected_initial = {
+        "plan_path": "experiments/github_actions/cross_version_protocol_plan_v1.3.json",
+        "protocol_commit": INITIAL_CROSS_VERSION_PROTOCOL_COMMIT,
+        "planned_runs": 9,
+        "observed_outcome": "nine_first_attempt_failures",
+        "preservation": (
+            "All nine original first-attempt failures remain part of the record and are not "
+            "replaced by the confirmatory cohort."
+        ),
+        "runs": expected_initial_runs,
+    }
+    if amendment.get("initial_protocol") != expected_initial:
+        errors.append("cross-version amendment does not preserve all nine exact initial failures")
+
+    expected_diagnosis = {
+        "classification": "experiment_harness_lifecycle_defect",
+        "common_failure_point": (
+            "after_exact_kubernetes_version_validation_before_artifact_creation"
+        ),
+        "cause": (
+            "The in-job acceptance check expected the completed-run GitHub artifact row before "
+            "the Upload evidence artifact step created that artifact."
+        ),
+        "scope": (
+            "All nine first attempts reached the same lifecycle assertion after exact "
+            "kubectl-client, API-server, and kubelet version validation."
+        ),
+        "interpretation": (
+            "The failures are preserved as failed workflow outcomes; they are not evidence that "
+            "the cross-plane acceptance criteria passed and they are not silently replaced."
+        ),
+    }
+    if amendment.get("failure_diagnosis") != expected_diagnosis:
+        errors.append("cross-version amendment changes the observed failure lifecycle diagnosis")
+
+    correction = amendment.get("correction_scope")
+    if not isinstance(correction, dict) or set(correction) != {
+        "policy",
+        "allowed_changes",
+        "confirmatory_tag_enablement",
+        "unchanged",
+    }:
+        errors.append("cross-version amendment correction scope differs")
+    else:
+        changes = correction.get("allowed_changes")
+        expected_change_paths = [
+            "experiments/github_actions/run_cross_plane_v1_3.sh",
+            "experiments/github_actions/capture_completed_run_v1_3.sh",
+            "experiments/github_actions/capture_run_outcome_v1_3.py",
+            "experiments/github_actions/summarize_cross_version_run_set.py",
+        ]
+        if (
+            not isinstance(changes, list)
+            or [change.get("path") for change in changes if isinstance(change, dict)]
+            != expected_change_paths
+            or any(set(change) != {"path", "change"} for change in changes if isinstance(change, dict))
+        ):
+            errors.append("cross-version amendment expands the scientific correction paths")
+        correction_text = json.dumps(correction, sort_keys=True)
+        for phrase in (
+            "Remove the artifact-dependent three-GitHub-row acceptance assertion",
+            "completed-run finalization, after GitHub has created the artifact",
+            "exact workflow and tag identity",
+            "generation-specific balanced-cohort tag indices",
+            "run-04..06",
+            "descriptive-only analysis boundary",
+        ):
+            if phrase not in correction_text:
+                errors.append(
+                    f"cross-version amendment correction scope omits {phrase!r}"
+                )
+
+    binding = amendment.get("amendment_commit_binding")
+    if not isinstance(binding, str) or any(
+        phrase not in binding
+        for phrase in (
+            "single Git commit containing this amendment and the limited correction",
+            "confirmatory run set",
+            "not edited back into this file",
+        )
+    ):
+        errors.append("cross-version amendment lacks a prospective single-commit binding")
+
+    acceptance = amendment.get("acceptance_criteria")
+    required_acceptance = (
+        "nine distinct workflow run IDs at one shared amendment commit",
+        "run attempt one and successful conclusion",
+        "requested Kubernetes version equals kubectl client, API server, and kubelet version",
+        "present no-ID negative-control evidence remains unjoined",
+        "exactly three GitHub evidence rows are accepted only during completed-run finalization",
+        "all nested and cohort SHA-256 manifests verify",
+        "SLSA bundle verifies offline",
+    )
+    if (
+        not isinstance(acceptance, list)
+        or len(acceptance) != 10
+        or any(not isinstance(item, str) for item in acceptance)
+        or any(not any(phrase in item for item in acceptance) for phrase in required_acceptance)
+    ):
+        errors.append("cross-version amendment weakens the confirmatory acceptance criteria")
+
+    policy_text = "\n".join(
+        str(amendment.get(field, ""))
+        for field in ("failure_policy", "failure_capture", "analysis_policy", "claim_boundary")
+    )
+    for phrase in (
+        "Do not replace a failed confirmatory cohort member",
+        "even when no evidence archive exists",
+        "initial nine failures and the nine confirmatory outcomes as separate generations",
+        "descriptive procedural repetitions, not inferential samples",
+        "not identifier discovery",
+        "cross-provider or cross-organization replication",
+        "managed-cluster or field deployment",
+        "third-party reproduction",
+        "production reliability estimate",
+        "initial nine failed runs passed",
+    ):
+        if phrase not in policy_text:
+            errors.append(f"cross-version amendment policy omits {phrase!r}")
+
+
 def validate_cross_version_protocol(errors: list[str]) -> None:
-    """Validate the predeclared cross-version protocol and its claim boundaries."""
+    """Validate both predeclared cross-version generations and their boundaries."""
 
     experiment_root = ROOT / "experiments/github_actions"
     target_path = experiment_root / "kubernetes_targets_v1.3.json"
     plan_path = experiment_root / "cross_version_protocol_plan_v1.3.json"
     workflow_path = ROOT / ".github/workflows/eacp-cross-plane-v1.3.yml"
     ledger_path = ROOT / "CLAIMS_AND_EVIDENCE_v1.3.md"
+
+    validate_cross_version_amendment(errors)
 
     if target_path.is_file():
         targets = load_json_object(target_path, relative(target_path), errors)
@@ -948,17 +1342,17 @@ def validate_cross_version_protocol(errors: list[str]) -> None:
 
     if workflow_path.is_file():
         workflow = workflow_path.read_text(encoding="utf-8")
-        expected_workflow_tags = {
-            row["evidence_tag"] for row in EXPECTED_CROSS_VERSION_COHORT
-        }
         workflow_tags = re.findall(
             r'(?m)^\s*-\s+"(eacp-v1\.3-evidence/k8s-[^"]+)"\s*$', workflow
         )
         if (
-            len(workflow_tags) != len(expected_workflow_tags)
-            or set(workflow_tags) != expected_workflow_tags
+            len(workflow_tags) != len(EXPECTED_CROSS_VERSION_WORKFLOW_TAGS)
+            or set(workflow_tags) != EXPECTED_CROSS_VERSION_WORKFLOW_TAGS
         ):
-            errors.append("cross-version workflow evidence-tag allowlist differs from the 3-by-3 plan")
+            errors.append(
+                "cross-version workflow evidence-tag allowlist differs from the exact union "
+                "of nine initial and nine confirmatory tags"
+            )
         if re.search(r"(?m)^\s+branches(?:-ignore)?:", workflow):
             errors.append("cross-version evidence workflow must not run on branch pushes")
         required_workflow_text = (
@@ -1004,22 +1398,58 @@ def validate_cross_version_protocol(errors: list[str]) -> None:
                 + ", ".join(repr(text) for text in missing)
             )
 
-    cohort_root = experiment_root / "results/reference/cross-version-cohort-v1.3"
     summarizer = experiment_root / "summarize_cross_version_run_set.py"
-    if cohort_root.is_dir() and summarizer.is_file():
-        run_offline_check(
-            [
-                sys.executable,
-                str(summarizer),
-                "--root",
-                str(cohort_root),
-                "--target-manifest",
-                str(target_path),
-                "--verify",
-            ],
-            "cross-version cohort checksum and invariant verification",
-            errors,
+    optional_cohorts = (
+        (
+            experiment_root
+            / "results/reference/cross-version-initial-failed-cohort-v1.3",
+            EXPECTED_CROSS_VERSION_COHORT,
+            [1, 2, 3],
+            "initial failed cross-version cohort",
+            INITIAL_CROSS_VERSION_PROTOCOL_COMMIT,
+            EXPECTED_INITIAL_FAILED_RUN_IDS,
+        ),
+        (
+            experiment_root
+            / "results/reference/cross-version-confirmatory-cohort-v1.3",
+            EXPECTED_CONFIRMATORY_CROSS_VERSION_COHORT,
+            [4, 5, 6],
+            "confirmatory cross-version cohort",
+            None,
+            None,
+        ),
+    )
+    for (
+        cohort_root,
+        expected_members,
+        expected_indices,
+        label,
+        expected_commit,
+        expected_run_ids,
+    ) in optional_cohorts:
+        validate_cross_version_run_set_binding(
+            cohort_root=cohort_root,
+            expected_members=expected_members,
+            expected_indices=expected_indices,
+            label=label,
+            errors=errors,
+            expected_protocol_commit=expected_commit,
+            expected_run_ids=expected_run_ids,
         )
+        if cohort_root.is_dir() and summarizer.is_file():
+            run_offline_check(
+                [
+                    sys.executable,
+                    str(summarizer),
+                    "--root",
+                    str(cohort_root),
+                    "--target-manifest",
+                    str(target_path),
+                    "--verify",
+                ],
+                f"{label} checksum and invariant verification",
+                errors,
+            )
 
 
 def png_dimensions(path: Path, errors: list[str]) -> tuple[int, int] | None:

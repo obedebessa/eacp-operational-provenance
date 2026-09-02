@@ -13,7 +13,7 @@ from typing import Any, Sequence
 SCHEMA = "eacp.kubernetes-targets/1.3.0"
 TARGETS = {"v1.34.8", "v1.35.5", "v1.36.1"}
 TAG_PATTERN = re.compile(
-    r"eacp-v1\.3-evidence/k8s-(v1\.(?:34\.8|35\.5|36\.1))/run-0[1-3]"
+    r"eacp-v1\.3-evidence/k8s-(v1\.(?:34\.8|35\.5|36\.1))/run-0[1-6]"
 )
 HEX64 = re.compile(r"[0-9a-f]{64}")
 

@@ -1,4 +1,5 @@
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -15,6 +16,7 @@ from experiments.github_actions.resolve_kubernetes_target import (
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "kubernetes_targets_v1.3.json"
+WORKFLOW = ROOT.parents[1] / ".github" / "workflows" / "eacp-cross-plane-v1.3.yml"
 
 
 class TargetResolutionTests(unittest.TestCase):
@@ -25,7 +27,7 @@ class TargetResolutionTests(unittest.TestCase):
     def test_evidence_tags_resolve_exact_versions(self):
         manifest = load_manifest(MANIFEST)
         for version in sorted(TARGETS):
-            for replicate in range(1, 4):
+            for replicate in range(1, 7):
                 with self.subTest(version=version, replicate=replicate):
                     values = resolve(
                         manifest,
@@ -38,6 +40,23 @@ class TargetResolutionTests(unittest.TestCase):
                     )
                     self.assertEqual(values["KUBERNETES_PROFILE"], version)
                     self.assertIn(f"node:{version}@sha256:", values["KIND_NODE_IMAGE"])
+
+    def test_workflow_push_trigger_is_exactly_the_approved_tag_set(self):
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        push_block = workflow.split("  workflow_dispatch:", 1)[0].split("  push:", 1)[1]
+        observed = re.findall(
+            r'^\s+- "(eacp-v1\.3-evidence/k8s-v1\.(?:34\.8|35\.5|36\.1)/run-0[1-6])"$',
+            push_block,
+            flags=re.MULTILINE,
+        )
+        expected = {
+            f"eacp-v1.3-evidence/k8s-{version}/run-{replicate:02d}"
+            for version in TARGETS
+            for replicate in range(1, 7)
+        }
+        self.assertEqual(set(observed), expected)
+        self.assertEqual(len(observed), len(expected))
+        self.assertNotIn("branches:", push_block)
 
     def test_manual_dispatch_is_allowlisted(self):
         self.assertEqual(
@@ -60,7 +79,9 @@ class TargetResolutionTests(unittest.TestCase):
     def test_malformed_or_unapproved_ref_fails_closed(self):
         for ref_type, ref_name in (
             ("tag", "eacp-v1.3-evidence/k8s-v1.36.1/not-a-run"),
-            ("tag", "eacp-v1.3-evidence/k8s-v1.36.1/run-04"),
+            ("tag", "eacp-v1.3-evidence/k8s-v1.36.1/run-00"),
+            ("tag", "eacp-v1.3-evidence/k8s-v1.36.1/run-07"),
+            ("tag", "eacp-v1.3-evidence/k8s-v1.36.1/run-06-extra"),
             ("tag", "eacp-v1.3-evidence/k8s-v1.37.0/run-01"),
             ("branch", "eacp-v1.3-candidate"),
             ("branch", "main"),

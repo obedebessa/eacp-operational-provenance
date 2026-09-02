@@ -1,0 +1,144 @@
+{
+  "captured_at": "2026-09-02T22:17:22Z",
+  "conclusion": "failure",
+  "event": "push",
+  "evidence_tag": "eacp-v1.3-evidence/k8s-v1.36.1/run-03",
+  "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+  "jobs": [
+    {
+      "completed_at": "2026-09-02T22:14:36Z",
+      "conclusion": "failure",
+      "database_id": 100444095735,
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "name": "github-actions-to-kubernetes",
+      "started_at": "2026-09-02T22:13:40Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completed_at": "2026-09-02T22:13:43Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "started_at": "2026-09-02T22:13:42Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:13:44Z",
+          "conclusion": "success",
+          "name": "Check out the exact run revision",
+          "number": 2,
+          "started_at": "2026-09-02T22:13:43Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:13:45Z",
+          "conclusion": "success",
+          "name": "Set up Python",
+          "number": 3,
+          "started_at": "2026-09-02T22:13:44Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:13:45Z",
+          "conclusion": "success",
+          "name": "Resolve checksum-pinned Kubernetes target",
+          "number": 4,
+          "started_at": "2026-09-02T22:13:45Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:13:45Z",
+          "conclusion": "success",
+          "name": "Verify adapter unit and negative-control tests",
+          "number": 5,
+          "started_at": "2026-09-02T22:13:45Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:13:46Z",
+          "conclusion": "success",
+          "name": "Install checksum-pinned kind and matching kubectl",
+          "number": 6,
+          "started_at": "2026-09-02T22:13:45Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:14:34Z",
+          "conclusion": "failure",
+          "name": "Execute real cross-plane chain and controls",
+          "number": 7,
+          "started_at": "2026-09-02T22:13:46Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:14:34Z",
+          "conclusion": "skipped",
+          "name": "Create stable archive subject",
+          "number": 8,
+          "started_at": "2026-09-02T22:14:34Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:14:34Z",
+          "conclusion": "skipped",
+          "name": "Attest the evidence archive",
+          "number": 9,
+          "started_at": "2026-09-02T22:14:34Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:14:34Z",
+          "conclusion": "skipped",
+          "name": "Upload evidence, archive, and digest",
+          "number": 10,
+          "started_at": "2026-09-02T22:14:34Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:14:34Z",
+          "conclusion": "skipped",
+          "name": "Record claim boundary in job summary",
+          "number": 11,
+          "started_at": "2026-09-02T22:14:34Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:14:34Z",
+          "conclusion": "skipped",
+          "name": "Post Set up Python",
+          "number": 21,
+          "started_at": "2026-09-02T22:14:34Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:14:34Z",
+          "conclusion": "success",
+          "name": "Post Check out the exact run revision",
+          "number": 22,
+          "started_at": "2026-09-02T22:14:34Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-09-02T22:14:34Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "started_at": "2026-09-02T22:14:34Z",
+          "status": "completed"
+        }
+      ]
+    }
+  ],
+  "kubernetes_version": "v1.36.1",
+  "repository": "obedebessa/eacp-operational-provenance",
+  "run_attempt": 1,
+  "run_id": 33689302997,
+  "run_index": 3,
+  "run_url": "https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33689302997",
+  "schema_version": "eacp.cross-version-run-outcome/1.3.0",
+  "source_acquisition": "github_cli_read_only",
+  "status": "completed",
+  "workflow_name": "EACP cross-plane v1.3"
+}
