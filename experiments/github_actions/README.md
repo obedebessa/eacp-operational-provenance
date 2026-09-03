@@ -74,10 +74,10 @@ before publication.
 The JSON Schemas are under `schema/`. Runtime verification does not require a
 third-party JSON Schema package: it checks SHA-256 manifests and regenerates
 the CSV, JSONL, summary, and Kubernetes patch from the minimized source.
-Current schema identifiers resolve through the public candidate branch. The
-checksum-bound run artifacts retain the prospective `v1.3.0` identifiers that
-were emitted at execution time; the verifier accepts those historical values
-without rewriting or weakening their manifests.
+Current schema identifiers resolve through the immutable `v1.3.0` release tag.
+Checksum-bound run artifacts retain the candidate-branch or prospective
+`v1.3.0` identifiers emitted at execution time; the verifier accepts those
+historical values without rewriting or weakening their manifests.
 Normative profile records are also passed through
 `spec/tools/eacp_profile.py`. GitHub records distinguish `initiator`,
 `triggering_actor`, and the `github-actions` execution principal. Kubernetes
@@ -144,10 +144,10 @@ ZIP paths are validated before extraction and path traversal is rejected.
 
 ## Real cross-plane protocol
 
-The v1.3 workflow is intentionally isolated. It runs only on a push to the
-`eacp-v1.3-candidate` branch or by manual dispatch after the workflow exists on
-the default branch. It does not deploy to an external cluster and needs no
-cloud credentials.
+The v1.3 workflow is intentionally isolated. Push execution is restricted to
+the 18 exact allowlisted evidence tags; manual dispatch is available after the
+workflow exists on the default branch. It does not deploy to an external
+cluster and needs no cloud credentials.
 
 The workflow performs the following sequence:
 

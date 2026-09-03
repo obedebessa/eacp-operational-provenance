@@ -1,7 +1,7 @@
-# Expert review request — EACP 1.3 candidate
+# Expert review request — EACP 1.3.0
 
-Status: copy-ready reviewer outreach, 2026-09-02. This candidate has not
-undergone peer review and has no v1.3 DOI.
+Status: copy-ready reviewer outreach, 2026-09-03. The preprint has not
+undergone peer review. Its DOI is <https://doi.org/10.5281/zenodo.22283868>.
 
 ## Suggested subject
 
@@ -11,12 +11,12 @@ Request for critical review and reproduction: EACP 1.3 operational provenance
 
 Dear [Name],
 
-I am seeking a critical technical review of EACP 1.3, a reviewer-candidate
+I am seeking a critical technical review of EACP 1.3.0, a non-peer-reviewed
 preprint and public artifact about reconstructing operational transitions across
 software-delivery and runtime-control planes.
 
 The bounded contribution is a domain-specific evidence profile plus a
-materialized retrieval index. The candidate composes GitHub Actions and
+materialized retrieval index. The release composes GitHub Actions and
 Kubernetes records separately emitted by two systems within one deliberately
 orchestrated operation through exact typed and scoped links,
 retains native evidence pointers, and abstains when the selected link is absent
@@ -91,13 +91,13 @@ brief note would be extremely useful. I will not quote or identify you publicly
 without separate permission.
 
 Paper:
-<https://github.com/obedebessa/eacp-operational-provenance/blob/eacp-v1.3-candidate/paper/EACP_preprint_v1.3_candidate.pdf>
+<https://doi.org/10.5281/zenodo.22283868>
 
 Reviewer guide:
-<https://github.com/obedebessa/eacp-operational-provenance/blob/eacp-v1.3-candidate/REVIEWER_GUIDE_v1.3.md>
+<https://github.com/obedebessa/eacp-operational-provenance/blob/v1.3.0/REVIEWER_GUIDE_v1.3.md>
 
 Evidence brief and complete public run matrix:
-<https://github.com/obedebessa/eacp-operational-provenance/blob/eacp-v1.3-candidate/EVIDENCE_BRIEF_v1.3.md>
+<https://github.com/obedebessa/eacp-operational-provenance/blob/v1.3.0/EVIDENCE_BRIEF_v1.3.md>
 
 Initial protocol commit:
 <https://github.com/obedebessa/eacp-operational-provenance/tree/15d72da095a0c7640b9318b50b28728e76d68928>
@@ -115,7 +115,7 @@ Obede Bessa Rocha da Silva
 ## Fast review path for the recipient
 
 1. Read `EVIDENCE_BRIEF_v1.3.md`, then the contribution boundary, empirical
-   results, threats to validity, and conclusion in the candidate paper.
+   results, threats to validity, and conclusion in the v1.3.0 preprint.
 2. Read `REVIEWER_GUIDE_v1.3.md`, especially “Results worth scrutinizing” and
    “What would falsify or limit the interpretation.”
 3. Run the frozen-evidence commands under “Fast local artifact verification.”

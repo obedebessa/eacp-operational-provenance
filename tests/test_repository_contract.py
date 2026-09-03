@@ -18,12 +18,12 @@ def sha256(path: Path) -> str:
 class RepositoryContractTests(unittest.TestCase):
     def test_versions_and_primary_artifact_citation(self) -> None:
         metadata = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-        self.assertIn('version = "1.2.0"', metadata)
+        self.assertIn('version = "1.3.0"', metadata)
 
         cff = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
         self.assertIn("type: software", cff)
-        self.assertIn("version: 1.2.0", cff)
-        self.assertIn('doi: "10.5281/zenodo.21818550"', cff)
+        self.assertIn("version: 1.3.0", cff)
+        self.assertIn('doi: "10.5281/zenodo.22283852"', cff)
         self.assertIn(
             'repository-code: "https://github.com/obedebessa/eacp-operational-provenance"',
             cff,
@@ -32,11 +32,14 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertIn("article.", cff)
         self.assertNotIn("email:", cff)
         self.assertIn("preferred-citation:", cff)
+        self.assertIn('doi: "10.5281/zenodo.22283868"', cff)
         self.assertIn('doi: "10.5281/zenodo.22017662"', cff)
 
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertIn("10.5281/zenodo.21818550", readme)
+        self.assertIn("10.5281/zenodo.22283852", readme)
         self.assertIn("10.5281/zenodo.21817376", readme)
+        self.assertIn("10.5281/zenodo.22283868", readme)
+        self.assertIn("10.5281/zenodo.22017661", readme)
 
     def test_scope_caveats_are_explicit(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -57,9 +60,37 @@ class RepositoryContractTests(unittest.TestCase):
         license_map = (ROOT / "LICENSES/README.md").read_text(encoding="utf-8")
         self.assertIn("Data under data/", license_map)
         self.assertIn("paper/EACP_preprint.pdf", license_map)
+        self.assertIn("paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf", license_map)
         paper_notice = (ROOT / "paper/README.md").read_text(encoding="utf-8")
-        self.assertIn("All rights reserved", paper_notice)
-        self.assertIn("not an article", paper_notice)
+        paper_notice_normalized = " ".join(paper_notice.split())
+        self.assertIn("all-rights-reserved", paper_notice_normalized)
+        self.assertIn("Creative Commons Attribution 4.0 International", paper_notice_normalized)
+        self.assertIn("not the preprint DOI", paper_notice_normalized)
+
+    def test_checksum_bound_evidence_is_tracked(self) -> None:
+        if not (ROOT / ".git").exists():
+            self.skipTest("Git index is unavailable in an exported archive")
+        result = subprocess.run(
+            ["git", "ls-files", "-z", "--cached"],
+            cwd=ROOT,
+            capture_output=True,
+            check=True,
+        )
+        tracked = {
+            name.decode("utf-8") for name in result.stdout.split(b"\0") if name
+        }
+        evidence_root = ROOT / "experiments/github_actions/results/reference"
+        for manifest in sorted(evidence_root.rglob("*SHA256SUMS")):
+            if manifest.name not in {"REFERENCE_SHA256SUMS", "OUTCOME_SHA256SUMS"}:
+                continue
+            with self.subTest(manifest=manifest.relative_to(ROOT)):
+                self.assertIn(manifest.relative_to(ROOT).as_posix(), tracked)
+                for raw in manifest.read_text(encoding="utf-8").splitlines():
+                    if not raw.strip():
+                        continue
+                    _, raw_name = raw.split(maxsplit=1)
+                    target = (manifest.parent / raw_name.strip().lstrip("*")).resolve()
+                    self.assertIn(target.relative_to(ROOT).as_posix(), tracked)
 
     def test_sensitive_runtime_artifacts_are_ignored(self) -> None:
         gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
@@ -129,9 +160,19 @@ class RepositoryContractTests(unittest.TestCase):
             (ROOT / "experiments/comparison/opentelemetry/otel-config.yaml").exists()
         )
 
-    def test_repository_scaffold_verifier(self) -> None:
+    def test_repository_verifier(self) -> None:
         result = subprocess.run(
             [sys.executable, str(ROOT / "scripts/verify_repository.py")],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_release_profile_verifier(self) -> None:
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/verify_repository.py"), "--release"],
             cwd=ROOT,
             text=True,
             capture_output=True,

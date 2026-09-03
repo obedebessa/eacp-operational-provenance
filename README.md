@@ -1,18 +1,18 @@
 # EACP operational-provenance artifact
 
-[![Article DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22017662.svg)](https://doi.org/10.5281/zenodo.22017662)
+[![Preprint DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22283868.svg)](https://doi.org/10.5281/zenodo.22283868)
 [![Reproduce small](https://github.com/obedebessa/eacp-operational-provenance/actions/workflows/reproduce-small.yml/badge.svg)](https://github.com/obedebessa/eacp-operational-provenance/actions/workflows/reproduce-small.yml)
 
-> **Reviewer candidate — EACP 1.3, 2026-09-02.** This branch is not an
-> archival release and has no v1.3 DOI. Begin with the
-> [reviewer guide](REVIEWER_GUIDE_v1.3.md). The DOI badge and citation metadata
-> continue to identify the last released version, v1.2.0.
+> **Release — EACP 1.3.0, 2026-09-03.** Begin with the
+> [reviewer guide](REVIEWER_GUIDE_v1.3.md). The version-specific Zenodo records
+> are the [preprint](https://doi.org/10.5281/zenodo.22283868) and the separate
+> [software/reproducibility artifact](https://doi.org/10.5281/zenodo.22283852).
 
-This branch extends the released reproducibility artifact for:
+This release accompanies:
 
-> Obede Bessa Rocha da Silva, “Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP,” version 1.2, 2026.
+> Obede Bessa Rocha da Silva, “Cross-Plane Operational Provenance under Identifier Failure: A Reproducible Evaluation of EACP,” version 1.3.0, 2026. <https://doi.org/10.5281/zenodo.22283868>
 
-The v1.3 candidate adds an implementable evidence profile, adversarial
+Version 1.3.0 adds an implementable evidence profile, adversarial
 correlation-identifier experiments, a paired SQLite index ablation, and a
 controlled public GitHub Actions → Kubernetes evaluation: an earlier
 three-attempt run plus separately reported initial and confirmatory 3-by-3
@@ -21,14 +21,14 @@ microbenchmark, small single-control-plane Kubernetes evaluation, and bounded
 OpenTelemetry preservation comparison. The manuscript is a **preprint /
 technical report** and has **not undergone peer review**.
 
-## Review EACP 1.3
+## Review EACP 1.3.0
 
-- [Read the v1.3 reviewer-candidate paper (PDF)](paper/EACP_preprint_v1.3_candidate.pdf)
+- [Read the v1.3.0 preprint (PDF)](paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf)
 - [Concise evidence brief](EVIDENCE_BRIEF_v1.3.md)
 - [Copy-ready expert review request](EXPERT_REVIEW_REQUEST_v1.3.md)
 - [Claim-to-evidence and falsification ledger](CLAIMS_AND_EVIDENCE_v1.3.md)
 - [Reviewer guide and verification path](REVIEWER_GUIDE_v1.3.md)
-- [Candidate release notes](RELEASE_NOTES_v1.3-candidate.md)
+- [Release notes](RELEASE_NOTES_v1.3.0.md)
 - [Normative EACP Profile 1.3](spec/EACP_PROFILE_v1.3.md)
 - [Correlation-robustness experiment](experiments/correlation_robustness/README.md)
 - [Live GitHub Actions → Kubernetes experiment](experiments/github_actions/README.md)
@@ -38,42 +38,46 @@ technical report** and has **not undergone peer review**.
 - [Confirmatory 3-by-3 cohort](experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3/README.md)
 - [SQLite index ablation](experiments/index_ablation/README.md)
 
-The candidate's bounded contribution is a domain-specific operational-
+The release's bounded contribution is a domain-specific operational-
 provenance profile and materialized retrieval index that composes records
 separately emitted by delivery and runtime-control systems at service granularity, retains
 native evidence pointers, and abstains when explicit cross-plane linkage is
 missing or structurally ambiguous.
 
-## Read and cite the released v1.2 paper
+## Cite EACP 1.3.0
 
-- [Read the searchable preprint (PDF)](paper/EACP_preprint.pdf)
-- [Open the archived preprint and article DOI](https://doi.org/10.5281/zenodo.22017662)
-- [Open the archived reproducibility artifact](https://doi.org/10.5281/zenodo.21818550)
+- [Read the searchable v1.3.0 preprint (PDF)](paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf)
+- [Open the archived preprint DOI](https://doi.org/10.5281/zenodo.22283868)
+- [Open the archived reproducibility artifact](https://doi.org/10.5281/zenodo.22283852)
 - Use GitHub's **Cite this repository** control for automatically generated
   citation formats. The preferred citation in `CITATION.cff` points to the
-  preprint. The Zenodo DOI identifies the separate software and reproducibility
-  artifact; it is not an article DOI.
+  preprint. The software Zenodo DOI identifies the separate reproducibility
+  artifact; it is not the preprint DOI.
 
 **APA**
 
-> Rocha da Silva, O. B. (2026). *Cross-Plane Operational Provenance in
-> Cloud-Native Systems: A Reproducible Evaluation of EACP* (Version 1.2)
-> [Preprint]. Zenodo. https://doi.org/10.5281/zenodo.22017662
+> Rocha da Silva, O. B. (2026). *Cross-Plane Operational Provenance under
+> Identifier Failure: A Reproducible Evaluation of EACP* (Version 1.3.0)
+> [Preprint]. Zenodo. https://doi.org/10.5281/zenodo.22283868
 
 **BibTeX**
 
 ```bibtex
 @techreport{rocha_da_silva_eacp_2026,
   author  = {Obede Bessa Rocha da Silva},
-  title   = {Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP},
+  title   = {Cross-Plane Operational Provenance under Identifier Failure: A Reproducible Evaluation of EACP},
   year    = {2026},
-  month   = aug,
-  version = {1.2},
-  doi     = {10.5281/zenodo.22017662},
-  url     = {https://doi.org/10.5281/zenodo.22017662},
+  month   = sep,
+  version = {1.3.0},
+  doi     = {10.5281/zenodo.22283868},
+  url     = {https://doi.org/10.5281/zenodo.22283868},
   note    = {Preprint}
 }
 ```
+
+The historical v1.2 preprint and artifact remain available at
+<https://doi.org/10.5281/zenodo.22017662> and
+<https://doi.org/10.5281/zenodo.21818550>, respectively.
 
 ## Artifact boundary
 
@@ -85,7 +89,7 @@ and successful live workflows separately attest their in-run TARs. Local
 completed-state finalization is not part of those attestations, and neither
 mechanism establishes source truth or causation.
 
-Across the released and candidate materials, the artifact evaluates five
+Across the v1.2 and v1.3.0 materials, the artifact evaluates five
 bounded questions:
 
 1. Can an EACP SQLite index reproduce the same canonical rows as six indexed, fragmented source tables in a deterministic synthetic workload?
@@ -107,7 +111,7 @@ source truth, universal performance superiority, tamper-proof evidence,
 complete auditability, identifier discovery, field utility, or independent
 reproduction.
 
-## EACP 1.3 candidate results
+## EACP 1.3.0 results
 
 All values below are copied from the checked-in machine-readable files. They
 are descriptive results for the declared protocols, not projections.
@@ -131,7 +135,7 @@ and checksum inventory. See the [evidence brief](EVIDENCE_BRIEF_v1.3.md) for all
 ## Released v1.2 results
 
 These values remain copied from the machine-readable files in `data/`; the
-candidate does not relabel them as new v1.3 executions.
+v1.3.0 release does not relabel them as new v1.3 executions.
 
 | Evaluation | Frozen run and boundary | Descriptive result |
 |---|---|---|
@@ -145,7 +149,7 @@ The Kubernetes corpus SHA-256 is `6aa39ee1cf8d3cbf58cb683ed6c7977ce851ab442c7057
 
 | Path | Purpose |
 |---|---|
-| `REVIEWER_GUIDE_v1.3.md` | Candidate reading order, headline evidence, verification commands, and claim boundaries |
+| `REVIEWER_GUIDE_v1.3.md` | Release reading order, headline evidence, verification commands, and claim boundaries |
 | `spec/` | EACP Profile 1.3, JSON Schemas, reference validator/migrator/resolver, examples, and tests |
 | `benchmark/sqlite/` | Standard-library deterministic fragmented-baseline and EACP benchmark |
 | `experiments/correlation_robustness/` | Adversarial identifier, duplication, timing, and compound-scenario evaluation |
@@ -156,8 +160,8 @@ The Kubernetes corpus SHA-256 is `6aa39ee1cf8d3cbf58cb683ed6c7977ce851ab442c7057
 | `data/sqlite/` | Synthetic trial data, summaries, query plans, and sanitized environment metadata |
 | `data/kubernetes/20260806T031453Z/` | Exactly the eight approved public result files from the canonical Kubernetes run |
 | `data/comparison/20260806T032418Z/` | Safe comparison summary, trials, environment metadata, and run checksums |
-| `figures/` | v1.3 candidate PNG generators/results plus the released v1.2 PNG, SVG, and vector-PDF set |
-| `paper/` | Released v1.2 preprint and the separately labeled v1.3 reviewer-candidate PDF, with file-specific status and rights notes |
+| `figures/` | v1.3.0 PNG generators/results plus the released v1.2 PNG, SVG, and vector-PDF set |
+| `paper/` | Released v1.2 and v1.3.0 preprints with file-specific status and rights notes |
 | `scripts/` | Reproduction, hygiene, and release-manifest checks |
 | `tests/` | Repository-contract tests |
 
@@ -185,7 +189,7 @@ Do not substitute a floating image tag when reproducing an archival release.
 - kind and `kubectl` for the Kubernetes evaluation;
 - Pillow 10–12 only if regenerating the PNG figures.
 
-### Candidate result verification
+### Frozen v1.3.0 result verification
 
 The fast path checks already frozen evidence without rerunning timing
 experiments or creating a cluster:
@@ -208,7 +212,7 @@ python3 experiments/index_ablation/index_ablation.py \
   shasum -a 256 -c SHA256SUMS)
 ```
 
-Candidate-specific tests are listed in
+Version 1.3.0-specific tests are listed in
 [REVIEWER_GUIDE_v1.3.md](REVIEWER_GUIDE_v1.3.md).
 
 ### Repository and small-run checks
@@ -216,6 +220,8 @@ Candidate-specific tests are listed in
 ```bash
 python -m unittest discover -s tests -v
 python scripts/verify_repository.py
+python scripts/generate_manifest.py --manifest MANIFEST-v1.3.0.sha256 --check
+python scripts/verify_repository.py --release --expected-tag v1.3.0
 bash scripts/reproduce_small.sh
 ```
 
@@ -325,25 +331,22 @@ The sanitizer and selection rules are documented in `experiments/kubernetes/PUBL
 
 ## Citation and archival status
 
-The `eacp-v1.3-candidate` branch is a review surface, not a release. It has no
-v1.3 DOI, and the v1.2 DOI must not be cited as though it archived the candidate
-changes. See [candidate release notes](RELEASE_NOTES_v1.3-candidate.md).
+Tag `v1.3.0` is the immutable source for this release. Its version-specific
+software/artifact DOI is <https://doi.org/10.5281/zenodo.22283852>, while
+<https://doi.org/10.5281/zenodo.21817376> is the artifact Concept DOI. The
+separate v1.3.0 preprint DOI is <https://doi.org/10.5281/zenodo.22283868>, and
+<https://doi.org/10.5281/zenodo.22017661> is the preprint Concept DOI. A DOI or
+Concept DOI for one record must not be presented as the identifier for the
+other record, and none implies peer review.
 
-GitHub can read the released software citation from `CITATION.cff`. The
-version-specific identifier for v1.2.0 is the Zenodo software/artifact DOI
-<https://doi.org/10.5281/zenodo.21818550>. The Concept DOI
-<https://doi.org/10.5281/zenodo.21817376> represents all published artifact
-versions and resolves to the latest published version. The separate v1.2
-article/preprint DOI is <https://doi.org/10.5281/zenodo.22017662>.
-
-The searchable released preprint is `paper/EACP_preprint.pdf`, and
-`MANIFEST.sha256` covers the frozen v1.2 release tree. Release v1.2.0 is valid
-only after `python scripts/verify_repository.py --release` passes. Neither file
-is silently repurposed as a v1.3 candidate manifest or citation.
+`CITATION.cff` describes software release v1.3.0 and points its preferred
+citation to the v1.3.0 preprint. `MANIFEST-v1.3.0.sha256` covers the tracked
+release tree; the historical `MANIFEST.sha256`, `paper/EACP_preprint.pdf`, and
+`RELEASE_NOTES_v1.2.0.md` remain the frozen v1.2 materials.
 
 ## Licensing
 
 - Code, scripts, tests, CI, container configuration, Kubernetes manifests, and other software configuration: Apache License 2.0 (`LICENSE`).
 - Data, documentation, and figures: Creative Commons Attribution 4.0 International (`LICENSES/CC-BY-4.0.txt`).
-- The preprint PDF is not covered by those path-based grants unless `paper/README.md` or the PDF states otherwise.
+- `paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf`: Creative Commons Attribution 4.0 International; the historical v1.2 PDF retains its own all-rights-reserved notice.
 - Third-party components are not relicensed; see `THIRD_PARTY_NOTICES.md`.

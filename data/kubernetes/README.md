@@ -23,4 +23,4 @@ Key checksums:
 - `normalized_evidence.csv`: `ff03698e83a764651aec912fc806a50464374567ae862936fe32251523d796b5`
 - `summary.json`: `b565042468c895620ea8284c928f43bb9c1767a74d82c0cebf8ea62ae7a11cad`
 
-The final repository-wide `MANIFEST.sha256` will cover every published file. Sanitization reduces disclosure risk; it does not make the corpus representative of production Kubernetes activity or prove authenticity of the upstream API-server source.
+The release-wide `MANIFEST-v1.3.0.sha256` covers every tracked published file. Sanitization reduces disclosure risk; it does not make the corpus representative of production Kubernetes activity or prove authenticity of the upstream API-server source.

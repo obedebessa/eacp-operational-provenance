@@ -1,7 +1,10 @@
-# EACP operational-provenance artifact v1.3 candidate
+# EACP operational-provenance artifact v1.3.0
 
-Status: reviewer candidate, 2026-09-02. This is not a GitHub or Zenodo release,
-has not undergone peer review, and has no v1.3 DOI.
+Status: archival release, 2026-09-03. The accompanying manuscript is a preprint
+and has not undergone peer review. Version-specific Zenodo DOIs:
+
+- software/reproducibility artifact: <https://doi.org/10.5281/zenodo.22283852>;
+- preprint: <https://doi.org/10.5281/zenodo.22283868>.
 
 The initial cross-version protocol is frozen at commit
 [`15d72da`](https://github.com/obedebessa/eacp-operational-provenance/tree/15d72da095a0c7640b9318b50b28728e76d68928).
@@ -10,7 +13,7 @@ Its narrow prospective amendment is direct-child commit
 The failed initial and successful confirmatory generations are frozen and
 reported separately.
 
-## Candidate claim
+## Bounded release claim
 
 EACP 1.3 is a domain-specific operational-provenance profile and materialized
 retrieval index for composing records separately emitted by delivery and
@@ -18,7 +21,7 @@ runtime-control systems at service granularity. It preserves evidence pointers a
 typed, scoped links; the reference resolver abstains when the selected link is
 missing or multivalued.
 
-The candidate does not claim a new general provenance model, causal or
+The release does not claim a new general provenance model, causal or
 root-cause inference, source truth, tamper-proof storage, production readiness,
 or replacement of supply-chain attestation, tracing, SIEM, or authoritative
 source systems.
@@ -163,13 +166,12 @@ The v1.2 DOI-backed artifacts are unchanged in status:
 - version-specific software/artifact DOI: <https://doi.org/10.5281/zenodo.21818550>;
 - software/artifact Concept DOI: <https://doi.org/10.5281/zenodo.21817376>.
 
-`CITATION.cff`, `MANIFEST.sha256`, and `paper/EACP_preprint.pdf` still identify
-the released v1.2 artifact. They must not be used to imply that this candidate
-branch is already archived. A v1.3 release would require a separate review,
-release manifest, a documented release tag, archival deposit, and synchronized citation
-metadata.
+`CITATION.cff`, `MANIFEST-v1.3.0.sha256`, and
+`paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf` identify this
+v1.3.0 release. Historical `MANIFEST.sha256`, `paper/EACP_preprint.pdf`, and
+`RELEASE_NOTES_v1.2.0.md` remain frozen as v1.2 materials.
 
-## Verify the frozen candidate results
+## Verify the frozen v1.3.0 results
 
 ```bash
 python3 experiments/github_actions/summarize_reference_run.py --verify

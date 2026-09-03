@@ -1,8 +1,8 @@
-# Reviewer guide — EACP 1.3 candidate
+# Reviewer guide — EACP 1.3.0
 
-Status: reviewer candidate, 2026-09-02. This branch is not an archival release,
-has not undergone peer review, and has no v1.3 DOI. The DOI-backed release
-remains v1.2.0; see [archival status](#version-and-archival-status).
+Status: archival release, 2026-09-03. The accompanying manuscript has not
+undergone peer review. See [archival status](#version-and-archival-status) for
+the separate version-specific preprint and software/artifact DOIs.
 
 Three source anchors must not be conflated: the earlier three-attempt live run
 used commit `76b2ed54381ae52cf0f54cd22a20341c3216b77b`; the initial cross-version
@@ -123,9 +123,14 @@ python3 experiments/index_ablation/index_ablation.py \
 
 (cd experiments/correlation_robustness/results/reference && \
   shasum -a 256 -c SHA256SUMS)
+
+python3 scripts/generate_manifest.py \
+  --manifest MANIFEST-v1.3.0.sha256 --check
+python3 scripts/verify_repository.py \
+  --release --expected-tag v1.3.0
 ```
 
-Run the candidate-specific test suites:
+Run the v1.3.0-specific test suites:
 
 ```bash
 python3 -m unittest discover -s spec/tests -v
@@ -173,16 +178,13 @@ causality of source events.
 
 ## Version and archival status
 
-This `eacp-v1.3-candidate` branch is a review surface, not a release. It must not
-be cited with the v1.2 DOI as though that DOI archived the candidate changes.
-No v1.3 DOI has been minted.
+Tag `v1.3.0` is the immutable source for this release. The version-specific
+preprint DOI is <https://doi.org/10.5281/zenodo.22283868>; its Concept DOI is
+<https://doi.org/10.5281/zenodo.22017661>. The corresponding version-specific
+software/artifact DOI is <https://doi.org/10.5281/zenodo.22283852>; its Concept
+DOI is <https://doi.org/10.5281/zenodo.21817376>. These records are linked but
+distinct, and none implies peer review.
 
-The last archival release is v1.2.0:
-
-- article/preprint DOI: <https://doi.org/10.5281/zenodo.22017662>;
-- version-specific software/artifact DOI: <https://doi.org/10.5281/zenodo.21818550>;
-- software/artifact Concept DOI: <https://doi.org/10.5281/zenodo.21817376>.
-
-`CITATION.cff`, `MANIFEST.sha256`, the DOI badge, and the released preprint PDF
-continue to describe v1.2.0 until a separate candidate review, release decision,
-and archival deposit are complete.
+`CITATION.cff`, `MANIFEST-v1.3.0.sha256`, the DOI badge, and the v1.3.0 PDF
+describe this release. The historical v1.2 manifest, PDF, release notes, and
+version-specific DOIs remain unchanged.

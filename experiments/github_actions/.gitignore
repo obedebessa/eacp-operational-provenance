@@ -1,2 +1,4 @@
-results/
+results/*
+!results/reference/
+!results/reference/**
 work/

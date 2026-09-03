@@ -1,10 +1,10 @@
 # Figures
 
-The directory contains two deliberately separated figure sets: the released
-v1.2 figures and the v1.3 reviewer-candidate figures. The candidate PNGs do not
-change the archival status of the v1.2 vector exports.
+The directory contains two deliberately separated figure sets: the historical
+v1.2 figures and the released v1.3.0 figures. The v1.3.0 PNGs do not alter the
+archival identity of the v1.2 vector exports.
 
-## EACP 1.3 reviewer-candidate figures
+## EACP 1.3.0 figures
 
 `generate_v1_3_figures.py` produces three 300-dpi RGB PNGs:
 
@@ -31,8 +31,9 @@ python3 -m pip install 'Pillow>=10,<13'
 python3 figures/generate_v1_3_figures.py
 ```
 
-The v1.3 figures are candidate raster assets. They are not described as
-archival vector masters, and no v1.3 release or DOI is implied by their presence.
+The v1.3.0 figures are released raster assets. They are not described as
+archival vector masters; their integrity is covered by
+`MANIFEST-v1.3.0.sha256`.
 
 ## Released v1.2 figures
 

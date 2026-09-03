@@ -84,20 +84,23 @@ RELEASE_REQUIRED_FILES = (
     "paper/EACP_preprint.pdf",
     "RELEASE_NOTES_v1.2.0.md",
     "MANIFEST.sha256",
+    "paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf",
+    "RELEASE_NOTES_v1.3.0.md",
+    "MANIFEST-v1.3.0.sha256",
 )
 
-CANDIDATE_SENTINELS = (
+V1_3_SENTINELS = (
     "spec/EACP_PROFILE_v1.3.md",
     "REVIEWER_GUIDE_v1.3.md",
     "experiments/github_actions/results/reference/run-33682116347/reference_summary.json",
 )
 
-CANDIDATE_REQUIRED_FILES = (
+V1_3_REQUIRED_FILES = (
     ".github/workflows/eacp-cross-plane-v1.3.yml",
     "CLAIMS_AND_EVIDENCE_v1.3.md",
     "EVIDENCE_BRIEF_v1.3.md",
     "EXPERT_REVIEW_REQUEST_v1.3.md",
-    "RELEASE_NOTES_v1.3-candidate.md",
+    "RELEASE_NOTES_v1.3.0.md",
     "REVIEWER_GUIDE_v1.3.md",
     "spec/EACP_PROFILE_v1.3.md",
     "spec/schema/eacp-core-evidence-record-v1.3.schema.json",
@@ -157,10 +160,10 @@ CANDIDATE_REQUIRED_FILES = (
     "figures/eacp_architecture_v1_3.png",
     "figures/eacp_correlation_robustness_v1_3.png",
     "figures/eacp_live_cross_plane_v1_3.png",
-    "paper/EACP_preprint_v1.3_candidate.pdf",
+    "paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf",
 )
 
-CANDIDATE_REQUIRED_DIRECTORIES = (
+V1_3_REQUIRED_DIRECTORIES = (
     "spec/examples",
     "spec/schema",
     "spec/tests",
@@ -327,7 +330,7 @@ EXPECTED_CROSS_VERSION_WORKFLOW_TAGS = {
     *(row["evidence_tag"] for row in EXPECTED_CONFIRMATORY_CROSS_VERSION_COHORT),
 }
 
-EXPECTED_CANDIDATE_FIGURES = {
+EXPECTED_V1_3_FIGURES = {
     "figures/eacp_architecture_v1_3.png": (2400, 1500),
     "figures/eacp_correlation_robustness_v1_3.png": (2400, 1520),
     "figures/eacp_live_cross_plane_v1_3.png": (2400, 1520),
@@ -348,9 +351,12 @@ KUBERNETES_INPUT_SHA256 = "6aa39ee1cf8d3cbf58cb683ed6c7977ce851ab442c7057b7a85e9
 KUBERNETES_PROJECTION_CSV_SHA256 = "ff03698e83a764651aec912fc806a50464374567ae862936fe32251523d796b5"
 CANONICAL_PROJECTION_SHA256 = "196d4a1bf8d057d9fe9e6f18062b7c5ac5228642df3098b28c84fb48d7a67da6"
 OTEL_IMAGE_DIGEST = "sha256:c5918f78992ee73b0d6f0e599423ac5ec52dd5d9726733114d6eca53d5a32ed5"
-ARTIFACT_VERSION = "1.2.0"
-ARTIFACT_DOI = "10.5281/zenodo.21818550"
+ARTIFACT_VERSION = "1.3.0"
+ARTIFACT_DOI = "10.5281/zenodo.22283852"
 CONCEPT_DOI = "10.5281/zenodo.21817376"
+PREPRINT_DOI = "10.5281/zenodo.22283868"
+PREPRINT_CONCEPT_DOI = "10.5281/zenodo.22017661"
+PREPRINT_PDF_SHA256 = "2b02f04cfa08f917c2c42fa8417b853ad5126c01108eb9c7465b707ac5bae4b1"
 REPOSITORY_URL = "https://github.com/obedebessa/eacp-operational-provenance"
 
 TEXT_SUFFIXES = {
@@ -379,6 +385,26 @@ PRIVATE_MATERIAL_RES = (
     re.compile(r"(?im)^\s*(?:authorization|bearer[_-]?token|client[_-]?secret)\s*[:=]\s*\S+"),
 )
 
+RELEASE_ACTIVE_TEXT_FILES = (
+    "README.md",
+    "RELEASE_NOTES_v1.3.0.md",
+    "REVIEWER_GUIDE_v1.3.md",
+    "EVIDENCE_BRIEF_v1.3.md",
+    "CLAIMS_AND_EVIDENCE_v1.3.md",
+    "EXPERT_REVIEW_REQUEST_v1.3.md",
+    "figures/README.md",
+    "paper/README.md",
+    "index.html",
+)
+TRANSIENT_RELEASE_PHRASES = (
+    "reviewer candidate",
+    "reviewer-candidate",
+    "no v1.3 doi",
+    "not an archival release",
+    "eacp_preprint_v1.3_candidate.pdf",
+    "release_notes_v1.3-candidate.md",
+)
+
 SKIP_PARTS = {".git", "__pycache__", ".venv"}
 
 
@@ -402,6 +428,126 @@ def sha256(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             value.update(block)
     return value.hexdigest()
+
+
+def tracked_repository_paths(errors: list[str]) -> set[str] | None:
+    """Return tracked paths for checkout-only release-boundary checks."""
+
+    if not (ROOT / ".git").exists():
+        return None
+    try:
+        result = subprocess.run(
+            ["git", "ls-files", "-z", "--cached"],
+            cwd=ROOT,
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        errors.append(f"could not enumerate tracked files: {exc}")
+        return None
+    if result.returncode != 0:
+        detail = result.stderr.decode("utf-8", errors="replace").strip()
+        errors.append(f"could not enumerate tracked files: {detail}")
+        return None
+    try:
+        return {
+            name.decode("utf-8", errors="strict")
+            for name in result.stdout.split(b"\0")
+            if name
+        }
+    except UnicodeDecodeError as exc:
+        errors.append(f"tracked path is not UTF-8: {exc}")
+        return None
+
+
+def validate_checksum_targets_are_tracked(errors: list[str]) -> None:
+    """Reject local-only evidence that a Git tag or archive would omit."""
+
+    tracked = tracked_repository_paths(errors)
+    if tracked is None:
+        return
+    evidence_root = ROOT / "experiments/github_actions/results/reference"
+    for manifest in sorted(evidence_root.rglob("*SHA256SUMS")):
+        if manifest.name not in {"REFERENCE_SHA256SUMS", "OUTCOME_SHA256SUMS"}:
+            continue
+        manifest_relative = relative(manifest)
+        if manifest_relative not in tracked:
+            errors.append(f"evidence checksum manifest is not tracked: {manifest_relative}")
+        try:
+            lines = manifest.read_text(encoding="utf-8").splitlines()
+        except (OSError, UnicodeDecodeError) as exc:
+            errors.append(f"cannot read evidence checksum manifest {manifest_relative}: {exc}")
+            continue
+        for line_number, raw in enumerate(lines, start=1):
+            if not raw.strip():
+                continue
+            parts = raw.split(maxsplit=1)
+            if len(parts) != 2:
+                errors.append(f"malformed checksum line {manifest_relative}:{line_number}")
+                continue
+            raw_name = parts[1].strip().lstrip("*")
+            candidate = Path(raw_name)
+            if candidate.is_absolute() or ".." in candidate.parts:
+                errors.append(f"unsafe checksum path {manifest_relative}:{line_number}")
+                continue
+            target = (manifest.parent / candidate).resolve()
+            try:
+                target_relative = target.relative_to(ROOT.resolve()).as_posix()
+            except ValueError:
+                errors.append(f"checksum target escapes repository: {manifest_relative}:{line_number}")
+                continue
+            if target_relative not in tracked:
+                errors.append(
+                    f"checksum-bound evidence is absent from the Git index: {target_relative}"
+                )
+
+
+def validate_release_tag(expected_tag: str | None, errors: list[str]) -> None:
+    if expected_tag is None:
+        return
+    required = f"v{ARTIFACT_VERSION}"
+    if expected_tag != required:
+        errors.append(f"release tag is {expected_tag!r}; expected {required!r}")
+        return
+    if not (ROOT / ".git").exists():
+        return
+    try:
+        object_type = subprocess.run(
+            ["git", "cat-file", "-t", f"refs/tags/{expected_tag}"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+        tag_commit = subprocess.run(
+            ["git", "rev-parse", f"refs/tags/{expected_tag}^{{commit}}"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+        head_commit = subprocess.run(
+            ["git", "rev-parse", "HEAD^{commit}"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        errors.append(f"could not verify annotated release tag: {exc}")
+        return
+    if object_type.returncode != 0:
+        errors.append(f"release tag {expected_tag!r} does not exist in this checkout")
+    elif object_type.stdout.strip() != "tag":
+        errors.append(f"release tag {expected_tag!r} is not an annotated tag object")
+    if tag_commit.returncode != 0 or head_commit.returncode != 0:
+        errors.append(f"could not resolve release tag {expected_tag!r} and HEAD")
+    elif tag_commit.stdout.strip() != head_commit.stdout.strip():
+        errors.append(f"release tag {expected_tag!r} does not point to HEAD")
 
 
 def load_json_object(path: Path, label: str, errors: list[str]) -> dict[str, object] | None:
@@ -432,7 +578,7 @@ def validate_checksum_manifest(
         errors.append(f"missing {label} checksum manifest: {relative(manifest)}")
         return
     if sha256(manifest) != expected_manifest_sha256:
-        errors.append(f"{label} checksum manifest differs from the frozen candidate")
+        errors.append(f"{label} checksum manifest differs from the frozen v1.3 result")
 
     listed: set[str] = set()
     try:
@@ -525,7 +671,7 @@ def run_offline_check(command: list[str], label: str, errors: list[str]) -> None
     errors.append(f"{label} failed: {detail}")
 
 
-def validate_profile_candidate(errors: list[str]) -> None:
+def validate_profile_v1_3(errors: list[str]) -> None:
     schema_paths = (
         ROOT / "spec/schema/eacp-core-evidence-record-v1.3.schema.json",
         ROOT / "spec/schema/eacp-evidence-collection-v1.3.schema.json",
@@ -608,7 +754,7 @@ def validate_profile_candidate(errors: list[str]) -> None:
             errors.append(f"Profile 1.3 reference test inventory is {test_count}, expected 19")
 
 
-def validate_correlation_candidate(errors: list[str]) -> None:
+def validate_correlation_v1_3(errors: list[str]) -> None:
     result_root = ROOT / "experiments/correlation_robustness/results/reference"
     validate_checksum_manifest(
         result_root=result_root,
@@ -690,7 +836,7 @@ def validate_correlation_candidate(errors: list[str]) -> None:
         errors.append(f"correlation robustness trial row count is {trial_count}, expected 2250")
 
 
-def validate_index_ablation_candidate(errors: list[str]) -> None:
+def validate_index_ablation_v1_3(errors: list[str]) -> None:
     result_root = ROOT / "experiments/index_ablation/results/reference"
     validate_checksum_manifest(
         result_root=result_root,
@@ -787,7 +933,7 @@ def validate_index_ablation_candidate(errors: list[str]) -> None:
             errors.append(f"index ablation {name} row count is {count}, expected {expected}")
 
 
-def validate_github_actions_candidate(errors: list[str]) -> None:
+def validate_github_actions_v1_3(errors: list[str]) -> None:
     result_root = (
         ROOT
         / "experiments/github_actions/results/reference"
@@ -796,9 +942,9 @@ def validate_github_actions_candidate(errors: list[str]) -> None:
     manifest = result_root / "REFERENCE_SHA256SUMS"
     summary_path = result_root / "reference_summary.json"
     if manifest.is_file() and sha256(manifest) != GITHUB_ACTIONS_REFERENCE_MANIFEST_SHA256:
-        errors.append("GitHub Actions reference manifest differs from the frozen candidate")
+        errors.append("GitHub Actions reference manifest differs from the frozen v1.3 result")
     if summary_path.is_file() and sha256(summary_path) != GITHUB_ACTIONS_REFERENCE_SUMMARY_SHA256:
-        errors.append("GitHub Actions reference summary differs from the frozen candidate")
+        errors.append("GitHub Actions reference summary differs from the frozen v1.3 result")
 
     summarizer = ROOT / "experiments/github_actions/summarize_reference_run.py"
     if summarizer.is_file() and result_root.is_dir():
@@ -1257,7 +1403,7 @@ def validate_cross_version_amendment(errors: list[str]) -> None:
     if not path.is_file():
         return
     if sha256(path) != CROSS_VERSION_AMENDMENT_SHA256:
-        errors.append("cross-version protocol amendment differs from the frozen candidate")
+        errors.append("cross-version protocol amendment differs from the frozen v1.3 result")
     amendment = load_json_object(path, relative(path), errors)
     if amendment is None:
         return
@@ -1783,57 +1929,59 @@ def png_dimensions(path: Path, errors: list[str]) -> tuple[int, int] | None:
         with path.open("rb") as stream:
             header = stream.read(24)
     except OSError as exc:
-        errors.append(f"cannot read candidate figure {relative(path)}: {exc}")
+        errors.append(f"cannot read v1.3 figure {relative(path)}: {exc}")
         return None
     if len(header) != 24 or header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
-        errors.append(f"candidate figure is not a valid PNG header: {relative(path)}")
+        errors.append(f"v1.3 figure is not a valid PNG header: {relative(path)}")
         return None
     return struct.unpack(">II", header[16:24])
 
 
-def validate_candidate_figures_and_docs(errors: list[str]) -> None:
-    for name, expected in EXPECTED_CANDIDATE_FIGURES.items():
+def validate_v1_3_figures_and_docs(errors: list[str]) -> None:
+    for name, expected in EXPECTED_V1_3_FIGURES.items():
         path = ROOT / name
         if path.is_file():
             dimensions = png_dimensions(path, errors)
             if dimensions is not None and dimensions != expected:
                 errors.append(
-                    f"candidate figure dimensions differ for {name}: "
+                    f"v1.3 figure dimensions differ for {name}: "
                     f"{dimensions[0]}x{dimensions[1]}, expected {expected[0]}x{expected[1]}"
                 )
 
-    release_notes = ROOT / "RELEASE_NOTES_v1.3-candidate.md"
+    release_notes = ROOT / "RELEASE_NOTES_v1.3.0.md"
     reviewer_guide = ROOT / "REVIEWER_GUIDE_v1.3.md"
     for path in (release_notes, reviewer_guide):
         if not path.is_file():
             continue
         content = path.read_text(encoding="utf-8")
+        normalized_content = " ".join(content.split())
         for required_text in (
-            "reviewer candidate",
-            "no v1.3 DOI",
+            "archival release",
             ARTIFACT_DOI,
+            PREPRINT_DOI,
+            "has not undergone peer review",
             str(GITHUB_ACTIONS_RUN_ID),
         ):
-            if required_text not in content:
-                errors.append(f"{relative(path)} omits candidate boundary text: {required_text}")
+            if required_text not in normalized_content:
+                errors.append(f"{relative(path)} omits v1.3.0 release boundary text: {required_text}")
 
 
-def validate_candidate_additions(errors: list[str]) -> None:
-    if not any((ROOT / name).exists() for name in CANDIDATE_SENTINELS):
+def validate_v1_3_additions(errors: list[str]) -> None:
+    if not any((ROOT / name).exists() for name in V1_3_SENTINELS):
         return
-    for name in CANDIDATE_REQUIRED_FILES:
+    for name in V1_3_REQUIRED_FILES:
         if not (ROOT / name).is_file():
-            errors.append(f"missing v1.3 candidate file: {name}")
-    for name in CANDIDATE_REQUIRED_DIRECTORIES:
+            errors.append(f"missing v1.3.0 release file: {name}")
+    for name in V1_3_REQUIRED_DIRECTORIES:
         if not (ROOT / name).is_dir():
-            errors.append(f"missing v1.3 candidate directory: {name}")
+            errors.append(f"missing v1.3.0 release directory: {name}")
 
-    validate_profile_candidate(errors)
-    validate_correlation_candidate(errors)
-    validate_index_ablation_candidate(errors)
-    validate_github_actions_candidate(errors)
+    validate_profile_v1_3(errors)
+    validate_correlation_v1_3(errors)
+    validate_index_ablation_v1_3(errors)
+    validate_github_actions_v1_3(errors)
     validate_cross_version_protocol(errors)
-    validate_candidate_figures_and_docs(errors)
+    validate_v1_3_figures_and_docs(errors)
 
 
 def validate_frozen_results(errors: list[str]) -> None:
@@ -1919,6 +2067,10 @@ def main() -> int:
         action="store_true",
         help="also reject unresolved placeholders and missing frozen release files",
     )
+    parser.add_argument(
+        "--expected-tag",
+        help="expected semantic release tag; CI passes GITHUB_REF_NAME here",
+    )
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -1932,7 +2084,8 @@ def main() -> int:
             errors.append(f"missing required directory: {name}")
 
     validate_frozen_results(errors)
-    validate_candidate_additions(errors)
+    validate_v1_3_additions(errors)
+    validate_checksum_targets_are_tracked(errors)
 
     cff_path = ROOT / "CITATION.cff"
     if cff_path.is_file():
@@ -1940,13 +2093,21 @@ def main() -> int:
         if f"version: {ARTIFACT_VERSION}" not in cff:
             errors.append(f"CITATION.cff does not declare artifact version {ARTIFACT_VERSION}")
         if f'doi: "{ARTIFACT_DOI}"' not in cff:
-            errors.append("CITATION.cff does not declare the reserved artifact DOI")
+            errors.append("CITATION.cff does not declare the version-specific artifact DOI")
+        if f'doi: "{PREPRINT_DOI}"' not in cff:
+            errors.append("CITATION.cff does not declare the preferred preprint DOI")
         if f'repository-code: "{REPOSITORY_URL}"' not in cff:
             errors.append("CITATION.cff does not declare the canonical repository URL")
         if re.search(r"(?m)^\s*email\s*:", cff):
             errors.append("CITATION.cff must not publish a personal email address")
         if args.release and not re.search(r"(?m)^\s*doi\s*:\s*[\"']?10\.", cff):
             errors.append("release CITATION.cff is missing the published DOI")
+
+    pyproject_path = ROOT / "pyproject.toml"
+    if pyproject_path.is_file():
+        pyproject = pyproject_path.read_text(encoding="utf-8")
+        if f'version = "{ARTIFACT_VERSION}"' not in pyproject:
+            errors.append(f"pyproject.toml does not declare version {ARTIFACT_VERSION}")
 
     readme_path = ROOT / "README.md"
     if readme_path.is_file():
@@ -1955,6 +2116,10 @@ def main() -> int:
             errors.append("README.md does not declare the version-specific artifact DOI")
         if CONCEPT_DOI not in readme:
             errors.append("README.md does not declare the Zenodo Concept DOI")
+        if PREPRINT_DOI not in readme:
+            errors.append("README.md does not declare the version-specific preprint DOI")
+        if PREPRINT_CONCEPT_DOI not in readme:
+            errors.append("README.md does not declare the preprint Concept DOI")
 
     for path in iter_text_files():
         try:
@@ -1978,13 +2143,28 @@ def main() -> int:
                 warnings.append(f"scaffold placeholder(s): {message}")
 
     if args.release:
+        validate_release_tag(args.expected_tag, errors)
+        for name in RELEASE_ACTIVE_TEXT_FILES:
+            path = ROOT / name
+            if not path.is_file():
+                continue
+            content = path.read_text(encoding="utf-8").lower()
+            for phrase in TRANSIENT_RELEASE_PHRASES:
+                if phrase in content:
+                    errors.append(f"{name} retains transient release text: {phrase}")
         paper_notice_path = ROOT / "paper/README.md"
         if paper_notice_path.is_file():
             paper_notice = paper_notice_path.read_text(encoding="utf-8")
-            if "All rights reserved" not in paper_notice:
-                errors.append("paper/README.md is missing the preprint rights notice")
-            if "not an article" not in paper_notice:
+            paper_notice_normalized = " ".join(paper_notice.split())
+            if "all-rights-reserved" not in paper_notice_normalized.lower():
+                errors.append("paper/README.md is missing the historical v1.2 rights notice")
+            if "Creative Commons Attribution 4.0 International" not in paper_notice_normalized:
+                errors.append("paper/README.md is missing the v1.3.0 CC BY 4.0 notice")
+            if "not the preprint DOI" not in paper_notice_normalized:
                 errors.append("paper/README.md does not distinguish the artifact DOI")
+        preprint_path = ROOT / "paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf"
+        if preprint_path.is_file() and sha256(preprint_path) != PREPRINT_PDF_SHA256:
+            errors.append("v1.3.0 preprint PDF differs from the visually verified release file")
         for name in RELEASE_REQUIRED_FILES:
             if not (ROOT / name).is_file():
                 errors.append(f"missing frozen release file: {name}")
@@ -2010,16 +2190,23 @@ def main() -> int:
                 if re.search(r"[\"']sourceIPs[\"']\s*:", kubernetes_data):
                     errors.append(f"unsanitized sourceIPs field found in {relative(path)}")
         manifest_script = ROOT / "scripts/generate_manifest.py"
-        if (ROOT / "MANIFEST.sha256").is_file() and manifest_script.is_file():
+        release_manifest = ROOT / "MANIFEST-v1.3.0.sha256"
+        if release_manifest.is_file() and manifest_script.is_file():
             result = subprocess.run(
-                [sys.executable, str(manifest_script), "--check"],
+                [
+                    sys.executable,
+                    str(manifest_script),
+                    "--manifest",
+                    release_manifest.name,
+                    "--check",
+                ],
                 cwd=ROOT,
                 text=True,
                 capture_output=True,
                 check=False,
             )
             if result.returncode != 0:
-                errors.append("MANIFEST.sha256 does not match the frozen repository tree")
+                errors.append("MANIFEST-v1.3.0.sha256 does not match the tracked release tree")
 
     for warning in warnings:
         print(f"WARNING: {warning}")
@@ -2030,8 +2217,8 @@ def main() -> int:
         print(f"Repository verification failed with {len(errors)} error(s).", file=sys.stderr)
         return 1
 
-    candidate = any((ROOT / name).exists() for name in CANDIDATE_SENTINELS)
-    mode = "release" if args.release else "candidate" if candidate else "scaffold"
+    v1_3 = any((ROOT / name).exists() for name in V1_3_SENTINELS)
+    mode = "release" if args.release else "v1.3" if v1_3 else "scaffold"
     print(f"Repository {mode} verification passed with {len(warnings)} warning(s).")
     return 0
 

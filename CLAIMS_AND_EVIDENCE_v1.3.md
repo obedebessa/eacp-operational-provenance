@@ -1,6 +1,6 @@
 # EACP 1.3 claims and evidence ledger
 
-Status: reviewer-candidate ledger, 2026-09-02. This document maps each headline
+Status: release 1.3.0 ledger, 2026-09-03. This document maps each headline
 claim to executable or frozen evidence, its falsification condition, and its
 interpretive boundary. It is not a substitute for the manuscript.
 
@@ -24,7 +24,7 @@ interpretive boundary. It is not a substitute for the manuscript.
 
 ## Explicit non-claims
 
-The candidate does not establish causal inference, root-cause correctness,
+The release does not establish causal inference, root-cause correctness,
 source truth, tamper-proof storage, complete auditability, production readiness,
 universal performance superiority, managed-cluster behavior, field utility,
 national importance, identifier discovery, external reproduction, independent-

@@ -1,7 +1,7 @@
 # EACP 1.3 evidence brief
 
-Status: reviewer candidate, 2026-09-02. This is a concise audit map, not a
-peer-reviewed result or archival release. No v1.3 DOI has been minted.
+Status: release 1.3.0, 2026-09-03. This is a concise audit map for a
+non-peer-reviewed preprint and its reproducibility artifact.
 
 ## Bottom line
 
@@ -111,5 +111,7 @@ Start with the [reviewer guide](REVIEWER_GUIDE_v1.3.md) and
 - `experiments/github_actions/results/reference/cross-version-initial-failed-cohort-v1.3/`
 - `experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3/`
 
-The branch remains a candidate. The v1.2 DOI and citation metadata do not archive
-these v1.3 results.
+The v1.3.0 results are archived separately as a preprint
+(<https://doi.org/10.5281/zenodo.22283868>) and a software/reproducibility
+artifact (<https://doi.org/10.5281/zenodo.22283852>), both bound to tag
+`v1.3.0`.

@@ -1,0 +1,35 @@
+{
+  "captured_at": "2026-09-02T22:47:20Z",
+  "conclusion": "failure",
+  "diagnostic_boundary": "Only exact allowlisted program markers are retained; the full failed-step log is represented by its SHA-256 fingerprint and byte count. GitHub log text is a public API observation, not a signed origin record, and these markers do not convert the failed run into partial technical success.",
+  "evidence_tag": "eacp-v1.3-evidence/k8s-v1.34.8/run-02",
+  "expected_kubernetes_version": "v1.34.8",
+  "full_failed_log_retained": false,
+  "full_failed_log_sha256": "ccb3151cce15ca7f74c7fd3aae2c074e163b0b11a8881071704a10607987e55e",
+  "full_failed_log_size_bytes": 8112,
+  "gh_cli_version": "gh version 2.97.0 (2026-07-31)",
+  "head_sha": "15d72da095a0c7640b9318b50b28728e76d68928",
+  "recognized_markers": [
+    {
+      "job_name": "github-actions-to-kubernetes",
+      "marker": "exact_client_server_kubelet_profile_validated",
+      "message": "Validated exact client/server/kubelet profile: v1.34.8",
+      "selected_line_sha256": "9fca6b1da94dd04321fea953acf64298aed5a2b1a96a54526c54934076add67f",
+      "step_name": "Execute real cross-plane chain and controls",
+      "timestamp": "2026-09-02T22:14:12.3832870Z"
+    },
+    {
+      "job_name": "github-actions-to-kubernetes",
+      "marker": "premature_completed_artifact_row_assertion",
+      "message": "cross-plane validation failed: expected three GitHub evidence records",
+      "selected_line_sha256": "ff936aae15f96d0aca2de2f024555d753a58352ba0d6011a5e89d3d0846b3bb5",
+      "step_name": "Execute real cross-plane chain and controls",
+      "timestamp": "2026-09-02T22:14:19.8563681Z"
+    }
+  ],
+  "repository": "obedebessa/eacp-operational-provenance",
+  "run_attempt": 1,
+  "run_id": 33689284057,
+  "schema_version": "eacp.failed-log-observation/1.3.0",
+  "source_acquisition": "github_cli_first_attempt_failed_log"
+}

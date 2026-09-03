@@ -39,15 +39,15 @@ SCHEMA_VERSION = "eacp.github-actions.capture/1.3.0"
 EVIDENCE_SCHEMA_VERSION = "eacp.evidence/1.3.0"
 CAPTURE_SCHEMA_URL = (
     "https://raw.githubusercontent.com/obedebessa/eacp-operational-provenance/"
-    "eacp-v1.3-candidate/experiments/github_actions/schema/github-actions-capture-v1.3.schema.json"
+    "v1.3.0/experiments/github_actions/schema/github-actions-capture-v1.3.schema.json"
 )
 EVIDENCE_SCHEMA_URL = (
     "https://raw.githubusercontent.com/obedebessa/eacp-operational-provenance/"
-    "eacp-v1.3-candidate/experiments/github_actions/schema/eacp-evidence-row-v1.3.schema.json"
+    "v1.3.0/experiments/github_actions/schema/eacp-evidence-row-v1.3.schema.json"
 )
 LEGACY_CANDIDATE_CAPTURE_SCHEMA_URL = (
     "https://raw.githubusercontent.com/obedebessa/eacp-operational-provenance/"
-    "v1.3.0/experiments/github_actions/schema/github-actions-capture-v1.3.schema.json"
+    "eacp-v1.3-candidate/experiments/github_actions/schema/github-actions-capture-v1.3.schema.json"
 )
 ANNOTATION_KEY = "eacp.io/correlation-id"
 DEFAULT_DEPLOYMENT = "eacp-demo"

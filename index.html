@@ -3,23 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP</title>
+  <title>Cross-Plane Operational Provenance under Identifier Failure: A Reproducible Evaluation of EACP</title>
 
-  <meta name="citation_title" content="Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP">
+  <meta name="citation_title" content="Cross-Plane Operational Provenance under Identifier Failure: A Reproducible Evaluation of EACP">
   <meta name="citation_author" content="Rocha da Silva, Obede Bessa">
-  <meta name="citation_publication_date" content="2026/08/06">
-  <meta name="citation_pdf_url" content="https://obedebessa.github.io/eacp-operational-provenance/paper/EACP_preprint.pdf">
+  <meta name="citation_publication_date" content="2026/09/03">
+  <meta name="citation_pdf_url" content="https://obedebessa.github.io/eacp-operational-provenance/paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf">
+  <meta name="citation_doi" content="10.5281/zenodo.22283868">
   <meta name="citation_technical_report_institution" content="Independent Researcher">
-  <meta name="citation_technical_report_number" content="EACP Preprint v1.2">
+  <meta name="citation_technical_report_number" content="EACP Preprint v1.3.0">
   <meta name="citation_language" content="en">
   <meta name="citation_keywords" content="cloud-native systems; operational provenance; control plane; auditability; DevOps; evidence index; reproducibility">
 
-  <meta name="DC.title" content="Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP">
+  <meta name="DC.title" content="Cross-Plane Operational Provenance under Identifier Failure: A Reproducible Evaluation of EACP">
   <meta name="DC.creator" content="Obede Bessa Rocha da Silva">
-  <meta name="DC.date" content="2026-08-06">
+  <meta name="DC.date" content="2026-09-03">
   <meta name="DC.type" content="Text.Preprint">
   <meta name="DC.language" content="en">
-  <meta name="description" content="A reproducible evaluation of an evidence-aware control plane for cross-plane operational provenance in cloud-native systems.">
+  <meta name="DC.identifier" content="https://doi.org/10.5281/zenodo.22283868">
+  <meta name="DC.rights" content="Creative Commons Attribution 4.0 International">
+  <meta name="description" content="A reproducible evaluation of EACP under identifier failure, paired SQLite index ablation, and controlled GitHub Actions-to-Kubernetes composition across three Kubernetes minor versions.">
 
   <style>
     :root { color-scheme: light dark; font-family: Georgia, serif; }
@@ -35,28 +38,29 @@
   <main>
     <article>
       <header>
-        <h1>Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP</h1>
+        <h1>Cross-Plane Operational Provenance under Identifier Failure: A Reproducible Evaluation of EACP</h1>
         <p><strong>Obede Bessa Rocha da Silva</strong></p>
-        <p class="metadata">Independent Researcher in Cloud Architecture and DevOps · Clermont, Florida, USA · 6 August 2026 · Version 1.2</p>
+        <p class="metadata">Independent Researcher in Cloud Architecture and DevOps · Clermont, Florida, USA · 3 September 2026 · Version 1.3.0</p>
         <p class="notice"><strong>Preprint / technical report.</strong> This manuscript has not been peer reviewed.</p>
       </header>
 
       <p>
-        <a href="paper/EACP_preprint.pdf">Download the full preprint (PDF)</a>
-        · <a href="https://doi.org/10.5281/zenodo.21818550">Reproducibility artifact (Zenodo)</a>
+        <a href="paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf">Download the full preprint (PDF)</a>
+        · <a href="https://doi.org/10.5281/zenodo.22283868">Preprint (Zenodo)</a>
+        · <a href="https://doi.org/10.5281/zenodo.22283852">Reproducibility artifact (Zenodo)</a>
         · <a href="https://orcid.org/0009-0001-0787-5710">ORCID</a>
       </p>
 
       <h2>Abstract</h2>
       <p>
-        Cloud-native operations distribute audit-relevant evidence across delivery, identity, orchestration, policy, telemetry, incident, and recovery systems. This paper presents an evidence-aware control plane (EACP), an asynchronous pattern that normalizes minimal source metadata into an append-only, service-level index while retaining authoritative artifacts in native systems and remaining outside application request paths by default. We evaluate a Python and SQLite reference implementation against six separately indexed source tables using deterministic workloads of 10,000, 50,000, and 100,000 events, ten seeded trials per size, and 600 reconstruction queries per trial. At 100,000 events, median p95 service-state query latency was 0.691 ms versus 1.141 ms for the fragmented baseline (1.65×), and correlation reconstruction was 0.022 ms versus 0.045 ms (2.05×). All sampled results and complete normalized projections matched. The EACP database, however, was 1.81× the fragmented-baseline size, or approximately 81% larger; retaining both produced a combined footprint near 2.81× the source-only baseline. A second laboratory evaluation used a real single-node Kubernetes v1.36.1 kind cluster. EACP persisted all 374 sanitized API-server audit events, including three HTTP 403 authorization denials, and append-only triggers rejected updates and deletions. Replays through an OpenTelemetry Collector reference pipeline retained 374/374 events in every run; an external validator matched 4,862/4,862 projected values. These results establish local feasibility, reproducibility, Kubernetes integration, and corpus preservation—not production effectiveness, semantic accuracy under missing or ambiguous correlation identifiers, or distributed-system scalability.
+        Cloud-native operations scatter audit-relevant evidence across delivery and runtime systems. This preprint presents EACP 1.3, a domain-specific operational-provenance profile and materialized retrieval index that retains native evidence pointers, uses typed and scoped exact links, and abstains when the selected identifier is missing or ambiguous. A 30-seed adversarial campaign measures degradation under identifier failure, while paired SQLite ablations isolate retrieval, storage, and ingestion costs. A controlled GitHub Actions-to-Kubernetes study preserves an initial 0/9 cohort that exposed a lifecycle-invalid assertion and separately reports 9/9 confirmatory first-attempt runs across Kubernetes v1.34.8, v1.35.5, and v1.36.1 after a prospectively committed narrow amendment. These descriptive results support bounded feasibility and controlled compatibility—not causal inference, source truth, production reliability, independent replication, or distributed-scale performance.
       </p>
 
       <h2>Keywords</h2>
       <p>Cloud-native systems; operational provenance; control plane; auditability; DevOps; evidence index; reproducibility.</p>
 
       <h2>Suggested citation</h2>
-      <p>Rocha da Silva, O. B. (2026). <em>Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP</em> (Version 1.2) [Preprint / technical report].</p>
+      <p>Rocha da Silva, O. B. (2026). <em>Cross-Plane Operational Provenance under Identifier Failure: A Reproducible Evaluation of EACP</em> (Version 1.3.0) [Preprint]. Zenodo. <a href="https://doi.org/10.5281/zenodo.22283868">https://doi.org/10.5281/zenodo.22283868</a>.</p>
     </article>
   </main>
 </body>
