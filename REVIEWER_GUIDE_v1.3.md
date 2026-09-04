@@ -2,7 +2,7 @@
 
 Status: archival release, 2026-09-03. The accompanying manuscript has not
 undergone peer review. See [archival status](#version-and-archival-status) for
-the separate version-specific preprint and software/artifact DOIs.
+the separate version-specific Profile, preprint, and software/artifact DOIs.
 
 Three source anchors must not be conflated: the earlier three-attempt live run
 used commit `76b2ed54381ae52cf0f54cd22a20341c3216b77b`; the initial cross-version
@@ -179,11 +179,13 @@ causality of source events.
 ## Version and archival status
 
 Tag `v1.3.0` is the immutable source for this release. The version-specific
-preprint DOI is <https://doi.org/10.5281/zenodo.22283868>; its Concept DOI is
+Profile DOI is <https://doi.org/10.5281/zenodo.22307668>; its Concept DOI is
+<https://doi.org/10.5281/zenodo.22307667>. The version-specific preprint DOI is
+<https://doi.org/10.5281/zenodo.22283868>; its Concept DOI is
 <https://doi.org/10.5281/zenodo.22017661>. The corresponding version-specific
 software/artifact DOI is <https://doi.org/10.5281/zenodo.22283852>; its Concept
-DOI is <https://doi.org/10.5281/zenodo.21817376>. These records are linked but
-distinct, and none implies peer review.
+DOI is <https://doi.org/10.5281/zenodo.21817376>. These three records are linked
+but distinct, and none implies peer review.
 
 `CITATION.cff`, `MANIFEST-v1.3.0.sha256`, the DOI badge, and the v1.3.0 PDF
 describe this release. The historical v1.2 manifest, PDF, release notes, and

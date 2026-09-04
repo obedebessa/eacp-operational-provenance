@@ -33,6 +33,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertNotIn("email:", cff)
         self.assertIn("preferred-citation:", cff)
         self.assertIn('doi: "10.5281/zenodo.22283868"', cff)
+        self.assertIn('doi: "10.5281/zenodo.22307668"', cff)
         self.assertIn('doi: "10.5281/zenodo.22017662"', cff)
 
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -40,6 +41,8 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertIn("10.5281/zenodo.21817376", readme)
         self.assertIn("10.5281/zenodo.22283868", readme)
         self.assertIn("10.5281/zenodo.22017661", readme)
+        self.assertIn("10.5281/zenodo.22307668", readme)
+        self.assertIn("10.5281/zenodo.22307667", readme)
 
     def test_scope_caveats_are_explicit(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")

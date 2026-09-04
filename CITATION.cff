@@ -41,6 +41,15 @@ references:
     version: "1.3.0"
     doi: "10.5281/zenodo.22283868"
   - type: report
+    title: "EACP Profile 1.3: A Conservative Operational-Provenance Interchange Specification"
+    authors:
+      - family-names: "Rocha da Silva"
+        given-names: "Obede Bessa"
+    year: 2026
+    month: 9
+    version: "1.3.0"
+    doi: "10.5281/zenodo.22307668"
+  - type: report
     title: "Cross-Plane Operational Provenance in Cloud-Native Systems: A Reproducible Evaluation of EACP"
     authors:
       - family-names: "Rocha da Silva"

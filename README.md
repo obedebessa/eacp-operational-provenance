@@ -1,11 +1,13 @@
 # EACP operational-provenance artifact
 
+[![Profile DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22307668.svg)](https://doi.org/10.5281/zenodo.22307668)
 [![Preprint DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22283868.svg)](https://doi.org/10.5281/zenodo.22283868)
 [![Reproduce small](https://github.com/obedebessa/eacp-operational-provenance/actions/workflows/reproduce-small.yml/badge.svg)](https://github.com/obedebessa/eacp-operational-provenance/actions/workflows/reproduce-small.yml)
 
 > **Release — EACP 1.3.0, 2026-09-03.** Begin with the
 > [reviewer guide](REVIEWER_GUIDE_v1.3.md). The version-specific Zenodo records
-> are the [preprint](https://doi.org/10.5281/zenodo.22283868) and the separate
+> are the standalone [Profile 1.3 specification](https://doi.org/10.5281/zenodo.22307668),
+> the [preprint](https://doi.org/10.5281/zenodo.22283868), and the separate
 > [software/reproducibility artifact](https://doi.org/10.5281/zenodo.22283852).
 
 This release accompanies:
@@ -24,6 +26,7 @@ technical report** and has **not undergone peer review**.
 ## Review EACP 1.3.0
 
 - [Read the v1.3.0 preprint (PDF)](paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf)
+- [Open the archived Profile 1.3 specification](https://doi.org/10.5281/zenodo.22307668)
 - [Concise evidence brief](EVIDENCE_BRIEF_v1.3.md)
 - [Copy-ready expert review request](EXPERT_REVIEW_REQUEST_v1.3.md)
 - [Claim-to-evidence and falsification ledger](CLAIMS_AND_EVIDENCE_v1.3.md)
@@ -47,12 +50,14 @@ missing or structurally ambiguous.
 ## Cite EACP 1.3.0
 
 - [Read the searchable v1.3.0 preprint (PDF)](paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf)
+- [Open the archived Profile 1.3 specification](https://doi.org/10.5281/zenodo.22307668)
 - [Open the archived preprint DOI](https://doi.org/10.5281/zenodo.22283868)
 - [Open the archived reproducibility artifact](https://doi.org/10.5281/zenodo.22283852)
 - Use GitHub's **Cite this repository** control for automatically generated
   citation formats. The preferred citation in `CITATION.cff` points to the
-  preprint. The software Zenodo DOI identifies the separate reproducibility
-  artifact; it is not the preprint DOI.
+  preprint. The Profile DOI identifies the standalone specification and
+  conformance aids; the software Zenodo DOI identifies the separate
+  reproducibility artifact. Neither is the preprint DOI.
 
 **APA**
 
@@ -335,14 +340,17 @@ Tag `v1.3.0` is the immutable source for this release. Its version-specific
 software/artifact DOI is <https://doi.org/10.5281/zenodo.22283852>, while
 <https://doi.org/10.5281/zenodo.21817376> is the artifact Concept DOI. The
 separate v1.3.0 preprint DOI is <https://doi.org/10.5281/zenodo.22283868>, and
-<https://doi.org/10.5281/zenodo.22017661> is the preprint Concept DOI. A DOI or
-Concept DOI for one record must not be presented as the identifier for the
-other record, and none implies peer review.
+<https://doi.org/10.5281/zenodo.22017661> is the preprint Concept DOI. The
+standalone Profile 1.3 version DOI is <https://doi.org/10.5281/zenodo.22307668>,
+and <https://doi.org/10.5281/zenodo.22307667> is the Profile Concept DOI. A DOI
+or Concept DOI for any of these three linked records must not be presented as
+the identifier for another, and none implies peer review.
 
-`CITATION.cff` describes software release v1.3.0 and points its preferred
-citation to the v1.3.0 preprint. `MANIFEST-v1.3.0.sha256` covers the tracked
-release tree; the historical `MANIFEST.sha256`, `paper/EACP_preprint.pdf`, and
-`RELEASE_NOTES_v1.2.0.md` remain the frozen v1.2 materials.
+`CITATION.cff` describes software release v1.3.0, references the standalone
+Profile, and points its preferred citation to the v1.3.0 preprint.
+`MANIFEST-v1.3.0.sha256` covers the tracked release tree; the historical
+`MANIFEST.sha256`, `paper/EACP_preprint.pdf`, and `RELEASE_NOTES_v1.2.0.md`
+remain the frozen v1.2 materials.
 
 ## Licensing
 

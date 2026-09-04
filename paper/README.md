@@ -23,3 +23,9 @@ The Zenodo identifier <https://doi.org/10.5281/zenodo.22283852> is the
 version-specific DOI for v1.3.0 of the software and reproducibility artifact.
 The Concept DOI <https://doi.org/10.5281/zenodo.21817376> represents all
 artifact versions. Each is an artifact identifier, not the preprint DOI.
+
+The standalone Profile 1.3 version DOI
+<https://doi.org/10.5281/zenodo.22307668> and Profile Concept DOI
+<https://doi.org/10.5281/zenodo.22307667> identify the interchange
+specification and executable conformance aids, not either manuscript or the
+full software/reproducibility artifact.

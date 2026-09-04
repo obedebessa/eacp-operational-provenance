@@ -93,6 +93,9 @@ without separate permission.
 Paper:
 <https://doi.org/10.5281/zenodo.22283868>
 
+Standalone Profile 1.3 specification:
+<https://doi.org/10.5281/zenodo.22307668>
+
 Reviewer guide:
 <https://github.com/obedebessa/eacp-operational-provenance/blob/v1.3.0/REVIEWER_GUIDE_v1.3.md>
 

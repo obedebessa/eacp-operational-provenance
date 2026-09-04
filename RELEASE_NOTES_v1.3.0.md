@@ -3,8 +3,12 @@
 Status: archival release, 2026-09-03. The accompanying manuscript is a preprint
 and has not undergone peer review. Version-specific Zenodo DOIs:
 
+- standalone Profile 1.3 specification: <https://doi.org/10.5281/zenodo.22307668>;
 - software/reproducibility artifact: <https://doi.org/10.5281/zenodo.22283852>;
 - preprint: <https://doi.org/10.5281/zenodo.22283868>.
+
+These are three linked but independently citable records; no DOI identifies
+more than one of them.
 
 The initial cross-version protocol is frozen at commit
 [`15d72da`](https://github.com/obedebessa/eacp-operational-provenance/tree/15d72da095a0c7640b9318b50b28728e76d68928).
@@ -159,6 +163,12 @@ source systems.
 The v1.2 13-column CSV remains available as a compatibility projection. The
 Profile 1.3 JSON record is normative for the new actor, service, link, and
 digest semantics; the flat CSV cannot express all of them.
+
+The standalone Profile 1.3 record has version DOI
+<https://doi.org/10.5281/zenodo.22307668> and Concept DOI
+<https://doi.org/10.5281/zenodo.22307667>. It identifies the interchange
+specification and executable conformance aids, not the preprint or the full
+software/reproducibility artifact.
 
 The v1.2 DOI-backed artifacts are unchanged in status:
 

@@ -1,7 +1,8 @@
 # EACP 1.3 evidence brief
 
-Status: release 1.3.0, 2026-09-03. This is a concise audit map for a
-non-peer-reviewed preprint and its reproducibility artifact.
+Status: release 1.3.0, 2026-09-03. This is a concise audit map for an
+independently citable Profile, a non-peer-reviewed preprint, and its
+reproducibility artifact.
 
 ## Bottom line
 
@@ -111,7 +112,8 @@ Start with the [reviewer guide](REVIEWER_GUIDE_v1.3.md) and
 - `experiments/github_actions/results/reference/cross-version-initial-failed-cohort-v1.3/`
 - `experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3/`
 
-The v1.3.0 results are archived separately as a preprint
-(<https://doi.org/10.5281/zenodo.22283868>) and a software/reproducibility
-artifact (<https://doi.org/10.5281/zenodo.22283852>), both bound to tag
-`v1.3.0`.
+The v1.3.0 materials are archived as three linked but distinct records: the
+standalone Profile specification (<https://doi.org/10.5281/zenodo.22307668>),
+the preprint (<https://doi.org/10.5281/zenodo.22283868>), and the
+software/reproducibility artifact (<https://doi.org/10.5281/zenodo.22283852>).
+All three are bound to tag `v1.3.0`.
