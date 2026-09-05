@@ -7,6 +7,8 @@ import argparse
 import hashlib
 import json
 import subprocess
+import sys
+import tempfile
 import zipfile
 from pathlib import Path
 
@@ -21,6 +23,8 @@ def git(*args: str) -> str:
 def package(destination: Path) -> dict:
     if git("status", "--porcelain"):
         raise ValueError("freeze a clean source/results commit before making the review package")
+    if git("rev-parse", "--is-shallow-repository") != "false":
+        raise ValueError("complete the local Git history before packaging; shallow bundles are not transferable")
     if git("rev-parse", "v1.3.0^{commit}") != HISTORICAL_COMMIT:
         raise ValueError("historical tag pin changed")
     destination = destination.resolve()
@@ -36,9 +40,23 @@ def package(destination: Path) -> dict:
     bundle = destination / "EACP_1.4.0-rc1_source.bundle"
     subprocess.run(["git", "bundle", "create", str(bundle), branch, "refs/tags/v1.3.0"], cwd=ROOT, check=True)
     subprocess.run(["git", "bundle", "verify", str(bundle)], cwd=ROOT, check=True, capture_output=True)
+    # Verifying inside the producer repository can hide missing Git objects.
+    # Require a standalone clone and verify the delivered bytes before archiving.
+    with tempfile.TemporaryDirectory(prefix="eacp-package-transfer-") as temporary:
+        checkout = Path(temporary) / "checkout"
+        subprocess.run(["git", "clone", "--quiet", "--branch", branch.removeprefix("refs/heads/"),
+                        str(bundle), str(checkout)], check=True, capture_output=True)
+        for ref, expected in (("HEAD", source_commit), ("v1.3.0^{commit}", HISTORICAL_COMMIT)):
+            actual = subprocess.check_output(["git", "rev-parse", ref], cwd=checkout, text=True).strip()
+            if actual != expected:
+                raise ValueError("transferred Git identity does not match the pinned source")
+        for command in (["scripts/verify_hardening.py"],
+                        ["scripts/generate_manifest.py", "--manifest", "MANIFEST-v1.4.0-rc1.sha256", "--check"]):
+            subprocess.run([sys.executable, "-B", *command], cwd=checkout, check=True, capture_output=True)
     metadata = {"schema": "eacp.local-review-package/1", "version": "1.4.0-rc1",
                 "source_commit": source_commit, "branch": branch, "historical_commit": HISTORICAL_COMMIT,
-                "published": False, "external_reproduction_claimed": False, "organizational_pilot_claimed": False}
+                "published": False, "external_reproduction_claimed": False, "organizational_pilot_claimed": False,
+                "local_transfer_clone_verified": True}
     (destination / "PACKAGE.json").write_text(json.dumps(metadata, sort_keys=True, indent=2) + "\n")
     (destination / "REVIEWER_PACKET.md").write_text((ROOT / "docs/v1.4/REVIEWER_PACKET.md").read_text())
     short_branch = branch.removeprefix("refs/heads/")
@@ -47,6 +65,8 @@ def package(destination: Path) -> dict:
 This package contains a complete Git bundle, including the historical v1.3.0 tag.
 It is an unpublished candidate, not a replacement for the published 1.3 PDFs/DOIs.
 No production readiness, independent execution or organizational pilot is claimed.
+The producer verified a fresh local clone, pinned commits and its file manifest;
+this transfer check is not independent reproduction by an external reviewer.
 
 ## Open the exact source
 

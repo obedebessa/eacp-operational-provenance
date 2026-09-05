@@ -10,6 +10,16 @@ Classification: **author-executed local validation**, not independent review or
 organizational evidence. Later results/packaging commits package these records;
 they do not change the collection/storage code that produced them. A packaging-only
 filename correction appends `.zip` without discarding the dotted candidate version.
+Final transfer QA also found that a shallow local Git history produced a bundle
+that passed verification in the producer repository but could not be cloned by
+a recipient. Missing public history was fetched without changing remote state.
+The packager now rejects shallow sources and requires a fresh standalone clone,
+exact candidate/historical identities and candidate manifest verification before
+creating its ZIP. Five real disposable-Git regression tests cover this boundary;
+the later complete root suite passed 126 tests. See
+`additional-checks/package-transfer-regression.md`. Together with the unchanged
+historical suites, the candidate now has 218 distinct cases; the original 213-case
+measurement below is preserved, not silently rewritten or counted twice.
 
 ## Results
 
