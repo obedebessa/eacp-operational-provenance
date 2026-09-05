@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eacp-operational-provenance"
-version = "1.4.0"
-description = "EACP collection security and resilience reference artifact with preserved Profile 1.3 experiments"
+version = "1.5.0rc1"
+description = "EACP bounded operability candidate with preserved Profile 1.3 semantics"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
@@ -19,7 +19,7 @@ keywords = [
   "OpenTelemetry",
   "reproducibility"
 ]
-dependencies = []
+dependencies = ["cryptography==50.0.1"]
 
 [project.optional-dependencies]
 figures = ["Pillow>=10,<13"]
@@ -32,7 +32,8 @@ eacp-hardening = "eacp_hardening.cli:main"
 Repository = "https://github.com/obedebessa/eacp-operational-provenance"
 
 [tool.setuptools]
-packages = ["eacp_hardening"]
+packages = ["eacp_hardening", "eacp_profile"]
+package-dir = { eacp_profile = "spec/tools" }
 
 [tool.unittest]
 start-directory = "tests"

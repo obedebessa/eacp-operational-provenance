@@ -1,12 +1,12 @@
 cff-version: 1.2.0
-message: "Cite this software DOI for the 1.4.0 implementation; cite the separate 1.3 preprint for its historical research. The DOI was reserved at source freeze; check Zenodo for publication status."
-title: "EACP Operational-Provenance Artifact: Collection Security and Resilience"
+message: "Unpublished 1.5.0rc1 software candidate: cite its exact Git commit, not an earlier version-specific DOI. Cite the separate 1.3 preprint for historical research."
+title: "EACP Operational-Provenance Artifact: Bounded Operability Candidate"
 abstract: >-
-  Version 1.4.0 security and resilience reference artifact, preserving Profile 1.3
-  semantics and historical experimental evidence. Adds minimized public
-  projections, authenticated collector statements, encrypted durable ingestion,
-  tenant-scoped access, externally anchored snapshot verification and isolated
-  attestation workflow with retained live verification. Tests are author-executed; independent
+  Version 1.5.0rc1 operability candidate, preserving Profile 1.3
+  semantics and historical experimental evidence. Adds an installed query path,
+  checkpoint-bound offline query verification, atomic cursor pages, diagnostics,
+  consistent physical backup and current-anchor recovery. The retained 1.4
+  live attestation does not attest this new implementation. Tests are author-executed; independent
   reproduction, organizational pilots and production validation are not claimed.
   The archived software DOI in references identifies the artifact, not the accompanying
   article. Licensing is file-scoped; see LICENSES/README.md and paper/README.md.
@@ -16,11 +16,10 @@ authors:
     given-names: "Obede Bessa"
     orcid: "https://orcid.org/0009-0001-0787-5710"
     affiliation: "Independent Researcher in Cloud Architecture and DevOps"
-version: 1.4.0
-doi: "10.5281/zenodo.22326718"
+version: 1.5.0rc1
 date-released: 2026-09-05
 repository-code: "https://github.com/obedebessa/eacp-operational-provenance"
-url: "https://doi.org/10.5281/zenodo.22326718"
+url: "https://github.com/obedebessa/eacp-operational-provenance"
 keywords:
   - operational provenance
   - cloud-native systems

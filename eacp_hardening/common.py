@@ -13,7 +13,24 @@ class HardeningError(ValueError):
     """Fail-closed validation or policy error safe to expose without raw input."""
 
 
+def bounded_json(value: Any, *, max_depth: int = 64, max_nodes: int = 250000) -> None:
+    """Bound work explicitly; do not normalize identities or coerce object keys."""
+    stack, count = [(value, 0)], 0
+    while stack:
+        item, depth = stack.pop()
+        count += 1
+        if depth > max_depth or count > max_nodes:
+            raise HardeningError("JSON structure exceeds resource limit")
+        if isinstance(item, dict):
+            if any(not isinstance(key, str) for key in item):
+                raise HardeningError("JSON object keys must be strings")
+            stack.extend((child, depth + 1) for child in item.values())
+        elif isinstance(item, (list, tuple)):
+            stack.extend((child, depth + 1) for child in item)
+
+
 def canonical_bytes(value: Any) -> bytes:
+    bounded_json(value)
     try:
         return json.dumps(value, sort_keys=True, separators=(",", ":"),
                           ensure_ascii=False, allow_nan=False).encode("utf-8")
@@ -21,7 +38,7 @@ def canonical_bytes(value: Any) -> bytes:
         raise HardeningError("value is not canonical JSON") from exc
 
 
-def strict_json(content: str | bytes) -> Any:
+def strict_json(content: str | bytes, *, max_bytes: int = 2 * 1024 * 1024) -> Any:
     """Reject ambiguous duplicate fields and nonfinite/over-nested input."""
     def unique_pairs(pairs):
         result = {}
@@ -30,11 +47,17 @@ def strict_json(content: str | bytes) -> Any:
                 raise HardeningError("duplicate JSON field")
             result[key] = value
         return result
+    if not isinstance(content, (str, bytes)):
+        raise HardeningError("JSON input must be text or bytes")
+    if len(content) > max_bytes:
+        raise HardeningError("JSON input exceeds size limit")
     try:
+        if isinstance(content, str) and len(content.encode('utf-8')) > max_bytes:
+            raise HardeningError("JSON input exceeds size limit")
         value = json.loads(content, object_pairs_hook=unique_pairs)
         canonical_bytes(value)
         return value
-    except (ValueError, UnicodeError, RecursionError) as exc:
+    except (ValueError, UnicodeError, RecursionError):
         raise HardeningError("invalid or ambiguous JSON") from None
 
 

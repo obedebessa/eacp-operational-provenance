@@ -3,7 +3,6 @@
 import hashlib
 import importlib.metadata
 import json
-import os
 import platform
 import sqlite3
 import subprocess

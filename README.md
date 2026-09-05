@@ -1,5 +1,14 @@
 # EACP operational-provenance artifact
 
+> **Current checkout: unpublished software candidate 1.5.0rc1.**
+> Start with [the operational quickstart](docs/v1.5/README.md) and
+> [evidence/limitations matrix](docs/v1.5/EVIDENCE_MATRIX.md).
+> Use `python3 scripts/verify_candidate_v1_5.py` for this checkout.
+> The 1.4.0 tag and all historical results remain frozen; their release gates
+> belong to their own checkouts. No 1.5 DOI, live signature, external review,
+> organizational pilot or production certification is claimed. The following
+> archival description is historical, not the version of the current checkout.
+
 > **Software archival edition: EACP 1.4.0.** Start with the
 > [hardening implementation and verification guide](docs/v1.4/README.md) and
 > [reviewer packet](docs/v1.4/REVIEWER_PACKET.md). The new collection/security

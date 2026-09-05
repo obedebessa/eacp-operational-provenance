@@ -18,15 +18,15 @@ def sha256(path: Path) -> str:
 class RepositoryContractTests(unittest.TestCase):
     def test_versions_and_primary_artifact_citation(self) -> None:
         metadata = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-        self.assertIn('version = "1.4.0"', metadata)
+        self.assertIn('version = "1.5.0rc1"', metadata)
         self.assertIn('hardening = ["cryptography==50.0.1"]', metadata)
 
         cff = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
         self.assertIn("type: software", cff)
-        self.assertIn("version: 1.4.0\n", cff)
+        self.assertIn("version: 1.5.0rc1\n", cff)
         self.assertIn('version: "1.3.0"', cff)
         # A new software version must not borrow the old version-specific DOI.
-        self.assertIn('doi: "10.5281/zenodo.22326718"', cff.splitlines())
+        self.assertFalse(any(line.startswith('doi:') for line in cff.splitlines()))
         self.assertIn('doi: "10.5281/zenodo.22283852"', cff)
         self.assertIn(
             'repository-code: "https://github.com/obedebessa/eacp-operational-provenance"',
@@ -169,7 +169,7 @@ class RepositoryContractTests(unittest.TestCase):
 
     def test_repository_verifier(self) -> None:
         result = subprocess.run(
-            [sys.executable, str(ROOT / "scripts/verify_hardening.py")],
+            [sys.executable, str(ROOT / "scripts/verify_candidate_v1_5.py")],
             cwd=ROOT,
             text=True,
             capture_output=True,
