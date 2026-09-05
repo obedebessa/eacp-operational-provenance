@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-c",
+    "import hashlib,json,sys; from pathlib import Path; from eacp_hardening.attestation import AttestationPolicy,validate_binding; from eacp_hardening.common import strict_json; archive,binding,checksums=map(Path,sys.argv[1:4]); policy=AttestationPolicy(sys.argv[4],sys.argv[5],sys.argv[6],int(sys.argv[7]),int(sys.argv[8])); validate_binding(archive,strict_json(binding.read_bytes()),policy); digest=hashlib.sha256(archive.read_bytes()).hexdigest(); expected=(digest+'  '+archive.name+'\\n').encode(); assert checksums.read_bytes()==expected, 'SHA256SUMS does not exactly match actual archive bytes'; print(json.dumps({'binding_consistency_passed':True,'sha256sums_consistency_passed':True,'archive_sha256':digest,'cryptographic_verification':False}))",
+    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/verification-01/inputs/eacp-hardening-v1.4.tar.gz",
+    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/verification-01/inputs/binding.json",
+    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/verification-01/inputs/archive.SHA256SUMS",
+    "obedebessa/eacp-operational-provenance",
+    "0bcb038fef930faff3ef19f661bf995f97d605d8",
+    "refs/heads/main",
+    "33945266470",
+    "1"
+  ],
+  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "elapsed_seconds": 0.0730158329824917,
+  "expectation_met": true,
+  "expected_exit_code": 0,
+  "finished_at": "2026-09-05T04:44:51.528947Z",
+  "name": "00b-binding-and-checksum-consistency",
+  "offline_boundary": null,
+  "offline_requested": false,
+  "phase": "consistency",
+  "process_state": "completed",
+  "returncode": 0,
+  "started_at": "2026-09-05T04:44:51.455950Z",
+  "stderr": "receipts/00b-binding-and-checksum-consistency.stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout": "receipts/00b-binding-and-checksum-consistency.stdout.txt",
+  "stdout_sha256": "d2f8917ebd27b665fda61d040eaea605eaeafaf55ee6b06269a302eec7daed74",
+  "timeout_seconds": 60
+}

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "gh",
+    "api",
+    "repos/obedebessa/eacp-operational-provenance/actions/runs/33945266470"
+  ],
+  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "started_at": "2026-09-05T04:43:27.670502+00:00",
+  "elapsed_seconds": 0.9675707910209894,
+  "exit_code": 0,
+  "timed_out": false
+}

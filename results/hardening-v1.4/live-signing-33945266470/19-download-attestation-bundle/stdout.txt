@@ -1,0 +1,4 @@
+Wrote attestations to file sha256:b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea.jsonl.
+Any previous content has been overwritten
+
+The trusted metadata is now available at sha256:b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea.jsonl

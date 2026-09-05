@@ -1,7 +1,8 @@
 # EACP 1.4.0-rc1: collection security and resilience
 
-Status: **unpublished engineering candidate**, not a new normative Profile and
-not a production-ready service. Profile 1.3 semantics and the historical paper,
+Status: **engineering candidate publicly available on GitHub**, with a verified
+live signing run; no final v1.4 Zenodo release or production readiness is claimed.
+This is not a new normative Profile. Profile 1.3 semantics and the historical paper,
 datasets, workflows and result verifiers remain byte-preserved. The versioned
 1.3 DOIs do not identify this new source code or these new experiments.
 
@@ -21,8 +22,20 @@ replication. See the [one-pass reviewer packet](REVIEWER_PACKET.md).
 | Completeness | Authenticated finite inventories; explicit UNKNOWN/INCOMPLETE/COMPLETE; missing, pending, pruned and extra IDs | Fault campaign injects loss, reordering, duplicate delivery and late recovery; inventory authority is not universal source completeness |
 | Retention | Operator-controlled event-body pruning, preservation holds, tombstones and receipts | Pruned events cannot resurrect or make an inventory complete; backups, quarantine and audit retention require deployment policy |
 | Snapshot integrity | Signed checkpoints bound to an independently acquired current digest, sequence floor, tenant/store and freshness policy | Alteration, truncation, replay and consistent-replacement tests; compromise of the external anchor remains outside protection |
-| Attestation isolation | Read-only execution job, separate hosted signer with no checkout or archive execution, exact artifact/run binding | Static/fixture tests and YAML validation; no new hosted 1.4 run or attestation is claimed yet |
+| Attestation isolation | Read-only execution job, separate hosted signer with no checkout or archive execution, exact artifact/run binding | Live main run 33945266470 and default/offline CLI verification; PR/branch signing skipped; owners, workflow and hosted platform remain trusted |
 | External evaluation | Recorded reproduction runner and gated paired pilot protocol/evaluator | Ready-to-execute tooling; no external reviewer execution or organizational pilot is invented |
+
+The [live signing record](../../results/hardening-v1.4/live-signing-33945266470/README.md)
+identifies commit `0bcb038fef930faff3ef19f661bf995f97d605d8` and
+[main run 33945266470](https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33945266470),
+attempt 1. Execution passed 112 tests and its OIDC-absence check; a distinct
+hosted signing runner produced an attestation for the exact TAR. Fresh local
+GitHub CLI and policy-wrapper verification succeeded with default trust and
+with the separately captured official trust root offline. Six negative checks
+rejected five deliberately altered conditions. These are author-operated hosted
+execution and local verification, not an independent review or a field evaluation.
+The signature covers the identified TAR only, not the entire repository, any PDF,
+or a later review ZIP. See [the attestation boundary](ATTESTATION.md) for details.
 
 ## Run locally
 
@@ -121,7 +134,7 @@ consent, an agreed pilot, or a result.
 - [Trust model, key rotation and compromise recovery](TRUST_MODEL.md)
 - [Minimization and historical-corpus compatibility](PRIVACY.md)
 - [Durability, encryption, access and retention boundaries](STORAGE.md)
-- [Isolated attestation and live-run prerequisites](ATTESTATION.md)
+- [Isolated attestation, observed live run and remaining limits](ATTESTATION.md)
 - [Independent reproduction and pilot evaluation](EXTERNAL_VALIDATION.md)
 
 ## Historical preservation
@@ -137,5 +150,6 @@ code, datasets, manifests, PDFs and original verifiers are unchanged.
 The old `scripts/verify_repository.py` and `MANIFEST-v1.3.0.sha256` still describe
 the old release. Run them in that exact immutable checkout. The new
 `scripts/verify_hardening.py` checks candidate metadata and rejects modifications
-to frozen content. Its `--release` gate intentionally rejects this unpublished
-candidate; no DOI or hosted signature is borrowed from an earlier version.
+to frozen content. Its `--release` gate still rejects this candidate as a final
+archival release. The live v1.4 signature identifies its own source and archive;
+the v1.3 DOIs continue to identify their historical materials.

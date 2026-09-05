@@ -1,0 +1,16 @@
+{
+  "command": [
+    "gh",
+    "api",
+    "--method",
+    "PUT",
+    "repos/obedebessa/eacp-operational-provenance/branches/main/protection",
+    "--input",
+    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/eacp-live-signing-tools/main-protection.json"
+  ],
+  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "started_at": "2026-09-05T04:40:20.490378+00:00",
+  "elapsed_seconds": 1.495927624986507,
+  "exit_code": 1,
+  "timed_out": false
+}

@@ -4,13 +4,15 @@ Prepared in response to the technical assessment of the Profile 1.3 candidate.
 This is new author-produced engineering evidence, not a revised opinion issued
 by TytoNyx, an independent reproduction, a new paper claim or an agreed pilot.
 The old review target and the published 1.3.0 release remain separate records.
+The candidate is now publicly available on GitHub and has an author-operated
+live signing run. It has no final v1.4 Zenodo DOI or external-review outcome.
 
 ## What changed and what to inspect
 
 | Assessment concern | Implemented response | Direct evidence | Remaining limitation |
 | --- | --- | --- | --- |
 | Broad laboratory sanitization | Allowlisted public projections and no raw unknown-field reporting | `tests/hardening/test_privacy.py`; historical-corpus reprocessing | Retained identifiers require human disclosure review |
-| Execution and attestation share privileges | Separate clean signer job, no experiment checkout or TAR execution, bound artifact/run identity | `test_attestation.py`, workflow and verifier | Static/fixture checks; live 1.4 dispatch/attestation still pending |
+| Execution and attestation share privileges | Separate clean signer job, no experiment checkout or TAR execution, bound artifact/run identity | `test_attestation.py`; live main run 33945266470 and default/offline CLI verification | Owners, workflow and hosted platform remain trusted; live failed-producer behavior was not injected |
 | Weakly specified collection identity | Pinned Ed25519 collector policy, source/adapter/origin binding, freshness, rotation/revocation, actual bounded HTTPS client | `test_trust.py`, `test_cli.py` | Collector authentication is not source semantic truth |
 | Privileged replacement and rollback | Signed exact-state checkpoints against external digest/floor/freshness | `test_integrity.py`, integrated fault campaign | Deployment requires independently protected authority |
 | Silent evidence loss | Durable queue, post-commit ACK, conflict quarantine, retries, finite-inventory reconciliation | `test_store.py`, seeded ingestion CSV | Local fsync assumptions; unknown source denominator remains UNKNOWN |
@@ -38,6 +40,15 @@ Use a clean checkout of the supplied source commit, not a moving branch. A sourc
 commit and a later results-only commit may differ; consult the report's source
 hashes and commit rather than silently substituting one for the other.
 
+The [live signing record](../../results/hardening-v1.4/live-signing-33945266470/README.md)
+separately binds main run `33945266470`, attempt 1, to source/signing commit
+`0bcb038fef930faff3ef19f661bf995f97d605d8`. The execution job passed 112 tests
+and its OIDC-absence check; a separate hosted signer produced the exact TAR's
+attestation. Fresh default-trust and offline verification succeeded, and six
+negative checks rejected five altered conditions. The attestation covers that
+TAR, not this reviewer packet or a later ZIP. PR and branch signing were observed
+skipped; producer-failure skipping was not exercised by a new live fault injection.
+
 ## A limited review request, not a requested conclusion
 
 > Thank you for the actionable assessment. The attached 1.4.0-rc1 candidate
@@ -58,6 +69,7 @@ reviewer's execution is not guaranteed by a runnable package.
 ## Release and study boundaries
 
 - Software candidate: 1.4.0-rc1; Profile semantics: 1.3.
+- Public GitHub source and live TAR attestation; no final v1.4 Zenodo release.
 - Existing Profile DOI: https://doi.org/10.5281/zenodo.22307668.
 - Existing preprint DOI: https://doi.org/10.5281/zenodo.22283868.
 - Existing artifact DOI: https://doi.org/10.5281/zenodo.22283852.

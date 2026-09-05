@@ -56,6 +56,7 @@ def package(destination: Path) -> dict:
     metadata = {"schema": "eacp.local-review-package/1", "version": "1.4.0-rc1",
                 "source_commit": source_commit, "branch": branch, "historical_commit": HISTORICAL_COMMIT,
                 "published": False, "external_reproduction_claimed": False, "organizational_pilot_claimed": False,
+                "publication_scope": "final archival release, not GitHub source availability",
                 "local_transfer_clone_verified": True}
     (destination / "PACKAGE.json").write_text(json.dumps(metadata, sort_keys=True, indent=2) + "\n")
     (destination / "REVIEWER_PACKET.md").write_text((ROOT / "docs/v1.4/REVIEWER_PACKET.md").read_text())
@@ -63,7 +64,9 @@ def package(destination: Path) -> dict:
     (destination / "START_HERE.md").write_text(f"""# EACP 1.4.0-rc1 - local review package
 
 This package contains a complete Git bundle, including the historical v1.3.0 tag.
-It is an unpublished candidate, not a replacement for the published 1.3 PDFs/DOIs.
+It is an engineering candidate, not a final archival release or a replacement for
+the published 1.3 PDFs/DOIs. PACKAGE.json's published flag refers to a final
+archival release, not source availability on GitHub.
 No production readiness, independent execution or organizational pilot is claimed.
 The producer verified a fresh local clone, pinned commits and its file manifest;
 this transfer check is not independent reproduction by an external reviewer.

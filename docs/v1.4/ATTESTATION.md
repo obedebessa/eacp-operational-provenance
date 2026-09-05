@@ -1,9 +1,12 @@
 # Candidate execution and attestation separation
 
-Status: implemented locally for review; a live run of this new workflow has not
-yet been observed. Local fixture tests do not demonstrate GitHub runner isolation
-or constitute cryptographic verification of a new published artifact. The v1.3.0
-workflow, historical cohorts and their verification contracts remain unchanged.
+Status: exercised on protected main in
+[run 33945266470](https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33945266470),
+attempt 1, with separate hosted execution/signing jobs and fresh default-trust
+and offline verification of the resulting TAR. This is an author-operated live
+run, not external reproduction, a final Zenodo release, a field result or a SLSA
+L3 claim. The v1.3.0 workflow, historical cohorts and verification contracts
+remain unchanged. See the [retained live record](../../results/hardening-v1.4/live-signing-33945266470/README.md).
 
 ## Trust boundary
 
@@ -31,9 +34,12 @@ The execution job can still produce false synthetic results or arbitrary archive
 bytes. This change isolates its code from the signing environment; it does not
 independently validate every measurement inside the archive. Repository owners,
 reviewers of the authorized workflow, GitHub's hosted platform, and the pinned
-actions remain trusted. Repository settings must protect `main` and require
-appropriate review of workflow changes. The `github.ref_protected` guard checks
-that protection exists; it cannot prove that its review policy is sufficient.
+actions remain trusted. For this run, `main` required the strict `reproduce-small`
+status check from GitHub App `15368`, enforced administrator compliance and
+disallowed force pushes and deletion. Mandatory human PR approval was not
+configured. Owners still control repository policy and approved workflow changes.
+The `github.ref_protected` guard checks that protection exists; it cannot prove
+that its review policy is sufficient or that an owner cannot weaken it.
 There is no automatic SLSA L3 claim and no proof of upstream event truth.
 
 ## Independent verification
@@ -69,7 +75,48 @@ version, command, stdout/stderr, archive, bundle and trust-root digest with the
 review record. The verifier rejects unknown output schemas rather than silently
 relaxing certificate checks.
 
-## Checks and remaining live acceptance
+## Observed live verification and remaining limits
+
+The recorded source and signer commit is
+`0bcb038fef930faff3ef19f661bf995f97d605d8`. Main run `33945266470`, attempt 1,
+passed its execution job with 112 tests and the OIDC-absence check. The signing
+job succeeded on a distinct hosted runner. Its immutable GitHub artifact ID is
+`9963122568`; the attestation ID is `45407867`. The signed TAR SHA-256 is
+`b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea`.
+The hosted campaign recorded 86/86 expected outcomes, including three explicit
+boundary demonstrations, with five seeds, forty events and 0%/5%/20% initial
+loss. Its environment was Python 3.11.16 and cryptography 50.0.1 on the clean
+source commit above.
+
+Fresh local verification of those actual bytes succeeded both through raw
+GitHub CLI and through the policy wrapper using default trust. After official
+trust-root capture, raw CLI and wrapper offline verification also succeeded;
+default and offline verification returned the same certificate material. Six
+negative checks returned rejection across five altered conditions: TAR tampering
+(checked twice), wrong expected source commit, wrong run, wrong signer and wrong
+ref. Input binding and checksum verification passed, and the original downloaded
+material remained unchanged. This attestation covers the exact TAR only; it does
+not attest the whole repository, PDFs, a later review package, or the truth of
+every measurement inside the TAR.
+
+The signed campaign still lists `live v1.4 GitHub attestation` under
+`not_established`: the producer wrote it before the signing job, and a campaign
+does not verify its own later signature. Preserve those signed bytes. The
+post-signing `verification-01` receipt in the live record supplies the subsequent
+verification result; it does not rewrite the earlier campaign's observation time.
+
+Signing was observed skipped in
+[PR run 33945220787](https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33945220787)
+and [branch run 33945267673](https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33945267673).
+These observations establish the two exercised exclusions. An unsuccessful
+producer and a compromised-fork/workflow scenario were not injected live in this
+cohort; their handling remains supported by workflow conditions and local tests,
+not new live observations. A future failure must be retained in its own record.
+
+The download action emitted a nonfatal Node 20 deprecation/forced-Node-24 warning.
+The original run and warning are retained; a future runtime/pin change must have
+its own source commit and verification rather than being retroactively applied
+to these logs.
 
 The 2026-09-05 live-run preflight found and corrected a GitHub CLI compatibility
 bug: `--signer-workflow` and `--cert-identity` are mutually exclusive in CLI 2.97.
@@ -87,19 +134,6 @@ signer, repository, trigger and runner; missing verification evidence; CLI
 failure; and execution/signing failure classification. Positive JSON fixtures
 test policy logic only. Static workflow checks guard permission scope, signing
 conditions, archive handling and commit-pinned actions.
-
-Before reporting the new workflow as exercised, merge the reviewed change through
-the repository's normal process and manually dispatch it from protected `main`.
-Retain all first-attempt failures. Acceptance requires these observations:
-
-1. Execution sees no OIDC request capability; both jobs run on distinct fresh
-   hosted runners; producer artifacts are bound to that run and commit.
-2. A successful signing job produces a downloadable attestation for the exact
-   TAR, and the fresh local CLI verifies it with the expected policy.
-3. A modified TAR and deliberately wrong expected run/commit/signer are rejected.
-   A signing-step success without that verification is not a verified artifact.
-4. PR and branch dispatch runs do not enter signing. An unsuccessful execution
-   leaves signing skipped; a signing failure is recorded separately.
 
 Do not retrofit these results into the archived v1.3 cohorts. Any future signing
 workflow or signer commit distinct from the source commit requires a separately
@@ -120,7 +154,8 @@ The following action references were checked against the primary GitHub API on
 
 The producer pins `cryptography==50.0.1`; this is a version pin, not a lockfile of
 all transitive packages or a hermetic build. That dependency is never installed
-in the signer. All produced measurements remain a synthetic local campaign.
+in the signer. The recorded measurements remain synthetic campaign observations,
+including the hosted execution; they are not production or field measurements.
 
 Primary documentation: [GitHub OIDC permissions](https://docs.github.com/en/actions/reference/security/oidc),
 [GitHub CLI verification and certificate policy](https://cli.github.com/manual/gh_attestation_verify),

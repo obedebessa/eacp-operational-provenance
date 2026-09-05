@@ -68,7 +68,7 @@ def verify() -> dict:
     return {"candidate": "1.4.0-rc1", "archived_source": ARCHIVED_COMMIT,
             "preexisting_documentation_baseline": DOCUMENTATION_BASELINE,
             "historical_files_preserved": preserved, "errors": errors,
-            "publication_status": "unpublished candidate",
+            "publication_status": "GitHub source candidate; final archival release unpublished",
             "external_replication": "not established", "organizational_pilot": "not performed"}
 
 
@@ -78,7 +78,7 @@ def main() -> int:
     args = parser.parse_args()
     report = verify()
     if args.release:
-        report["errors"].append("unpublished candidate: no final 1.4 archival record or live attestation has been verified")
+        report["errors"].append("unpublished candidate release: no final 1.4 archival record has been verified; live signing alone does not authorize archival promotion")
     print(json.dumps(report, indent=2, sort_keys=True))
     return 1 if report["errors"] else 0
 

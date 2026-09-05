@@ -1,0 +1,13 @@
+{
+  "archive_name": "eacp-hardening-v1.4.tar.gz",
+  "archive_sha256": "b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea",
+  "artifact_name": "eacp-hardening-v1.4-33945266470-1",
+  "evidence_class": "synthetic_local_hardening_campaign",
+  "repository": "obedebessa/eacp-operational-provenance",
+  "run_attempt": 1,
+  "run_id": 33945266470,
+  "schema": "eacp.hardening-archive-binding/1",
+  "source_ref": "refs/heads/main",
+  "source_sha": "0bcb038fef930faff3ef19f661bf995f97d605d8",
+  "workflow": ".github/workflows/eacp-hardening-v1.4.yml"
+}

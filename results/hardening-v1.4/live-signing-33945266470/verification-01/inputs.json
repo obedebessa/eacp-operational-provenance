@@ -1,0 +1,32 @@
+{
+  "auxiliary_script_sha256": "b4d41717d8fd99d316767d8889469176959c28d3b8223c7e7b37a77c4adc72c7",
+  "created_at": "2026-09-05T04:44:51.415305Z",
+  "environment_variables_dumped": false,
+  "expectation_origin": "explicit operator arguments, not derived from supplied archive/bundle",
+  "expected_run_attempt": 1,
+  "expected_run_id": 33945266470,
+  "expected_source_sha": "0bcb038fef930faff3ef19f661bf995f97d605d8",
+  "original_archive_path": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/artifact-33945266470/eacp-hardening-v1.4.tar.gz",
+  "original_bundle_path": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/attestation-33945266470/sha256:b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea.jsonl",
+  "original_sha256": {
+    "archive": "b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea",
+    "binding": "4fa1d567e2de85bd34f4558a9536a13e5e1810f178484105d4c03f0fa2cf5534",
+    "bundle": "be1830f303e89b612fa8fffc849ef4206178fe334ad7d9195a4e2b6e3a0418a8",
+    "checksums": "b332963edb3bd34c8a937bfbc6cc5a9d01ee1e88cc63356316140e052c3948c3"
+  },
+  "original_sidecar_paths": {
+    "binding": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/artifact-33945266470/binding.json",
+    "checksums": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/artifact-33945266470/SHA256SUMS"
+  },
+  "python": "3.12.14",
+  "python_executable": "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+  "repository": "obedebessa/eacp-operational-provenance",
+  "schema": "eacp.live-signing-verification-inputs/1",
+  "source_ref": "refs/heads/main",
+  "verification_sources_sha256": {
+    "eacp_hardening/attestation.py": "85e053fee6110948f41dd530c9e833036c7afdb698817d10dc8de28c7b98e930",
+    "eacp_hardening/common.py": "8b8ba303541d9284c9415a0cc1c55b987a10dd6a66a4ce0345fe885b419df8fa",
+    "scripts/verify_attestation_v1_4.py": "36871fed203fda41840b6abfbc3946ff3a65138b772bf08953d8de3422f9c2f1"
+  },
+  "workflow": ".github/workflows/eacp-hardening-v1.4.yml"
+}
