@@ -1,0 +1,26 @@
+{
+  "schema": "eacp.signing-preflight/1",
+  "observed_at": "2026-09-05T04:33:52Z",
+  "repository": "obedebessa/eacp-operational-provenance",
+  "remote_main_sha": "e1ee51f050d7bf6e31dbee68560dd781e9b75985",
+  "remote_main_protected": false,
+  "remote_rulesets": [],
+  "candidate_base_commit": "4daeceae4f1477b740f125ded491a9f546093a35",
+  "gh_version": "2.97.0",
+  "compatibility_fix": "Use exact --cert-identity without the mutually exclusive --signer-workflow; preserve signer/source digests and certificate/subject policy.",
+  "attestation_tests": {
+    "passed": 20,
+    "skipped": 0,
+    "real_cli_check": "frozen historical bundle with captured root; not new v1.4 evidence"
+  },
+  "root_tests": {
+    "passed": 127,
+    "skipped": 0,
+    "output": "----------------------------------------------------------------------\nRan 127 tests in 3.436s\n\nOK\n",
+    "exit_code": 0
+  },
+  "workflow_actionlint_exit_code": 0,
+  "remote_mutations_performed": false,
+  "live_v1_4_dispatch_performed": false,
+  "authorization_pending": "Candidate publication and main protection with required CI, admin enforcement, and no force pushes or deletions."
+}

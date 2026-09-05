@@ -71,6 +71,16 @@ relaxing certificate checks.
 
 ## Checks and remaining live acceptance
 
+The 2026-09-05 live-run preflight found and corrected a GitHub CLI compatibility
+bug: `--signer-workflow` and `--cert-identity` are mutually exclusive in CLI 2.97.
+The verifier now supplies the exact `--cert-identity` plus pinned signer/source
+digests, ref and all existing certificate/subject checks. A real offline CLI
+regression test verifies a frozen historical bundle using its captured trust
+root and a network-denying proxy; this checks the production flag combination,
+not a new 1.4 signature. Environments without the CLI or historical material
+explicitly skip that integration test rather than claim it ran. The original
+mocked policy tests did not detect the incompatible flag combination.
+
 `python -m unittest discover -s tests/hardening -p test_attestation.py -v`
 checks policy rejection for modified subject bytes, wrong run, ref, commit,
 signer, repository, trigger and runner; missing verification evidence; CLI

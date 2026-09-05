@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import tempfile
 import textwrap
@@ -73,14 +74,55 @@ class AttestationPolicyTests(unittest.TestCase):
         for flag, expected in {
             "--repo": POLICY.repository, "--source-digest": POLICY.source_sha,
             "--signer-digest": POLICY.source_sha, "--source-ref": POLICY.source_ref,
-            "--signer-workflow": f"{POLICY.repository}/{WORKFLOW}",
             "--cert-identity": POLICY.signer_uri, "--predicate-type": PREDICATE,
             "--bundle": str(self.bundle.resolve()),
         }.items():
             self.assertEqual(command[command.index(flag) + 1], expected)
         self.assertIn("--deny-self-hosted-runners", command)
+        self.assertNotIn("--signer-workflow", command)
+        self.assertNotIn("--signer-repo", command)
+        self.assertNotIn("--cert-identity-regex", command)
         self.assertFalse(call.kwargs.get("shell", False))
         self.assertFalse(result["upstream_event_truth_verified"])
+
+    @unittest.skipUnless(shutil.which("gh"), "GitHub CLI unavailable; real offline signature check not executed")
+    def test_real_cli_accepts_production_flag_set_against_historical_bundle_offline(self):
+        # Exercise the actual production command flags. The values are changed
+        # only to match frozen v1.3 evidence; this is NOT a new v1.4 attestation.
+        root = ROOT / "experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3/run-33690440169"
+        archive = root / "downloaded-artifact/eacp-cross-plane-v1.3-33690440169-1.tar.gz"
+        bundle = root / "attestation/sha256-26b609cdec31f26aec7f721114274794940d3e1fcb76665c9f3cd1ebb59dda3b.jsonl"
+        trusted_root = root / "attestation/trusted_root.jsonl"
+        if not all(path.is_file() for path in (archive, bundle, trusted_root)):
+            self.skipTest("Historical archive/bundle/captured trust root unavailable; offline signature check not executed")
+        _, call = self._verify()
+        command = list(call.args[0])
+        command[3] = str(archive)
+        historical_ref = "refs/tags/eacp-v1.3-evidence/k8s-v1.35.5/run-06"
+        historical_sha = "4cbf7d2fa0bb44585d258a3f37ce0c0d39ddea43"
+        historical_signer = (f"https://github.com/{POLICY.repository}/.github/workflows/"
+                             f"eacp-cross-plane-v1.3.yml@{historical_ref}")
+        for flag, value in {
+            "--bundle": str(bundle), "--source-digest": historical_sha,
+            "--signer-digest": historical_sha, "--source-ref": historical_ref,
+            "--cert-identity": historical_signer,
+        }.items():
+            command[command.index(flag) + 1] = value
+        command += ["--custom-trusted-root", str(trusted_root)]
+        # Prevent network fallback. All verification material is on disk; even
+        # an unexpected request must fail rather than reaching a remote service.
+        with patch.dict(os.environ, {"HTTPS_PROXY": "http://127.0.0.1:9",
+                                     "HTTP_PROXY": "http://127.0.0.1:9",
+                                     "ALL_PROXY": "http://127.0.0.1:9", "NO_PROXY": "",
+                                     "GH_DEBUG": ""}):
+            result = subprocess.run(command, capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        verified = json.loads(result.stdout)[0]["verificationResult"]
+        certificate = verified["signature"]["certificate"]
+        self.assertEqual(certificate["subjectAlternativeName"], historical_signer)
+        self.assertEqual(certificate["runInvocationURI"], f"{POLICY.repository_uri}/actions/runs/33690440169/attempts/1")
+        self.assertTrue(verified["verifiedTimestamps"])
+        self.assertEqual(verified["statement"]["predicate"]["runDetails"]["builder"]["id"], historical_signer)
 
     def test_wrong_certificate_identity_rejected(self):
         mutations = {

@@ -164,7 +164,6 @@ def verify_archive(archive: Path, bundle: Path, policy: AttestationPolicy, *,
     command = [
         "gh", "attestation", "verify", str(archive), "--hostname", "github.com",
         "--bundle", str(bundle), "--repo", policy.repository,
-        "--signer-workflow", f"{policy.repository}/{policy.workflow}",
         "--signer-digest", policy.source_sha, "--source-digest", policy.source_sha,
         "--source-ref", policy.source_ref, "--cert-identity", policy.signer_uri,
         "--cert-oidc-issuer", "https://token.actions.githubusercontent.com",
