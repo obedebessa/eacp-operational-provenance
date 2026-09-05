@@ -1,0 +1,21 @@
+{
+  "command": [
+    "python3",
+    "experiments/correlation_robustness/correlation_robustness.py",
+    "--chains",
+    "24",
+    "--services",
+    "4",
+    "--seeds",
+    "20260905",
+    "--output",
+    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate/reproduction-output/v1.4-source-e4716e8/correlation"
+  ],
+  "cpu_count": 16,
+  "generated_at_utc": "2026-09-05T04:12:55+00:00",
+  "machine": "arm64",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "python": "3.12.14",
+  "python_implementation": "CPython",
+  "stdlib_only": true
+}

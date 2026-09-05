@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "experiments/index_ablation/index_ablation.py",
+    "--verify",
+    "experiments/index_ablation/results/reference"
+  ],
+  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "elapsed_seconds": 0.07408683298854157,
+  "finished_at": "2026-09-05T04:12:56.130667Z",
+  "name": "frozen_index",
+  "returncode": 0,
+  "started_at": "2026-09-05T04:12:56.056596Z",
+  "status": "passed",
+  "stderr": "frozen_index.stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout": "frozen_index.stdout.txt",
+  "stdout_sha256": "58affe6d2c8fdf95574262d8ed80780fd64a9ed6b7c28bf88f37168220e644a8",
+  "timeout_seconds": 300
+}

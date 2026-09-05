@@ -1,0 +1,15 @@
+Command: '/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B scripts/verify_hardening.py
+Source commit: e4716e82b9cd86058288ce59744aefb88632fec8
+Exit code: 0
+Classification: author-executed local verification
+
+{
+  "archived_source": "537799bd2b292ce6e78004de22f4ab6df1b4feda",
+  "candidate": "1.4.0-rc1",
+  "errors": [],
+  "external_replication": "not established",
+  "historical_files_preserved": 657,
+  "organizational_pilot": "not performed",
+  "preexisting_documentation_baseline": "e1ee51f050d7bf6e31dbee68560dd781e9b75985",
+  "publication_status": "unpublished candidate"
+}

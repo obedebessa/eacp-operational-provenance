@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "experiments/index_ablation/index_ablation.py",
+    "--sizes",
+    "1000",
+    "--trials",
+    "1",
+    "--services",
+    "10",
+    "--query-samples",
+    "10",
+    "--cold-open-samples",
+    "2",
+    "--output",
+    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate/reproduction-output/v1.4-source-e4716e8/index"
+  ],
+  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "elapsed_seconds": 0.1792941670282744,
+  "finished_at": "2026-09-05T04:12:56.056153Z",
+  "name": "index_smoke",
+  "returncode": 0,
+  "started_at": "2026-09-05T04:12:55.876869Z",
+  "status": "passed",
+  "stderr": "index_smoke.stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout": "index_smoke.stdout.txt",
+  "stdout_sha256": "5679b7914814a613562a7f02b978a913a19fca303651fbf4d48e267115d66bc2",
+  "timeout_seconds": 300
+}

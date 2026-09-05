@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "experiments/github_actions/summarize_reference_run.py",
+    "--verify"
+  ],
+  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "elapsed_seconds": 0.0768793749739416,
+  "finished_at": "2026-09-05T04:12:56.208232Z",
+  "name": "frozen_reference",
+  "returncode": 0,
+  "started_at": "2026-09-05T04:12:56.131364Z",
+  "status": "passed",
+  "stderr": "frozen_reference.stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout": "frozen_reference.stdout.txt",
+  "stdout_sha256": "168055180ca00e211188d3a5cc62fc287af05dc529e5c1e0e74989287abd462b",
+  "timeout_seconds": 300
+}
