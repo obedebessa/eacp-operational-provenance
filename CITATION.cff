@@ -1,14 +1,14 @@
 cff-version: 1.2.0
-message: "If you use the research findings, cite the preprint below; cite this software record when referring specifically to the reproducibility artifact."
-title: "EACP Operational-Provenance Artifact: Reproducible Identifier-Failure and Cross-Plane Evaluation"
+message: "This is an unpublished 1.4 hardening candidate. Cite the exact source commit for new code; the preferred preprint and archival references identify the historical 1.3 research, not the new implementation."
+title: "EACP Operational-Provenance Artifact: Collection Security and Resilience Candidate"
 abstract: >-
-  Version 1.3.0 of the reproducibility artifact for a lightweight
-  evidence-aware control plane. It includes an implementable evidence profile,
-  an adversarial identifier-failure campaign, a paired SQLite index ablation,
-  preserved failed and confirmatory GitHub Actions-to-Kubernetes cohorts across
-  three Kubernetes minor versions, and the version 1.2 Kubernetes and
-  OpenTelemetry baselines. The accompanying manuscript is a non-peer-reviewed
-  preprint. The DOI in this record identifies the artifact, not the accompanying
+  Unpublished 1.4.0-rc1 security and resilience candidate, preserving Profile 1.3
+  semantics and historical experimental evidence. Adds minimized public
+  projections, authenticated collector statements, encrypted durable ingestion,
+  tenant-scoped access, externally anchored snapshot verification and isolated
+  attestation workflow design. New tests are author-executed; independent
+  reproduction, organizational pilots and production validation are not claimed.
+  The archived software DOI in references identifies the artifact, not the accompanying
   article. Licensing is file-scoped; see LICENSES/README.md and paper/README.md.
 type: software
 authors:
@@ -16,11 +16,9 @@ authors:
     given-names: "Obede Bessa"
     orcid: "https://orcid.org/0009-0001-0787-5710"
     affiliation: "Independent Researcher in Cloud Architecture and DevOps"
-version: 1.3.0
-date-released: 2026-09-03
+version: 1.4.0-rc1
 repository-code: "https://github.com/obedebessa/eacp-operational-provenance"
-doi: "10.5281/zenodo.22283852"
-url: "https://doi.org/10.5281/zenodo.22283852"
+url: "https://github.com/obedebessa/eacp-operational-provenance"
 keywords:
   - operational provenance
   - cloud-native systems
@@ -31,6 +29,13 @@ keywords:
   - reproducibility
   - evidence index
 references:
+  - type: software
+    title: "EACP Operational-Provenance Artifact: Reproducible Identifier-Failure and Cross-Plane Evaluation"
+    authors:
+      - family-names: "Rocha da Silva"
+        given-names: "Obede Bessa"
+    version: "1.3.0"
+    doi: "10.5281/zenodo.22283852"
   - type: report
     title: "Cross-Plane Operational Provenance under Identifier Failure: A Reproducible Evaluation of EACP"
     authors:

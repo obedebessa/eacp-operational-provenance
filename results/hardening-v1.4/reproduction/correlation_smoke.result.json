@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "experiments/correlation_robustness/correlation_robustness.py",
+    "--chains",
+    "24",
+    "--services",
+    "4",
+    "--seeds",
+    "20260905",
+    "--output",
+    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate/reproduction-output/v1.4-source-e4716e8/correlation"
+  ],
+  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "elapsed_seconds": 0.12687799998093396,
+  "finished_at": "2026-09-05T04:12:55.876335Z",
+  "name": "correlation_smoke",
+  "returncode": 0,
+  "started_at": "2026-09-05T04:12:55.749471Z",
+  "status": "passed",
+  "stderr": "correlation_smoke.stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout": "correlation_smoke.stdout.txt",
+  "stdout_sha256": "0695f4472d95c9242950624a4853ad2e9cdc5ddedad12ad4b969e686d5698472",
+  "timeout_seconds": 300
+}

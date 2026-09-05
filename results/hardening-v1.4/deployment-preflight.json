@@ -1,0 +1,12 @@
+{
+  "schema": "eacp.read-only-deployment-preflight/1",
+  "method": "GitHub REST branch metadata via authenticated CLI; read-only",
+  "repository": "obedebessa/eacp-operational-provenance",
+  "branch": "main",
+  "observed_commit": "e1ee51f050d7bf6e31dbee68560dd781e9b75985",
+  "protected": false,
+  "new_candidate_pushed": false,
+  "new_workflow_dispatched": false,
+  "remote_settings_modified": false,
+  "required_next_step": "Agree on and configure main protection, publish reviewed candidate code, then dispatch and verify the isolated signing workflow."
+}

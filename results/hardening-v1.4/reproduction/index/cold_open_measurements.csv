@@ -1,0 +1,5 @@
+event_count,trial,seed,query_type,sample_position,query_key,row_count,row_sha256,full_indexes_connect_plus_first_query_ms,no_service_index_connect_plus_first_query_ms,no_correlation_index_connect_plus_first_query_ms,no_lookup_indexes_connect_plus_first_query_ms
+1000,1,9238,service,0,svc-0009,102,d9c1fefc8fd689e9580dbd5fb4b35dbc6e5aa90821bd5e5a6d159124e94ae3af,0.298125,0.356875,0.260833,0.331375
+1000,1,9238,service,1,svc-0001,102,98c264553d24c48a527ab899eea210054cd1ef2aa6bd162f09e1ecb5a1500403,0.19775,0.231375,0.224334,0.228667
+1000,1,9238,correlation,0,corr-9238-00000121,6,16f303e166a97b69f1a4e41657031b6fc00fb95241d02e3734708fa8b61da3d4,0.086333,0.086708,0.1505,0.138625
+1000,1,9238,correlation,1,corr-9238-00000060,6,7c911c633eaf3366261c7b17c5a436344a7864822920246f2dbc75d5def11932,0.086709,0.081916,0.143209,0.135333

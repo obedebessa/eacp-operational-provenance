@@ -1,0 +1,39 @@
+{
+  "schema": "eacp.additional-local-verification/1",
+  "recorded_at": "2026-09-05 04:14:34 UTC",
+  "source_commit": "e4716e82b9cd86058288ce59744aefb88632fec8",
+  "classification": "author_executed",
+  "independent_reproduction": false,
+  "checks": [
+    {
+      "name": "repository-tests",
+      "command": "'/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B -m unittest discover -s tests -q",
+      "exit_code": 0
+    },
+    {
+      "name": "historical-adapter-tests",
+      "command": "'/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B -m unittest discover -s experiments/github_actions/tests -q",
+      "exit_code": 0
+    },
+    {
+      "name": "correlation-tests",
+      "command": "'/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B -m unittest discover -s experiments/correlation_robustness -q",
+      "exit_code": 0
+    },
+    {
+      "name": "index-tests",
+      "command": "'/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B -m unittest discover -s experiments/index_ablation -q",
+      "exit_code": 0
+    },
+    {
+      "name": "candidate-verifier",
+      "command": "'/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B scripts/verify_hardening.py",
+      "exit_code": 0
+    },
+    {
+      "name": "workflow-lint",
+      "command": "/opt/homebrew/bin/actionlint .github/workflows/eacp-hardening-v1.4.yml .github/workflows/reproduce-small.yml",
+      "exit_code": 0
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+name: EACP hardening v1.4 candidate
+
+on:
+  pull_request:
+    paths:
+      - "eacp_hardening/**"
+      - "tests/hardening/**"
+      - "scripts/verify_attestation_v1_4.py"
+      - ".github/workflows/eacp-hardening-v1.4.yml"
+  workflow_dispatch:
+
+# Unspecified permissions are none. PRs never enter the signing job.
+permissions:
+  contents: read
+
+concurrency:
+  group: eacp-hardening-v1-4-${{ github.run_id }}-${{ github.run_attempt }}
+  cancel-in-progress: false
+
+jobs:
+  execute:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+      artifact_digest: ${{ steps.upload.outputs.artifact-digest }}
+    steps:
+      - name: Check out source without persistent credentials
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.11"
+      - name: Confirm execution job has no OIDC request capability
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}"
+          test -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}"
+      - name: Install bounded reference dependency
+        run: python -m pip install --disable-pip-version-check 'cryptography==50.0.1'
+      - name: Test reference hardening contracts
+        run: python -m unittest discover -s tests/hardening -v
+      - name: Run public synthetic hardening campaign
+        shell: bash
+        run: python -m eacp_hardening.campaign --output "${RUNNER_TEMP}/eacp-hardening-results"
+      - name: Package campaign evidence and handoff identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir "${RUNNER_TEMP}/eacp-hardening-handoff"
+          tar --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner \
+            -czf "${RUNNER_TEMP}/eacp-hardening-handoff/eacp-hardening-v1.4.tar.gz" \
+            -C "${RUNNER_TEMP}/eacp-hardening-results" .
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          handoff = Path(os.environ["RUNNER_TEMP"]) / "eacp-hardening-handoff"
+          archive = handoff / "eacp-hardening-v1.4.tar.gz"
+          with archive.open("rb") as stream:
+              digest = hashlib.file_digest(stream, "sha256").hexdigest()
+          (handoff / "SHA256SUMS").write_text(f"{digest}  {archive.name}\n")
+          binding = {
+              "schema": "eacp.hardening-archive-binding/1",
+              "repository": os.environ["GITHUB_REPOSITORY"],
+              "workflow": ".github/workflows/eacp-hardening-v1.4.yml",
+              "source_sha": os.environ["GITHUB_SHA"],
+              "source_ref": os.environ["GITHUB_REF"],
+              "run_id": int(os.environ["GITHUB_RUN_ID"]),
+              "run_attempt": int(os.environ["GITHUB_RUN_ATTEMPT"]),
+              "artifact_name": "eacp-hardening-v1.4-" + os.environ["GITHUB_RUN_ID"] + "-" + os.environ["GITHUB_RUN_ATTEMPT"],
+              "archive_name": archive.name,
+              "archive_sha256": digest,
+              "evidence_class": "synthetic_local_hardening_campaign",
+          }
+          (handoff / "binding.json").write_text(json.dumps(binding, sort_keys=True, indent=2) + "\n")
+          PY
+      - name: Upload exact handoff artifact
+        id: upload
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: eacp-hardening-v1.4-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/eacp-hardening-handoff/
+          if-no-files-found: error
+          retention-days: 90
+
+  attest:
+    needs: execute
+    # Protection is a repository setting: main must be protected before dispatch.
+    # A modified PR, branch, fork, or failed producer cannot trigger this job.
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.repository == 'obedebessa/eacp-operational-provenance' &&
+      github.ref == 'refs/heads/main' && github.ref_protected &&
+      needs.execute.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+      attestations: write
+    steps:
+      # Fresh hosted runner; no checkout, pip, cache restore or repository code.
+      - name: Validate uploaded artifact metadata before downloading
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EACP_ARTIFACT_ID: ${{ needs.execute.outputs.artifact_id }}
+          EACP_ARTIFACT_DIGEST: ${{ needs.execute.outputs.artifact_digest }}
+        run: |
+          set -euo pipefail
+          python3 -I - <<'PY'
+          import json, os, re, subprocess
+          repo, sha = (os.environ[k] for k in ("GITHUB_REPOSITORY", "GITHUB_SHA"))
+          run, attempt = (int(os.environ[k]) for k in ("GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT"))
+          artifact_id = os.environ["EACP_ARTIFACT_ID"]
+          artifact_digest = os.environ["EACP_ARTIFACT_DIGEST"]
+          if not re.fullmatch(r"[1-9][0-9]*", artifact_id) or not re.fullmatch(r"[0-9a-f]{64}", artifact_digest):
+              raise SystemExit("Invalid artifact ID or digest")
+          response = subprocess.run(
+              ["gh", "api", f"repos/{repo}/actions/artifacts/{artifact_id}"],
+              capture_output=True, text=True, check=True, timeout=30,
+          )
+          metadata = json.loads(response.stdout)
+          if (metadata.get("id") != int(artifact_id)
+              or metadata.get("name") != f"eacp-hardening-v1.4-{run}-{attempt}"
+              or metadata.get("expired") is not False
+              or metadata.get("digest") != f"sha256:{artifact_digest}"
+              or metadata.get("workflow_run", {}).get("id") != run
+              or metadata.get("workflow_run", {}).get("head_sha") != sha
+              or type(metadata.get("size_in_bytes")) is not int
+              or not 0 < metadata["size_in_bytes"] <= 250_000_000):
+              raise SystemExit("GitHub artifact origin or size mismatch")
+          PY
+      - name: Download exact artifact from this run
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          artifact-ids: ${{ needs.execute.outputs.artifact_id }}
+          path: ${{ runner.temp }}/eacp-hardening-handoff
+          merge-multiple: true
+      - name: Validate artifact identity and bytes as data
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"]) / "eacp-hardening-handoff"
+          expected_files = {"eacp-hardening-v1.4.tar.gz", "SHA256SUMS", "binding.json"}
+          if {p.name for p in root.iterdir()} != expected_files:
+              raise SystemExit("Unexpected handoff file set")
+          if any(p.is_symlink() or not p.is_file() or p.stat().st_size == 0 for p in root.iterdir()):
+              raise SystemExit("Handoff must contain nonempty regular files only")
+          archive = root / "eacp-hardening-v1.4.tar.gz"
+          if (archive.stat().st_size > 250_000_000 or (root / "binding.json").stat().st_size > 8192
+              or (root / "SHA256SUMS").stat().st_size > 256):
+              raise SystemExit("Handoff exceeds bounded size")
+          with archive.open("rb") as stream:
+              digest = hashlib.file_digest(stream, "sha256").hexdigest()
+          if (root / "SHA256SUMS").read_text() != f"{digest}  {archive.name}\n":
+              raise SystemExit("Archive checksum mismatch")
+          repo, sha, ref = (os.environ[k] for k in ("GITHUB_REPOSITORY", "GITHUB_SHA", "GITHUB_REF"))
+          run, attempt = (int(os.environ[k]) for k in ("GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT"))
+          name = f"eacp-hardening-v1.4-{run}-{attempt}"
+          binding = json.loads((root / "binding.json").read_text())
+          expected = {
+              "schema": "eacp.hardening-archive-binding/1", "repository": repo,
+              "workflow": ".github/workflows/eacp-hardening-v1.4.yml",
+              "source_sha": sha, "source_ref": ref, "run_id": run, "run_attempt": attempt,
+              "artifact_name": name, "archive_name": archive.name, "archive_sha256": digest,
+              "evidence_class": "synthetic_local_hardening_campaign",
+          }
+          if (binding != expected or type(binding.get("run_id")) is not int
+              or type(binding.get("run_attempt")) is not int):
+              raise SystemExit("Handoff identity mismatch")
+          print("Exact same-run archive identity and SHA-256 checked; archive was not unpacked.")
+          PY
+      - name: Attest the validated archive
+        id: provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: ${{ runner.temp }}/eacp-hardening-handoff/eacp-hardening-v1.4.tar.gz
+      - name: Record the attestation boundary
+        if: always()
+        shell: bash
+        env:
+          EACP_SIGNING_OUTCOME: ${{ steps.provenance.outcome }}
+        run: |
+          {
+            echo '## EACP 1.4 candidate signing stage'
+            echo "Signing outcome: ${EACP_SIGNING_OUTCOME}"
+            echo 'This stage handles the archive as data on a fresh hosted runner.'
+            echo 'A successful signing step still requires independent cryptographic verification.'
+            echo 'The archive contains a synthetic hardening campaign, not a field deployment.'
+            echo 'Attestation binds bytes and workflow identity; it does not establish upstream event truth or automatically establish SLSA L3.'
+          } >> "${GITHUB_STEP_SUMMARY}"

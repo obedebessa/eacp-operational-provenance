@@ -1,0 +1,722 @@
+{
+  "cases": [
+    {
+      "category": "control",
+      "detail": null,
+      "id": "privacy_annotation",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "privacy_env",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "privacy_config",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "privacy_query",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "privacy_correlation_preserved",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "source_signature_valid",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "source_signature_alteration",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "source_key_revocation",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "source_wrong_scope",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "source_freshness",
+      "passed": true
+    },
+    {
+      "category": "boundary",
+      "detail": "Signature authenticates the collector statement, not source truth.",
+      "id": "source_semantic_falsehood_remains_undetectable",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-0_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-0_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-0_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-0_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-5_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-5_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-5_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-5_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-20_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-20_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-20_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-0-loss-20_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-0_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-0_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-0_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-0_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-5_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-5_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-5_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-5_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-20_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-20_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-20_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-1-loss-20_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-0_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-0_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-0_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-0_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-5_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-5_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-5_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-5_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-20_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-20_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-20_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-2-loss-20_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-0_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-0_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-0_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-0_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-5_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-5_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-5_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-5_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-20_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-20_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-20_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-3-loss-20_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-0_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-0_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-0_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-0_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-5_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-5_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-5_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-5_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-20_restart",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-20_no_silent_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-20_distinct_count",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "seed-4-loss-20_late_recovery",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "queue_full_rejects_without_ack",
+      "passed": true
+    },
+    {
+      "category": "boundary",
+      "detail": null,
+      "id": "unknown_source_completeness",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "conflicting_event_is_not_overwritten",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "conflict_quarantined",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "cross_tenant_write_denied",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "writer_cannot_read",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "other_tenant_cannot_observe_records",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "external_checkpoint_intact",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "external_checkpoint_truncation",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "consistent_content_manifest_replacement",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "old_valid_snapshot_rollback",
+      "passed": true
+    },
+    {
+      "category": "boundary",
+      "detail": null,
+      "id": "without_external_anchor_unknown",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "retention_hold_honored",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "retained_tombstone_no_resurrection",
+      "passed": true
+    },
+    {
+      "category": "control",
+      "detail": null,
+      "id": "access_denials_audited",
+      "passed": true
+    }
+  ],
+  "design": {
+    "events_per_case": 40,
+    "initial_loss_rates": [
+      0,
+      0.05,
+      0.2
+    ],
+    "seeds": 5
+  },
+  "environment": {
+    "cryptography": "50.0.1",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.14",
+    "source_commit": "e4716e82b9cd86058288ce59744aefb88632fec8",
+    "working_tree_dirty": false
+  },
+  "fixture_key_warning": "All campaign credentials are public test fixtures; never use them in deployment.",
+  "fixture_time": "2026-09-04T12:00:00Z",
+  "ingestion_observations": [
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 6,
+      "expected": 40,
+      "initial_delivered_distinct": 40,
+      "initial_missing": 0,
+      "initial_status": "COMPLETE",
+      "loss_rate": 0.0,
+      "recovered_distinct": 40,
+      "seed": 0
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 6,
+      "expected": 40,
+      "initial_delivered_distinct": 38,
+      "initial_missing": 2,
+      "initial_status": "INCOMPLETE",
+      "loss_rate": 0.05,
+      "recovered_distinct": 40,
+      "seed": 0
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 5,
+      "expected": 40,
+      "initial_delivered_distinct": 32,
+      "initial_missing": 8,
+      "initial_status": "INCOMPLETE",
+      "loss_rate": 0.2,
+      "recovered_distinct": 40,
+      "seed": 0
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 6,
+      "expected": 40,
+      "initial_delivered_distinct": 40,
+      "initial_missing": 0,
+      "initial_status": "COMPLETE",
+      "loss_rate": 0.0,
+      "recovered_distinct": 40,
+      "seed": 1
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 6,
+      "expected": 40,
+      "initial_delivered_distinct": 38,
+      "initial_missing": 2,
+      "initial_status": "INCOMPLETE",
+      "loss_rate": 0.05,
+      "recovered_distinct": 40,
+      "seed": 1
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 5,
+      "expected": 40,
+      "initial_delivered_distinct": 32,
+      "initial_missing": 8,
+      "initial_status": "INCOMPLETE",
+      "loss_rate": 0.2,
+      "recovered_distinct": 40,
+      "seed": 1
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 6,
+      "expected": 40,
+      "initial_delivered_distinct": 40,
+      "initial_missing": 0,
+      "initial_status": "COMPLETE",
+      "loss_rate": 0.0,
+      "recovered_distinct": 40,
+      "seed": 2
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 6,
+      "expected": 40,
+      "initial_delivered_distinct": 38,
+      "initial_missing": 2,
+      "initial_status": "INCOMPLETE",
+      "loss_rate": 0.05,
+      "recovered_distinct": 40,
+      "seed": 2
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 5,
+      "expected": 40,
+      "initial_delivered_distinct": 32,
+      "initial_missing": 8,
+      "initial_status": "INCOMPLETE",
+      "loss_rate": 0.2,
+      "recovered_distinct": 40,
+      "seed": 2
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 6,
+      "expected": 40,
+      "initial_delivered_distinct": 40,
+      "initial_missing": 0,
+      "initial_status": "COMPLETE",
+      "loss_rate": 0.0,
+      "recovered_distinct": 40,
+      "seed": 3
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 6,
+      "expected": 40,
+      "initial_delivered_distinct": 38,
+      "initial_missing": 2,
+      "initial_status": "INCOMPLETE",
+      "loss_rate": 0.05,
+      "recovered_distinct": 40,
+      "seed": 3
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 5,
+      "expected": 40,
+      "initial_delivered_distinct": 32,
+      "initial_missing": 8,
+      "initial_status": "INCOMPLETE",
+      "loss_rate": 0.2,
+      "recovered_distinct": 40,
+      "seed": 3
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 6,
+      "expected": 40,
+      "initial_delivered_distinct": 40,
+      "initial_missing": 0,
+      "initial_status": "COMPLETE",
+      "loss_rate": 0.0,
+      "recovered_distinct": 40,
+      "seed": 4
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 6,
+      "expected": 40,
+      "initial_delivered_distinct": 38,
+      "initial_missing": 2,
+      "initial_status": "INCOMPLETE",
+      "loss_rate": 0.05,
+      "recovered_distinct": 40,
+      "seed": 4
+    },
+    {
+      "after_recovery_status": "COMPLETE",
+      "duplicate_attempts": 5,
+      "expected": 40,
+      "initial_delivered_distinct": 32,
+      "initial_missing": 8,
+      "initial_status": "INCOMPLETE",
+      "loss_rate": 0.2,
+      "recovered_distinct": 40,
+      "seed": 4
+    }
+  ],
+  "method": "author_executed_finite_synthetic_fault_campaign",
+  "not_established": [
+    "independent reproduction",
+    "real organizational pilot",
+    "live v1.4 GitHub attestation",
+    "source semantic truth",
+    "production HA or privacy certification",
+    "rollback protection when the external anchor authority is compromised"
+  ],
+  "schema": "eacp.hardening-campaign/1.4",
+  "software_version": "1.4.0rc1",
+  "summary": {
+    "boundary_demonstrations": 3,
+    "checks": 86,
+    "failed": 0,
+    "passed": 86
+  }
+}

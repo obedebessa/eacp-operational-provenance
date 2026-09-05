@@ -1,0 +1,24 @@
+test_csv_header_drift_is_rejected (test_eacp_profile.LegacyMigrationTests.test_csv_header_drift_is_rejected) ... ok
+test_csv_migration_accepts_reordered_exact_header_and_cli_validates_output (test_eacp_profile.LegacyMigrationTests.test_csv_migration_accepts_reordered_exact_header_and_cli_validates_output) ... ok
+test_migration_preserves_all_13_values_without_digest_promotion (test_eacp_profile.LegacyMigrationTests.test_migration_preserves_all_13_values_without_digest_promotion) ... ok
+test_missing_legacy_correlation_becomes_no_link_and_abstains (test_eacp_profile.LegacyMigrationTests.test_missing_legacy_correlation_becomes_no_link_and_abstains) ... ok
+test_actor_roles_are_closed_and_missing_roles_are_not_fabricated (test_eacp_profile.ProfileSchemaTests.test_actor_roles_are_closed_and_missing_roles_are_not_fabricated) ... ok
+test_collection_source_identity_is_composite_and_unique (test_eacp_profile.ProfileSchemaTests.test_collection_source_identity_is_composite_and_unique) ... ok
+test_digest_match_and_artifact_digest_are_constrained (test_eacp_profile.ProfileSchemaTests.test_digest_match_and_artifact_digest_are_constrained) ... ok
+test_flat_actor_and_unscoped_service_are_rejected (test_eacp_profile.ProfileSchemaTests.test_flat_actor_and_unscoped_service_are_rejected) ... ok
+test_inferred_confidence_is_required_and_exclusive (test_eacp_profile.ProfileSchemaTests.test_inferred_confidence_is_required_and_exclusive) ... ok
+test_non_inferred_duplicate_link_key_is_rejected_even_if_method_differs (test_eacp_profile.ProfileSchemaTests.test_non_inferred_duplicate_link_key_is_rejected_even_if_method_differs) ... ok
+test_optional_source_digest_has_explicit_representation (test_eacp_profile.ProfileSchemaTests.test_optional_source_digest_has_explicit_representation) ... ok
+test_schema_documents_are_valid_json_and_tuple_identity_is_required (test_eacp_profile.ProfileSchemaTests.test_schema_documents_are_valid_json_and_tuple_identity_is_required) ... ok
+test_timestamps_require_an_offset_but_clock_skew_is_allowed (test_eacp_profile.ProfileSchemaTests.test_timestamps_require_an_offset_but_clock_skew_is_allowed) ... ok
+test_valid_example_passes_reference_validator (test_eacp_profile.ProfileSchemaTests.test_valid_example_passes_reference_validator) ... ok
+test_exact_resolution_excludes_an_ambiguous_bridge_record (test_eacp_profile.SafeResolutionTests.test_exact_resolution_excludes_an_ambiguous_bridge_record) ... ok
+test_inferred_links_are_opt_in_and_thresholded (test_eacp_profile.SafeResolutionTests.test_inferred_links_are_opt_in_and_thresholded) ... ok
+test_missing_link_abstains_without_matches (test_eacp_profile.SafeResolutionTests.test_missing_link_abstains_without_matches) ... ok
+test_multivalued_seed_link_abstains_as_ambiguous (test_eacp_profile.SafeResolutionTests.test_multivalued_seed_link_abstains_as_ambiguous) ... ok
+test_scope_filter_prevents_cross_scope_value_collision (test_eacp_profile.SafeResolutionTests.test_scope_filter_prevents_cross_scope_value_collision) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.084s
+
+OK

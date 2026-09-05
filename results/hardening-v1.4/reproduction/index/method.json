@@ -1,0 +1,64 @@
+{
+  "result_schema_version": "1.0",
+  "research_question": "How much of EACP SQLite lookup performance, ingestion cost, and database size is attributable to the service and correlation indexes?",
+  "benchmark_source": "benchmark/sqlite/eacp_benchmark.py",
+  "benchmark_source_sha256": "a4c372526a6ce9641f22b0cdf9f1642d8474fbd5f1bfc925d513f04ecce7d4ee",
+  "experiment_source": "experiments/index_ablation/index_ablation.py",
+  "experiment_source_sha256": "cad9cf302ea1083c86039803422942fad7b0607a4ee917b49f987f93762b28d1",
+  "reuse": [
+    "SOURCE_TYPES",
+    "EACP_SCHEMA",
+    "EACP_SERVICE_QUERY",
+    "EACP_CORRELATION_QUERY",
+    "EACP_FULL_QUERY",
+    "generate_events",
+    "configure",
+    "insert_eacp",
+    "timed_fetch",
+    "projection_digest",
+    "explain",
+    "db_size",
+    "percentile"
+  ],
+  "treatment": "Remove only the exact CREATE INDEX statements for ev_service_time and/or ev_correlation. The table, UNIQUE constraint, append-only triggers, and ev_source_time index remain unchanged.",
+  "variants": [
+    {
+      "name": "full_indexes",
+      "service_index": true,
+      "correlation_index": true
+    },
+    {
+      "name": "no_service_index",
+      "service_index": false,
+      "correlation_index": true
+    },
+    {
+      "name": "no_correlation_index",
+      "service_index": true,
+      "correlation_index": false
+    },
+    {
+      "name": "no_lookup_indexes",
+      "service_index": false,
+      "correlation_index": false
+    }
+  ],
+  "event_counts": [
+    1000
+  ],
+  "trials_per_event_count": 1,
+  "seeds": [
+    9238
+  ],
+  "service_count": 10,
+  "warm_query_samples_per_type_per_trial": 10,
+  "cold_open_samples_per_type_per_trial": 2,
+  "pairing": "Within each event-count/seed trial, all variants receive the same generated events and the same ordered service and correlation keys.",
+  "order_control": "Database build order and per-query variant execution order are deterministically rotated across trials and sample positions.",
+  "warm_cache_protocol": "Every timed key is fetched once on every variant immediately before the timed warm-cache pass.",
+  "cold_open_protocol": "Each sample times sqlite3.connect plus the first query and close on a new connection. This resets SQLite's connection-local page cache but does not flush or claim control of the operating-system page cache.",
+  "database_size_protocol": "ANALYZE, VACUUM, then file size in bytes.",
+  "equivalence_protocol": "Abort unless every variant has the same complete canonical projection row count and SHA-256, and every timed warm and cold-open query is row-for-row identical to full_indexes.",
+  "analysis_unit": "one event-count/seed trial",
+  "statistics": "Within-trial p50/p95 use linear interpolation across query samples. Across-trial summaries report median, Q1, Q3, minimum, and maximum. No population, independence, normality, or statistical-significance claim is made."
+}

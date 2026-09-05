@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "experiments/github_actions/summarize_cross_version_run_set.py",
+    "--root",
+    "experiments/github_actions/results/reference/cross-version-initial-failed-cohort-v1.3",
+    "--target-manifest",
+    "experiments/github_actions/kubernetes_targets_v1.3.json",
+    "--verify"
+  ],
+  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "elapsed_seconds": 0.0730380829772912,
+  "finished_at": "2026-09-05T04:12:56.281718Z",
+  "name": "frozen_initial_cohort",
+  "returncode": 0,
+  "started_at": "2026-09-05T04:12:56.208702Z",
+  "status": "passed",
+  "stderr": "frozen_initial_cohort.stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout": "frozen_initial_cohort.stdout.txt",
+  "stdout_sha256": "5a10b63c1492f1128b758d9fc736bc5e3cc03d2f05dfbc43109af021f5ed5760",
+  "timeout_seconds": 300
+}
