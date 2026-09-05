@@ -1,5 +1,14 @@
 # EACP operational-provenance artifact
 
+> **Development candidate: EACP 1.4.0-rc1.** Start with the
+> [hardening implementation and verification guide](docs/v1.4/README.md) and
+> [reviewer packet](docs/v1.4/REVIEWER_PACKET.md). The new collection/security
+> implementation is separate from the unchanged Profile 1.3 schema and archived
+> experiments. It has no new DOI or field/independent-validation claim. The badges,
+> research results, release notes and citations below describe **published 1.3.0**.
+> Use `python3 scripts/verify_hardening.py` for this candidate; use the immutable
+> `v1.3.0` checkout for the historical release verifier and historical manifest.
+
 [![Profile DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22307668.svg)](https://doi.org/10.5281/zenodo.22307668)
 [![Preprint DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22283868.svg)](https://doi.org/10.5281/zenodo.22283868)
 [![Reproduce small](https://github.com/obedebessa/eacp-operational-provenance/actions/workflows/reproduce-small.yml/badge.svg)](https://github.com/obedebessa/eacp-operational-provenance/actions/workflows/reproduce-small.yml)

@@ -1,0 +1,91 @@
+{
+  "schema": "eacp.observation-only-pilot-protocol/1",
+  "status": "not_started",
+  "pilot_id": null,
+  "service": null,
+  "sources": [],
+  "source_count_bounds": [2, 3],
+  "observation_only": true,
+  "production_configuration_changes_authorized": false,
+  "approvals": {
+    "service_owner_permission": {"approved": false, "approver": null, "approved_at": null, "scope_record": null},
+    "data_handling": {"approved": false, "approver": null, "approved_at": null, "scope_record": null},
+    "security_review": {"approved": false, "approver": null, "approved_at": null, "scope_record": null}
+  },
+  "preregistration": {
+    "frozen_at": null,
+    "detached_protocol_digest_receipt_reference": null,
+    "repository_commit": null,
+    "baseline_tools_and_versions": null,
+    "eacp_tools_and_versions": null,
+    "adapter_configuration_digest": null,
+    "operator_id": null,
+    "adjudicator_id": null,
+    "adjudicator_relationship_to_author": null,
+    "observation_start": null,
+    "observation_end": null,
+    "planned_paired_cases": 12,
+    "per_method_time_budget_seconds": 1200,
+    "stopping_rule": "Retain every predeclared case and first attempt, including failed, timed-out, missing-source and unknown-truth cases. No optional stopping for a favorable difference.",
+    "case_selection_rule": "Before opening EACP results, select consecutive eligible authorized changes to the one named service within the fixed observation window.",
+    "method_order": "Counterbalance baseline-first and EACP-first across the predeclared cases; record order and operator. Note that carryover is not eliminated.",
+    "task": "For one authorized service change, recover the expected operational links among the two or three approved sources and identify supporting record pointers.",
+    "baseline": "The operator's existing documented procedure, including available native indexes/search and normal tools; freeze it before comparing EACP.",
+    "same_information_rule": "Both methods receive the same sanitized source snapshot and task; disclose any extra normalization, adapter mapping or operator knowledge given to EACP.",
+    "ground_truth": "An identified adjudicator establishes expected links and judges accepted links from source evidence independently of the method outputs. If that cannot be established, label truth unknown; never count it as zero false links."
+  },
+  "data_handling": {
+    "allowed_fields": null,
+    "namespace_or_service_scope": null,
+    "retention_days": null,
+    "encryption_key_custodian": null,
+    "access_roles": null,
+    "redaction_review_owner": null,
+    "external_checkpoint_owner": null,
+    "public_export_approved": false,
+    "raw_records_publication": false,
+    "case_identifiers": "Pseudonymous; no customer names, bearer tokens, kubeconfigs, private keys or unrelated payloads in the exported CSV."
+  },
+  "measurements": {
+    "duration_seconds": "Wall-clock task time; retain the full time budget for a timeout and record the incomplete output, not a fabricated success.",
+    "expected_links": "Number of distinct expected links adjudicated for the case; positive integer. Use a shared denominator for both methods.",
+    "coverage": "correct_accepted_links / expected_links, a fraction from 0 to 1; blank when truth is unknown.",
+    "correct_accepted_links": "Distinct accepted links supported by adjudicated truth; blank when truth is unknown.",
+    "false_accepted_links": "Distinct accepted links contradicted by adjudicated truth; blank when truth is unknown.",
+    "abstentions": "Distinct candidate links explicitly left undecided; measured count, not assumed error-free links.",
+    "operational_cost_minutes": "Optional measured per-case operator/adapter-maintenance effort. Both paired values must be present or both absent; do not silently amortize setup."
+  },
+  "one_time_costs_minutes": {
+    "baseline_setup": null,
+    "eacp_adapter_development": null,
+    "eacp_adapter_validation": null,
+    "eacp_installation_and_access": null,
+    "operator_training": null,
+    "data_handling_and_security_review": null
+  },
+  "operating_costs": {
+    "observation_hours": null,
+    "compute_and_storage_cost_currency": null,
+    "compute_and_storage_cost_amount": null,
+    "adapter_maintenance_minutes": null,
+    "failed_acquisition_count": null,
+    "manual_recovery_minutes": null
+  },
+  "analysis": {
+    "type": "descriptive_paired_comparison",
+    "difference": "EACP minus baseline per case; report all cases and the number with adjudicated truth.",
+    "unknown_truth": "Exclude from quality aggregates while retaining duration, abstention and recorded cost observations.",
+    "inferential_reliability_or_generalization_claim": false,
+    "independent_reproduction_claim_automatic": false,
+    "field_success_claim_automatic": false
+  },
+  "execution_record": {
+    "started_at": null,
+    "completed_at": null,
+    "input_csv_sha256": null,
+    "adjudication_record_sha256": null,
+    "operator_statement": null,
+    "protocol_deviations": [],
+    "actual_observations": false
+  }
+}
