@@ -195,7 +195,7 @@ historical RequestResponse lab policy. Minimal audit data may not contain the
 annotations necessary for a join: return missing, do not turn on body capture
 silently. Stage/object-incarnation mappings and watch recovery still need an
 authorized provider-specific pilot. Existing `docs/v1.4/PILOT_PROTOCOL.json`
-remains unstarted and unapproved. A TytoNyx LOI is not permission to collect data.
+remains unstarted and unapproved. An external reviewer LOI is not permission to collect data.
 
 ## Sources and maintenance
 

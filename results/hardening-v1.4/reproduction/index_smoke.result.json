@@ -1,6 +1,6 @@
 {
   "command": [
-    "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/opt/eacp-tools/python/bin/python3",
     "experiments/index_ablation/index_ablation.py",
     "--sizes",
     "1000",
@@ -13,9 +13,9 @@
     "--cold-open-samples",
     "2",
     "--output",
-    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate/reproduction-output/v1.4-source-e4716e8/index"
+    "/workspace/eacp/reproduction-output/v1.4-source-e4716e8/index"
   ],
-  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "cwd": "/workspace/eacp",
   "elapsed_seconds": 0.1792941670282744,
   "finished_at": "2026-09-05T04:12:56.056153Z",
   "name": "index_smoke",

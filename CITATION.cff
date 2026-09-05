@@ -6,8 +6,11 @@ abstract: >-
   semantics and historical experimental evidence. Adds an installed query path,
   checkpoint-bound offline query verification, atomic cursor pages, diagnostics,
   consistent physical backup and current-anchor recovery. The retained 1.4
-  live attestation does not attest this new implementation. Tests are author-executed; independent
-  reproduction, organizational pilots and production validation are not claimed.
+  live attestation does not attest this new implementation. Author-run tests and
+  separately supplied external reexecution records are distinguished. The latter
+  are not an independently authenticated expert assessment, an organizational
+  pilot or production validation. Privacy-screened copies retain authorship and
+  record contact/path redactions separately from scientific changes.
   The archived software DOI in references identifies the artifact, not the accompanying
   article. Licensing is file-scoped; see LICENSES/README.md and paper/README.md.
 type: software

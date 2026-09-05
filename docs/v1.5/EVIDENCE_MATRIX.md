@@ -10,7 +10,10 @@ Initial review target was ecfd42d4; baseline here was frozen 1.4.0 at 5067a26a.
 That baseline already had authenticated collectors, minimization, encrypted
 durable ingestion, role checks, retention, checkpoints, signing isolation and
 retained live-signature negatives. Those are retested, not claimed as new fixes.
-The old artifact-finalization failure and correction are preserved untouched.
+The old artifact-finalization failure and correction remain visible. The current
+privacy-screened delivery replaces private paths/contacts only in ledger-bound
+derivative copies; original tags and signed TARs remain unchanged. See
+[release privacy](RELEASE_PRIVACY.md) and [supplied external execution](EXTERNAL_EXECUTION.md).
 
 ## Finding -> change -> test -> execution/artifact -> residual risk
 
@@ -51,7 +54,7 @@ The old artifact-finalization failure and correction are preserved untouched.
 | The three specified weakened checks were caught | actual mutation logs with assertion failures | Three specified mutants, never a universal test-quality score |
 | Expected event IDs/content survived the declared replay/recovery cases | I/F/D tests, per-scenario campaign receipts | Synthetic local SQLite/fsync assumptions; no physical power-failure claim |
 | Altered export or wrong query/config context is rejected | X tests, offline negative receipt | Exact external checkpoint/policy supplied; does not certify the authority |
-| The historical source and negative cohorts remain unchanged | candidate preservation verifier, old tags/bundle | Metadata/runtime paths explicitly allowlisted; old paper/Profile bytes preserved |
+| Historical scientific results and signed TARs remain unchanged | candidate preservation verifier, old tags, explicit privacy ledgers | Current contact/path-redacted copies are derivatives; paper scientific text and Profile bytes preserved, not all PDF/receipt bytes |
 | Known dependency advisories were addressed in the tested install | pip-audit JSON before/after | Pip installer update; PyPI did not audit this unpublished local EACP source |
 | Public GitHub run/attempt/job mapping was executed against the provider | live read receipt | One pre-existing public run; no new signing run, Kubernetes run or provider reliability study |
 
@@ -79,7 +82,7 @@ not erased failures or pooled confirmatory success counts.
 
 - Historical target: ecfd42d4f54d2d91d18fcdddf676d822001b79f9.
 - Pre-upgrade software: 5067a26ad008db3bc4b4a5554e52c60239142735.
-- Candidate target: see package CANDIDATE.json exact commit/tree and SHA256SUMS.
+- Candidate execution target: e2807efc14209e42ba5ac82f5aa8d44599d22c43. Delivery target: see package CANDIDATE.json exact commit/tree and SHA256SUMS.
 - Files personally inspected: **not supplied**.
 - Commands personally executed and environment: **not supplied**.
 - Findings confirmed, disputed or not tested: **not supplied**.
@@ -87,3 +90,18 @@ not erased failures or pooled confirmatory success counts.
 
 The reviewer can do a focused assessment within the agreed scope. This is not a
 request to endorse a predetermined conclusion or a claim they reran the suite.
+
+## Later supplied reexecution and privacy delivery
+
+The retained author-run table above describes its original execution phase.
+Subsequently supplied external logs report 275 initial successes and one skip;
+the historical-crypto follow-up passed that test and all 112 hardening tests.
+The 17-command demo, three specified sentinels and five workload scenarios also
+match their recorded expectations. These facts do not fill the expert worksheet,
+authenticate the executor's identity, or establish field utility. The latest
+supplied summary governs the delivery; earlier summaries are superseded.
+
+Private reviewer identity and local filesystem prefixes are suppressed in public
+copies. Their original and derivative hashes are distinct. Git history is not
+included in the screened ZIP, and historical manifests do not authenticate the
+new distribution. Privacy changes do not count as a new scientific experiment.

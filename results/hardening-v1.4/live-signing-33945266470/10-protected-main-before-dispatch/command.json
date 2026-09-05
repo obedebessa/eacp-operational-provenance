@@ -4,7 +4,7 @@
     "api",
     "repos/obedebessa/eacp-operational-provenance/branches/main"
   ],
-  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "cwd": "/workspace/eacp",
   "started_at": "2026-09-05T04:42:00.201388+00:00",
   "elapsed_seconds": 1.4026670420425944,
   "exit_code": 0,

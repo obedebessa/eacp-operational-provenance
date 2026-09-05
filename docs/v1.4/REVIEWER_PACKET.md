@@ -2,7 +2,7 @@
 
 Prepared in response to the technical assessment of the Profile 1.3 candidate.
 This is new author-produced engineering evidence, not a revised opinion issued
-by TytoNyx, an independent reproduction, a new paper claim or an agreed pilot.
+by an external reviewer, an independent reproduction, a new paper claim or an agreed pilot.
 The old review target and the published 1.3.0 release remain separate records.
 The implementation is publicly available on GitHub and has an author-operated
 live signing run. Software DOI 10.5281/zenodo.22326718 was reserved at source

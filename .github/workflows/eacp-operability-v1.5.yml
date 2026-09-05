@@ -1,10 +1,14 @@
 name: EACP operability candidate (no attestation)
 on:
+  push:
+    branches: ["eacp-v1.5-operability"]
   pull_request:
     paths:
       - "eacp_hardening/**"
       - "tests/operability/**"
       - "pyproject.toml"
+      - "scripts/**"
+      - "docs/v1.5/**"
       - ".github/workflows/eacp-operability-v1.5.yml"
   workflow_dispatch:
 permissions:
@@ -36,3 +40,9 @@ jobs:
         run: python -I -m eacp_hardening demo --output-directory installed-demo
       - name: Preserve historical source and candidate identity
         run: python scripts/verify_candidate_v1_5.py --freeze
+      - name: Inspect the current tracked snapshot for private paths
+        run: |
+          python -m pip install 'pypdf==6.10.0'
+          eacp_snapshot="$(mktemp -d)"
+          git archive HEAD | tar -x -C "$eacp_snapshot"
+          python scripts/privacy_scan_v1_5.py "$eacp_snapshot"

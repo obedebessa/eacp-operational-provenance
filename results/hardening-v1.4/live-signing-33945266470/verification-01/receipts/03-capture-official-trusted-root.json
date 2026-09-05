@@ -6,7 +6,7 @@
     "--hostname",
     "github.com"
   ],
-  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "cwd": "/workspace/eacp",
   "elapsed_seconds": 4.175410832976922,
   "expectation_met": true,
   "expected_exit_code": 0,

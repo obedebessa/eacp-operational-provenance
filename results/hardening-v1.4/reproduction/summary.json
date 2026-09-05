@@ -11,7 +11,7 @@
   "steps": [
     {
       "command": [
-        "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/opt/eacp-tools/python/bin/python3",
         "-m",
         "unittest",
         "discover",
@@ -19,7 +19,7 @@
         "tests/hardening",
         "-v"
       ],
-      "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+      "cwd": "/workspace/eacp",
       "elapsed_seconds": 1.0353226669831201,
       "finished_at": "2026-09-05T04:12:55.567832Z",
       "name": "hardening_tests",
@@ -34,7 +34,7 @@
     },
     {
       "command": [
-        "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/opt/eacp-tools/python/bin/python3",
         "-m",
         "unittest",
         "discover",
@@ -42,7 +42,7 @@
         "spec/tests",
         "-v"
       ],
-      "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+      "cwd": "/workspace/eacp",
       "elapsed_seconds": 0.18055770796490833,
       "finished_at": "2026-09-05T04:12:55.748889Z",
       "name": "profile_tests",
@@ -57,7 +57,7 @@
     },
     {
       "command": [
-        "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/opt/eacp-tools/python/bin/python3",
         "experiments/correlation_robustness/correlation_robustness.py",
         "--chains",
         "24",
@@ -66,9 +66,9 @@
         "--seeds",
         "20260905",
         "--output",
-        "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate/reproduction-output/v1.4-source-e4716e8/correlation"
+        "/workspace/eacp/reproduction-output/v1.4-source-e4716e8/correlation"
       ],
-      "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+      "cwd": "/workspace/eacp",
       "elapsed_seconds": 0.12687799998093396,
       "finished_at": "2026-09-05T04:12:55.876335Z",
       "name": "correlation_smoke",
@@ -83,7 +83,7 @@
     },
     {
       "command": [
-        "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/opt/eacp-tools/python/bin/python3",
         "experiments/index_ablation/index_ablation.py",
         "--sizes",
         "1000",
@@ -96,9 +96,9 @@
         "--cold-open-samples",
         "2",
         "--output",
-        "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate/reproduction-output/v1.4-source-e4716e8/index"
+        "/workspace/eacp/reproduction-output/v1.4-source-e4716e8/index"
       ],
-      "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+      "cwd": "/workspace/eacp",
       "elapsed_seconds": 0.1792941670282744,
       "finished_at": "2026-09-05T04:12:56.056153Z",
       "name": "index_smoke",
@@ -113,12 +113,12 @@
     },
     {
       "command": [
-        "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/opt/eacp-tools/python/bin/python3",
         "experiments/index_ablation/index_ablation.py",
         "--verify",
         "experiments/index_ablation/results/reference"
       ],
-      "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+      "cwd": "/workspace/eacp",
       "elapsed_seconds": 0.07408683298854157,
       "finished_at": "2026-09-05T04:12:56.130667Z",
       "name": "frozen_index",
@@ -133,11 +133,11 @@
     },
     {
       "command": [
-        "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/opt/eacp-tools/python/bin/python3",
         "experiments/github_actions/summarize_reference_run.py",
         "--verify"
       ],
-      "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+      "cwd": "/workspace/eacp",
       "elapsed_seconds": 0.0768793749739416,
       "finished_at": "2026-09-05T04:12:56.208232Z",
       "name": "frozen_reference",
@@ -152,7 +152,7 @@
     },
     {
       "command": [
-        "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/opt/eacp-tools/python/bin/python3",
         "experiments/github_actions/summarize_cross_version_run_set.py",
         "--root",
         "experiments/github_actions/results/reference/cross-version-initial-failed-cohort-v1.3",
@@ -160,7 +160,7 @@
         "experiments/github_actions/kubernetes_targets_v1.3.json",
         "--verify"
       ],
-      "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+      "cwd": "/workspace/eacp",
       "elapsed_seconds": 0.0730380829772912,
       "finished_at": "2026-09-05T04:12:56.281718Z",
       "name": "frozen_initial_cohort",
@@ -175,7 +175,7 @@
     },
     {
       "command": [
-        "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/opt/eacp-tools/python/bin/python3",
         "experiments/github_actions/summarize_cross_version_run_set.py",
         "--root",
         "experiments/github_actions/results/reference/cross-version-confirmatory-cohort-v1.3",
@@ -183,7 +183,7 @@
         "experiments/github_actions/kubernetes_targets_v1.3.json",
         "--verify"
       ],
-      "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+      "cwd": "/workspace/eacp",
       "elapsed_seconds": 0.5486793749732897,
       "finished_at": "2026-09-05T04:12:56.831465Z",
       "name": "frozen_confirmatory_cohort",

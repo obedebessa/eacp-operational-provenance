@@ -6,8 +6,8 @@
   "expected_run_attempt": 1,
   "expected_run_id": 33945266470,
   "expected_source_sha": "0bcb038fef930faff3ef19f661bf995f97d605d8",
-  "original_archive_path": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/artifact-33945266470/eacp-hardening-v1.4.tar.gz",
-  "original_bundle_path": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/attestation-33945266470/sha256:b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea.jsonl",
+  "original_archive_path": "/workspace/eacp/outputs/EACP_v1.4_Live_Signing_2026-09-05/artifact-33945266470/eacp-hardening-v1.4.tar.gz",
+  "original_bundle_path": "/workspace/eacp/outputs/EACP_v1.4_Live_Signing_2026-09-05/attestation-33945266470/sha256:b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea.jsonl",
   "original_sha256": {
     "archive": "b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea",
     "binding": "4fa1d567e2de85bd34f4558a9536a13e5e1810f178484105d4c03f0fa2cf5534",
@@ -15,11 +15,11 @@
     "checksums": "b332963edb3bd34c8a937bfbc6cc5a9d01ee1e88cc63356316140e052c3948c3"
   },
   "original_sidecar_paths": {
-    "binding": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/artifact-33945266470/binding.json",
-    "checksums": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/artifact-33945266470/SHA256SUMS"
+    "binding": "/workspace/eacp/outputs/EACP_v1.4_Live_Signing_2026-09-05/artifact-33945266470/binding.json",
+    "checksums": "/workspace/eacp/outputs/EACP_v1.4_Live_Signing_2026-09-05/artifact-33945266470/SHA256SUMS"
   },
   "python": "3.12.14",
-  "python_executable": "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+  "python_executable": "/opt/eacp-tools/python/bin/python3",
   "repository": "obedebessa/eacp-operational-provenance",
   "schema": "eacp.live-signing-verification-inputs/1",
   "source_ref": "refs/heads/main",
