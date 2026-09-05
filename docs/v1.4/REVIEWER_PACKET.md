@@ -1,11 +1,13 @@
-# One-pass reviewer packet: EACP 1.4.0-rc1
+# One-pass reviewer packet: EACP 1.4.0
 
 Prepared in response to the technical assessment of the Profile 1.3 candidate.
 This is new author-produced engineering evidence, not a revised opinion issued
 by TytoNyx, an independent reproduction, a new paper claim or an agreed pilot.
 The old review target and the published 1.3.0 release remain separate records.
-The candidate is now publicly available on GitHub and has an author-operated
-live signing run. It has no final v1.4 Zenodo DOI or external-review outcome.
+The implementation is publicly available on GitHub and has an author-operated
+live signing run. Software DOI 10.5281/zenodo.22326718 was reserved at source
+freeze; the Zenodo record establishes publication status. This packet does not
+authenticate an external executor or assert an external-review outcome.
 
 ## What changed and what to inspect
 
@@ -51,7 +53,7 @@ skipped; producer-failure skipping was not exercised by a new live fault injecti
 
 ## A limited review request, not a requested conclusion
 
-> Thank you for the actionable assessment. The attached 1.4.0-rc1 candidate
+> Thank you for the actionable assessment. The attached 1.4.0 software artifact
 > addresses the identified implementation boundaries with source changes,
 > negative tests and a finite fault campaign. The table maps each concern to its
 > change, verification and remaining limitation. Before we finalize the scope,
@@ -68,12 +70,13 @@ reviewer's execution is not guaranteed by a runnable package.
 
 ## Release and study boundaries
 
-- Software candidate: 1.4.0-rc1; Profile semantics: 1.3.
-- Public GitHub source and live TAR attestation; no final v1.4 Zenodo release.
+- Software edition: 1.4.0; Profile semantics: 1.3.
+- Software DOI: https://doi.org/10.5281/zenodo.22326718 (reserved at source freeze).
+- Public GitHub source and live TAR attestation; the new ZIP is not that signed TAR.
 - Existing Profile DOI: https://doi.org/10.5281/zenodo.22307668.
 - Existing preprint DOI: https://doi.org/10.5281/zenodo.22283868.
 - Existing artifact DOI: https://doi.org/10.5281/zenodo.22283852.
-- These DOIs identify historical published materials, not this candidate.
+- The three 1.3 DOIs identify historical published materials, not the 1.4 implementation.
 - Immutable historical source: `537799bd2b292ce6e78004de22f4ab6df1b4feda`.
 - No production, compliance, causality, universal false-join safety, field benefit
   or SLSA L3 claim is added by this engineering work.

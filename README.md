@@ -1,19 +1,25 @@
 # EACP operational-provenance artifact
 
-> **Development candidate: EACP 1.4.0-rc1.** Start with the
+> **Software archival edition: EACP 1.4.0.** Start with the
 > [hardening implementation and verification guide](docs/v1.4/README.md) and
 > [reviewer packet](docs/v1.4/REVIEWER_PACKET.md). The new collection/security
 > implementation is separate from the unchanged Profile 1.3 schema and archived
-> experiments. It has no new DOI or field/independent-validation claim. The badges,
+> experiments. See the [1.4.0 release notes](RELEASE_NOTES_v1.4.0.md) and
+> [software DOI](https://doi.org/10.5281/zenodo.22326718), reserved at source freeze;
+> the Zenodo record is authoritative for publication status. No field or
+> independently authenticated human-validation claim is added. The badges,
 > research results, release notes and citations below describe **published 1.3.0**.
-> Use `python3 scripts/verify_hardening.py` for this candidate; use the immutable
+> Use `python3 scripts/verify_hardening.py` for this implementation; use the immutable
 > `v1.3.0` checkout for the historical release verifier and historical manifest.
 >
-> The candidate is publicly available on GitHub. [Live run 33945266470 and its
+> The implementation is publicly available on GitHub. [Live run 33945266470 and its
 > verification record](results/hardening-v1.4/live-signing-33945266470/README.md)
 > demonstrate separate execution/signing and default/offline verification of the
 > exact signed TAR. That attestation does not cover the whole repository, PDFs,
 > or a later review ZIP; it adds no external-review, field or SLSA L3 claim.
+
+The 1.4.0 software edition does not create a Profile 1.4 or a paper 1.4. The
+following research overview describes the preserved **1.3.0** evidence.
 
 [![Profile DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22307668.svg)](https://doi.org/10.5281/zenodo.22307668)
 [![Preprint DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22283868.svg)](https://doi.org/10.5281/zenodo.22283868)

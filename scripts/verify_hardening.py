@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify candidate metadata and byte preservation of the frozen 1.3 release.
+"""Verify 1.4 metadata and byte preservation of historical evidence.
 
 Does not replace or weaken the historical verifier. That verifier stays unchanged
 and must be run in the immutable v1.3.0 checkout, not over added candidate files.
@@ -8,13 +8,19 @@ and must be run in the immutable v1.3.0 checkout, not over added candidate files
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ARCHIVED_COMMIT = "537799bd2b292ce6e78004de22f4ab6df1b4feda"
 DOCUMENTATION_BASELINE = "e1ee51f050d7bf6e31dbee68560dd781e9b75985"
+SIGNED_SOURCE = "0bcb038fef930faff3ef19f661bf995f97d605d8"
+VERSION = "1.4.0"
+DOI = "10.5281/zenodo.22326718"
+MANIFEST = "MANIFEST-v1.4.0.sha256"
 # This already-existing commit published the standalone Profile DOI. It predates
 # the hardening work; do not classify its documented metadata changes as new
 # scientific changes or silently permit further edits to those files.
@@ -47,10 +53,10 @@ def verify() -> dict:
             errors.append(f"missing candidate file: {name}")
     metadata = (ROOT / "pyproject.toml").read_text()
     citation = (ROOT / "CITATION.cff").read_text()
-    if 'version = "1.4.0rc1"' not in metadata or 'hardening = ["cryptography==50.0.1"]' not in metadata:
-        errors.append("candidate package version/dependency mismatch")
-    if "version: 1.4.0-rc1" not in citation or any(line.startswith("doi:") for line in citation.splitlines()):
-        errors.append("candidate citation must identify its version without claiming an archival DOI")
+    if 'version = "1.4.0"' not in metadata or 'hardening = ["cryptography==50.0.1"]' not in metadata:
+        errors.append("package version/dependency mismatch")
+    if "version: 1.4.0\n" not in citation or f'doi: "{DOI}"\n' not in citation:
+        errors.append("software citation must identify the exact 1.4 version and reserved DOI")
     try:
         archived = git("rev-parse", "v1.3.0^{commit}")
         if archived != ARCHIVED_COMMIT:
@@ -65,20 +71,58 @@ def verify() -> dict:
     except (OSError, subprocess.CalledProcessError):
         errors.append("git history is required to verify the independent historical source pin")
         preserved = 0
-    return {"candidate": "1.4.0-rc1", "archived_source": ARCHIVED_COMMIT,
+    return {"version": VERSION, "archived_source": ARCHIVED_COMMIT,
             "preexisting_documentation_baseline": DOCUMENTATION_BASELINE,
             "historical_files_preserved": preserved, "errors": errors,
-            "publication_status": "GitHub source candidate; final archival release unpublished",
-            "external_replication": "not established", "organizational_pilot": "not performed"}
+            "publication_status": "not checked by this local verifier; consult the Zenodo record",
+            "doi": DOI, "external_replication": "not authenticated by this verifier",
+            "organizational_pilot": "not performed"}
+
+
+def release_errors() -> list[str]:
+    """Fail closed on source/tag/manifest/evidence drift; never infer publication."""
+    errors = []
+    try:
+        if git("status", "--porcelain"):
+            errors.append("release checkout must be clean")
+        if git("cat-file", "-t", "refs/tags/v1.4.0") != "tag":
+            errors.append("v1.4.0 must be an annotated tag")
+        if git("rev-parse", "v1.4.0^{commit}") != git("rev-parse", "HEAD"):
+            errors.append("v1.4.0 tag must identify HEAD")
+        names = git("ls-tree", "-r", "--name-only", SIGNED_SOURCE, "--", "eacp_hardening").splitlines()
+        current = sorted(p.relative_to(ROOT).as_posix() for p in (ROOT / "eacp_hardening").glob("*.py"))
+        if sorted(names) != current:
+            errors.append("implementation module set differs from the signed source")
+        for name in names:
+            expected = subprocess.check_output(["git", "show", f"{SIGNED_SOURCE}:{name}"], cwd=ROOT)
+            if name == "eacp_hardening/__init__.py":
+                expected = expected.replace(b'__version__ = "1.4.0rc1"', b'__version__ = "1.4.0"')
+            if (ROOT / name).read_bytes() != expected:
+                errors.append(f"implementation changed beyond version metadata: {name}")
+        baseline = "01c81d50c9142a3166eb793fc9c3c35adf2c223d"
+        changed_evidence = git("diff", "--name-only", baseline, "--", "results/hardening-v1.4")
+        if changed_evidence:
+            errors.append("retained hardening evidence changed")
+        tar = ROOT / "results/hardening-v1.4/live-signing-33945266470/artifact-33945266470/eacp-hardening-v1.4.tar.gz"
+        if hashlib.sha256(tar.read_bytes()).hexdigest() != "b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea":
+            errors.append("live signed TAR digest mismatch")
+        check = subprocess.run([sys.executable, str(ROOT / "scripts/generate_manifest.py"),
+                                "--manifest", MANIFEST, "--check"], cwd=ROOT, capture_output=True, text=True)
+        if check.returncode:
+            errors.append("final release manifest mismatch or missing")
+    except (OSError, subprocess.CalledProcessError) as exc:
+        errors.append(f"release prerequisite missing or unreadable: {type(exc).__name__}")
+    return errors
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--release", action="store_true", help="reject premature promotion of this candidate")
+    parser.add_argument("--release", action="store_true", help="verify local archival readiness, not online publication")
     args = parser.parse_args()
     report = verify()
     if args.release:
-        report["errors"].append("unpublished candidate release: no final 1.4 archival record has been verified; live signing alone does not authorize archival promotion")
+        report["errors"].extend(release_errors())
+        report["release_readiness"] = "passed" if not report["errors"] else "failed"
     print(json.dumps(report, indent=2, sort_keys=True))
     return 1 if report["errors"] else 0
 

@@ -18,15 +18,15 @@ def sha256(path: Path) -> str:
 class RepositoryContractTests(unittest.TestCase):
     def test_versions_and_primary_artifact_citation(self) -> None:
         metadata = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-        self.assertIn('version = "1.4.0rc1"', metadata)
+        self.assertIn('version = "1.4.0"', metadata)
         self.assertIn('hardening = ["cryptography==50.0.1"]', metadata)
 
         cff = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
         self.assertIn("type: software", cff)
-        self.assertIn("version: 1.4.0-rc1", cff)
+        self.assertIn("version: 1.4.0\n", cff)
         self.assertIn('version: "1.3.0"', cff)
         # A new software version must not borrow the old version-specific DOI.
-        self.assertFalse(any(line.startswith("doi:") for line in cff.splitlines()))
+        self.assertIn('doi: "10.5281/zenodo.22326718"', cff.splitlines())
         self.assertIn('doi: "10.5281/zenodo.22283852"', cff)
         self.assertIn(
             'repository-code: "https://github.com/obedebessa/eacp-operational-provenance"',
@@ -35,7 +35,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertIn("identifies the artifact, not the accompanying", cff)
         self.assertIn("article.", cff)
         self.assertNotIn("email:", cff)
-        self.assertIn("preferred-citation:", cff)
+        self.assertNotIn("preferred-citation:", cff)
         self.assertIn('doi: "10.5281/zenodo.22283868"', cff)
         self.assertIn('doi: "10.5281/zenodo.22307668"', cff)
         self.assertIn('doi: "10.5281/zenodo.22017662"', cff)
@@ -177,7 +177,7 @@ class RepositoryContractTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
-    def test_candidate_cannot_be_mistaken_for_a_published_release(self) -> None:
+    def test_local_verifier_does_not_claim_online_publication(self) -> None:
         result = subprocess.run(
             [sys.executable, str(ROOT / "scripts/verify_hardening.py"), "--release"],
             cwd=ROOT,
@@ -185,8 +185,10 @@ class RepositoryContractTests(unittest.TestCase):
             capture_output=True,
             check=False,
         )
-        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn("unpublished candidate", result.stdout)
+        report = json.loads(result.stdout)
+        self.assertIn("not checked", report["publication_status"])
+        self.assertEqual(report["doi"], "10.5281/zenodo.22326718")
+        self.assertEqual(result.returncode, 1 if report["errors"] else 0)
 
 
 if __name__ == "__main__":
