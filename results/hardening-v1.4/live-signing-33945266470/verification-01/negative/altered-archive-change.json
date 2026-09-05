@@ -1,0 +1,5 @@
+{
+  "altered_sha256": "3a68cad2c78257c8510304a06bd1d5a8bf9e6f22f566034c0e12afbfc80234df",
+  "change": "toggle one bit in byte zero of a retained copy; original preserved",
+  "original_sha256": "b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea"
+}

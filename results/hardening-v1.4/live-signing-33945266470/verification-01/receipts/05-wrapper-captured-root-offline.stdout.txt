@@ -1,0 +1,14 @@
+{
+  "archive_sha256": "b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea",
+  "bundle_sha256": "be1830f303e89b612fa8fffc849ef4206178fe334ad7d9195a4e2b6e3a0418a8",
+  "method": "fresh_gh_attestation_verify_then_certificate_and_subject_policy",
+  "repository": "obedebessa/eacp-operational-provenance",
+  "run_attempt": 1,
+  "run_id": 33945266470,
+  "scope": "archive_bytes_and_workflow_identity_only",
+  "source_ref": "refs/heads/main",
+  "source_sha": "0bcb038fef930faff3ef19f661bf995f97d605d8",
+  "trusted_root_sha256": "65ca537f6ed8a47fd0e560c421baa1f6c1efb8b25fc200d8c5c02c0e92eb2b9c",
+  "upstream_event_truth_verified": false,
+  "verified": true
+}

@@ -1,5 +1,11 @@
 # EACP 1.4.0-rc1: retained local verification
 
+This is the retained **pre-hosted-run** local measurement record. A later real
+GitHub execution and default/offline signature verification are recorded in
+[live signing 33945266470](live-signing-33945266470/README.md). The earlier
+statements below about unavailable hosted evidence describe their capture time;
+they are preserved rather than retrospectively rewriting the original results.
+
 Executed against clean source commit
 `e4716e82b9cd86058288ce59744aefb88632fec8` on macOS 26.6.2 arm64,
 Python 3.12.14 and cryptography 50.0.1. The before/after source-tree SHA-256 was

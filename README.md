@@ -8,6 +8,12 @@
 > research results, release notes and citations below describe **published 1.3.0**.
 > Use `python3 scripts/verify_hardening.py` for this candidate; use the immutable
 > `v1.3.0` checkout for the historical release verifier and historical manifest.
+>
+> The candidate is publicly available on GitHub. [Live run 33945266470 and its
+> verification record](results/hardening-v1.4/live-signing-33945266470/README.md)
+> demonstrate separate execution/signing and default/offline verification of the
+> exact signed TAR. That attestation does not cover the whole repository, PDFs,
+> or a later review ZIP; it adds no external-review, field or SLSA L3 claim.
 
 [![Profile DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22307668.svg)](https://doi.org/10.5281/zenodo.22307668)
 [![Preprint DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22283868.svg)](https://doi.org/10.5281/zenodo.22283868)

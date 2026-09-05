@@ -1,0 +1,641 @@
+execute	Set up job	﻿2026-09-05T04:42:42.4328387Z Current runner version: '2.337.0'
+execute	Set up job	2026-09-05T04:42:42.4367440Z ##[group]Runner Image Provisioner
+execute	Set up job	2026-09-05T04:42:42.4368860Z Hosted Compute Agent
+execute	Set up job	2026-09-05T04:42:42.4370147Z Version: 20260828.587
+execute	Set up job	2026-09-05T04:42:42.4371246Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+execute	Set up job	2026-09-05T04:42:42.4372684Z Build Date: 2026-08-28T16:44:25Z
+execute	Set up job	2026-09-05T04:42:42.4373900Z Worker ID: {902d398b-e488-447b-ac40-1641dd60f299}
+execute	Set up job	2026-09-05T04:42:42.4375699Z Azure Region: eastus
+execute	Set up job	2026-09-05T04:42:42.4376718Z ##[endgroup]
+execute	Set up job	2026-09-05T04:42:42.4379586Z ##[group]Operating System
+execute	Set up job	2026-09-05T04:42:42.4380775Z Ubuntu
+execute	Set up job	2026-09-05T04:42:42.4381733Z 24.04.4
+execute	Set up job	2026-09-05T04:42:42.4382761Z LTS
+execute	Set up job	2026-09-05T04:42:42.4383703Z ##[endgroup]
+execute	Set up job	2026-09-05T04:42:42.4384828Z ##[group]Runner Image
+execute	Set up job	2026-09-05T04:42:42.4386007Z Image: ubuntu-24.04
+execute	Set up job	2026-09-05T04:42:42.4387035Z Version: 20260831.293.1
+execute	Set up job	2026-09-05T04:42:42.4389342Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260831.293/images/ubuntu/Ubuntu2404-Readme.md
+execute	Set up job	2026-09-05T04:42:42.4392607Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260831.293
+execute	Set up job	2026-09-05T04:42:42.4394507Z ##[endgroup]
+execute	Set up job	2026-09-05T04:42:42.4396742Z ##[group]GITHUB_TOKEN Permissions
+execute	Set up job	2026-09-05T04:42:42.4400316Z Contents: read
+execute	Set up job	2026-09-05T04:42:42.4401458Z Metadata: read
+execute	Set up job	2026-09-05T04:42:42.4402383Z ##[endgroup]
+execute	Set up job	2026-09-05T04:42:42.4405726Z Secret source: Actions
+execute	Set up job	2026-09-05T04:42:42.4407738Z Prepare workflow directory
+execute	Set up job	2026-09-05T04:42:42.4907251Z Prepare all required actions
+execute	Set up job	2026-09-05T04:42:42.4980257Z Getting action download info
+execute	Set up job	2026-09-05T04:42:42.6443620Z Download action repository 'actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+execute	Set up job	2026-09-05T04:42:42.8321542Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+execute	Set up job	2026-09-05T04:42:42.9501318Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+execute	Set up job	2026-09-05T04:42:43.1729915Z Complete job name: execute
+execute	Check out source without persistent credentials	﻿2026-09-05T04:42:43.2566437Z ##[group]Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2567654Z with:
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2568144Z   persist-credentials: false
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2568782Z   repository: obedebessa/eacp-operational-provenance
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2573670Z   token: ***
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2574149Z   ssh-strict: true
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2574619Z   ssh-user: git
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2575074Z   clean: true
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2575556Z   sparse-checkout-cone-mode: true
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2576170Z   fetch-depth: 1
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2576643Z   fetch-tags: false
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2577117Z   show-progress: true
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2577618Z   lfs: false
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2578062Z   submodules: false
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2578556Z   set-safe-directory: true
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2579312Z   allow-unsafe-pr-checkout: false
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.2580299Z ##[endgroup]
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3631121Z Syncing repository: obedebessa/eacp-operational-provenance
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3633910Z ##[group]Getting Git version info
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3635258Z Working directory is '/home/runner/work/eacp-operational-provenance/eacp-operational-provenance'
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3636663Z [command]/usr/bin/git version
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3682155Z git version 2.55.0
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3720156Z ##[endgroup]
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3730452Z Temporarily overriding HOME='/home/runner/work/_temp/f5335264-bc4b-44d0-b14a-bcf3aceb827a' before making global git config changes
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3736871Z Adding repository directory to the temporary git global config as a safe directory
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3751180Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/eacp-operational-provenance/eacp-operational-provenance
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3792579Z Deleting the contents of '/home/runner/work/eacp-operational-provenance/eacp-operational-provenance'
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3797980Z ##[group]Determining repository object format
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3801462Z ##[endgroup]
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3821152Z ##[group]Initializing the repository
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3823384Z [command]/usr/bin/git init /home/runner/work/eacp-operational-provenance/eacp-operational-provenance
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3935353Z hint: Using 'master' as the name for the initial branch. This default branch name
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3937610Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3940389Z hint: to use in all of your new repositories, which will suppress this warning,
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3942465Z hint: call:
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3943699Z hint:
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3945604Z hint: 	git config --global init.defaultBranch <name>
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3947684Z hint:
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3949330Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3951782Z hint: 'development'. The just-created branch can be renamed via this command:
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3953882Z hint:
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3955071Z hint: 	git branch -m <name>
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3956328Z hint:
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3957797Z hint: Disable this message with "git config set advice.defaultBranchName false"
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3960983Z Initialized empty Git repository in /home/runner/work/eacp-operational-provenance/eacp-operational-provenance/.git/
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.3965363Z [command]/usr/bin/git remote add origin https://github.com/obedebessa/eacp-operational-provenance
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4048437Z ##[endgroup]
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4050545Z ##[group]Disabling automatic garbage collection
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4053493Z [command]/usr/bin/git config --local gc.auto 0
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4097325Z ##[endgroup]
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4098937Z ##[group]Setting up auth
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4100747Z Removing SSH command configuration
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4106394Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4154346Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4608058Z Removing HTTP extra header
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4616607Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4661441Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4920771Z Removing includeIf entries pointing to credentials config files
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4930977Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.4980499Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.5221231Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.5264134Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/eacp-operational-provenance/eacp-operational-provenance/.git.path /home/runner/work/_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.5299470Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/eacp-operational-provenance/eacp-operational-provenance/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.5335982Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.5370822Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.5436044Z ##[endgroup]
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.5436892Z ##[group]Fetching the repository
+execute	Check out source without persistent credentials	2026-09-05T04:42:43.5444753Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +0bcb038fef930faff3ef19f661bf995f97d605d8:refs/remotes/origin/main
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1141274Z From https://github.com/obedebessa/eacp-operational-provenance
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1143428Z  * [new ref]         0bcb038fef930faff3ef19f661bf995f97d605d8 -> origin/main
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1150394Z [command]/usr/bin/git branch --list --remote origin/main
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1178978Z   origin/main
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1189401Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1216496Z 0bcb038fef930faff3ef19f661bf995f97d605d8
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1222614Z ##[endgroup]
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1224127Z ##[group]Determining the checkout info
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1225790Z ##[endgroup]
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1227186Z [command]/usr/bin/git sparse-checkout disable
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1280386Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1313953Z ##[group]Checking out the ref
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.1317546Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2353152Z Switched to a new branch 'main'
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2358215Z branch 'main' set up to track 'origin/main'.
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2377325Z ##[endgroup]
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2424262Z [command]/usr/bin/git log -1 --format=%H
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2452312Z 0bcb038fef930faff3ef19f661bf995f97d605d8
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2462264Z ##[group]Removing auth
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2463616Z Removing SSH command configuration
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2466027Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2512847Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2754042Z Removing HTTP extra header
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2758328Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.2796705Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3019766Z Removing includeIf entries pointing to credentials config files
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3024191Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3054916Z includeif.gitdir:/home/runner/work/eacp-operational-provenance/eacp-operational-provenance/.git.path
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3061020Z includeif.gitdir:/home/runner/work/eacp-operational-provenance/eacp-operational-provenance/.git/worktrees/*.path
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3064663Z includeif.gitdir:/github/workspace/.git.path
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3067423Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3072833Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/eacp-operational-provenance/eacp-operational-provenance/.git.path
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3092310Z /home/runner/work/_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3105079Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/eacp-operational-provenance/eacp-operational-provenance/.git.path /home/runner/work/_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3143503Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/eacp-operational-provenance/eacp-operational-provenance/.git/worktrees/*.path
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3167665Z /home/runner/work/_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3181455Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/eacp-operational-provenance/eacp-operational-provenance/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3218599Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3248471Z /github/runner_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3266462Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3308181Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3333889Z /github/runner_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3342668Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3378679Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3598897Z Removing credentials config '/home/runner/work/_temp/git-credentials-59d7c387-76d6-477d-be3e-103603f73cd0.config'
+execute	Check out source without persistent credentials	2026-09-05T04:42:44.3606881Z ##[endgroup]
+execute	Set up Python	﻿2026-09-05T04:42:44.4039836Z ##[group]Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+execute	Set up Python	2026-09-05T04:42:44.4041557Z with:
+execute	Set up Python	2026-09-05T04:42:44.4042421Z   python-version: 3.11
+execute	Set up Python	2026-09-05T04:42:44.4043397Z   check-latest: false
+execute	Set up Python	2026-09-05T04:42:44.4053623Z   token: ***
+execute	Set up Python	2026-09-05T04:42:44.4054553Z   update-environment: true
+execute	Set up Python	2026-09-05T04:42:44.4055612Z   allow-prereleases: false
+execute	Set up Python	2026-09-05T04:42:44.4056640Z   freethreaded: false
+execute	Set up Python	2026-09-05T04:42:44.4057582Z ##[endgroup]
+execute	Set up Python	2026-09-05T04:42:44.5368353Z ##[group]Installed versions
+execute	Set up Python	2026-09-05T04:42:44.5467441Z Successfully set up CPython (3.11.16)
+execute	Set up Python	2026-09-05T04:42:44.5469785Z ##[endgroup]
+execute	Confirm execution job has no OIDC request capability	﻿2026-09-05T04:42:44.5664308Z ##[group]Run set -euo pipefail
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5666269Z ^[[36;1mset -euo pipefail^[[0m
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5668234Z ^[[36;1mtest -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}"^[[0m
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5670915Z ^[[36;1mtest -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}"^[[0m
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5742878Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5745107Z env:
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5746780Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5749862Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib/pkgconfig
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5752724Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5755294Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5757905Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5760721Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib
+execute	Confirm execution job has no OIDC request capability	2026-09-05T04:42:44.5762952Z ##[endgroup]
+execute	Install bounded reference dependency	﻿2026-09-05T04:42:44.5994959Z ##[group]Run python -m pip install --disable-pip-version-check 'cryptography==50.0.1'
+execute	Install bounded reference dependency	2026-09-05T04:42:44.5997388Z ^[[36;1mpython -m pip install --disable-pip-version-check 'cryptography==50.0.1'^[[0m
+execute	Install bounded reference dependency	2026-09-05T04:42:44.6039638Z shell: /usr/bin/bash -e {0}
+execute	Install bounded reference dependency	2026-09-05T04:42:44.6040657Z env:
+execute	Install bounded reference dependency	2026-09-05T04:42:44.6041708Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Install bounded reference dependency	2026-09-05T04:42:44.6043438Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib/pkgconfig
+execute	Install bounded reference dependency	2026-09-05T04:42:44.6045172Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Install bounded reference dependency	2026-09-05T04:42:44.6046745Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Install bounded reference dependency	2026-09-05T04:42:44.6048326Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Install bounded reference dependency	2026-09-05T04:42:44.6050202Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib
+execute	Install bounded reference dependency	2026-09-05T04:42:44.6051554Z ##[endgroup]
+execute	Install bounded reference dependency	2026-09-05T04:42:47.9440601Z Collecting cryptography==50.0.1
+execute	Install bounded reference dependency	2026-09-05T04:42:47.9953988Z   Downloading cryptography-50.0.1-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+execute	Install bounded reference dependency	2026-09-05T04:42:48.0912626Z Collecting cffi>=2.0.0 (from cryptography==50.0.1)
+execute	Install bounded reference dependency	2026-09-05T04:42:48.0955367Z   Downloading cffi-2.1.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+execute	Install bounded reference dependency	2026-09-05T04:42:48.1083283Z Collecting pycparser (from cffi>=2.0.0->cryptography==50.0.1)
+execute	Install bounded reference dependency	2026-09-05T04:42:48.1136524Z   Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+execute	Install bounded reference dependency	2026-09-05T04:42:48.1221546Z Downloading cryptography-50.0.1-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+execute	Install bounded reference dependency	2026-09-05T04:42:48.1651308Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 175.2 MB/s  0:00:00
+execute	Install bounded reference dependency	2026-09-05T04:42:48.1698497Z Downloading cffi-2.1.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (217 kB)
+execute	Install bounded reference dependency	2026-09-05T04:42:48.1766460Z Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+execute	Install bounded reference dependency	2026-09-05T04:42:48.3876322Z Installing collected packages: pycparser, cffi, cryptography
+execute	Install bounded reference dependency	2026-09-05T04:42:48.6421187Z 
+execute	Install bounded reference dependency	2026-09-05T04:42:48.6430714Z Successfully installed cffi-2.1.1 cryptography-50.0.1 pycparser-3.0
+execute	Test reference hardening contracts	﻿2026-09-05T04:42:48.7102464Z ##[group]Run python -m unittest discover -s tests/hardening -v
+execute	Test reference hardening contracts	2026-09-05T04:42:48.7102999Z ^[[36;1mpython -m unittest discover -s tests/hardening -v^[[0m
+execute	Test reference hardening contracts	2026-09-05T04:42:48.7139462Z shell: /usr/bin/bash -e {0}
+execute	Test reference hardening contracts	2026-09-05T04:42:48.7139733Z env:
+execute	Test reference hardening contracts	2026-09-05T04:42:48.7140008Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Test reference hardening contracts	2026-09-05T04:42:48.7140452Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib/pkgconfig
+execute	Test reference hardening contracts	2026-09-05T04:42:48.7140891Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Test reference hardening contracts	2026-09-05T04:42:48.7141277Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Test reference hardening contracts	2026-09-05T04:42:48.7141674Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Test reference hardening contracts	2026-09-05T04:42:48.7142068Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib
+execute	Test reference hardening contracts	2026-09-05T04:42:48.7142390Z ##[endgroup]
+execute	Test reference hardening contracts	2026-09-05T04:42:49.3123899Z test_altered_archive_is_rejected_against_verified_subject (test_attestation.AttestationPolicyTests.test_altered_archive_is_rejected_against_verified_subject) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.3136833Z test_archive_changed_during_verification_rejected (test_attestation.AttestationPolicyTests.test_archive_changed_during_verification_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.3147806Z test_binding_checks_both_context_and_bytes (test_attestation.AttestationPolicyTests.test_binding_checks_both_context_and_bytes) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.3158169Z test_cryptographic_failure_never_accepts_success_json (test_attestation.AttestationPolicyTests.test_cryptographic_failure_never_accepts_success_json) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.3170746Z test_custom_root_is_explicitly_forwarded_and_hashed (test_attestation.AttestationPolicyTests.test_custom_root_is_explicitly_forwarded_and_hashed) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.3175075Z test_failure_stages_do_not_overclaim_verification (test_attestation.AttestationPolicyTests.test_failure_stages_do_not_overclaim_verification) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.3185040Z test_fresh_verifier_command_enforces_full_identity (test_attestation.AttestationPolicyTests.test_fresh_verifier_command_enforces_full_identity) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.3197856Z test_missing_cli_or_timeout_fails_closed (test_attestation.AttestationPolicyTests.test_missing_cli_or_timeout_fails_closed) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.3223459Z test_missing_duplicate_or_malformed_verification_rejected (test_attestation.AttestationPolicyTests.test_missing_duplicate_or_malformed_verification_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.3232459Z test_missing_verified_timestamp_rejected (test_attestation.AttestationPolicyTests.test_missing_verified_timestamp_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.3237182Z test_policy_requires_exact_commit_main_and_nonboolean_run (test_attestation.AttestationPolicyTests.test_policy_requires_exact_commit_main_and_nonboolean_run) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.5741473Z test_real_cli_accepts_production_flag_set_against_historical_bundle_offline (test_attestation.AttestationPolicyTests.test_real_cli_accepts_production_flag_set_against_historical_bundle_offline) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.5746492Z test_symlink_input_rejected (test_attestation.AttestationPolicyTests.test_symlink_input_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.5804804Z test_wrong_certificate_identity_rejected (test_attestation.AttestationPolicyTests.test_wrong_certificate_identity_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.5827368Z test_wrong_predicate_subject_and_statement_run_rejected (test_attestation.AttestationPolicyTests.test_wrong_predicate_subject_and_statement_run_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.5830902Z test_all_actions_are_commit_pinned (test_attestation.WorkflowPrivilegeTests.test_all_actions_are_commit_pinned) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.5868707Z test_inline_data_gate_rejects_altered_archive_and_foreign_binding (test_attestation.WorkflowPrivilegeTests.test_inline_data_gate_rejects_altered_archive_and_foreign_binding) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.5935424Z test_inline_metadata_gate_rejects_wrong_origin_before_download (test_attestation.WorkflowPrivilegeTests.test_inline_metadata_gate_rejects_wrong_origin_before_download) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.5938316Z test_producer_has_no_signing_permissions_and_signer_is_gated (test_attestation.WorkflowPrivilegeTests.test_producer_has_no_signing_permissions_and_signer_is_gated) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.5940898Z test_signer_does_not_execute_checkout_or_archive_content (test_attestation.WorkflowPrivilegeTests.test_signer_does_not_execute_checkout_or_archive_content) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.8686604Z test_integrated_finite_campaign_and_boundaries (test_campaign.CampaignTests.test_integrated_finite_campaign_and_boundaries) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9037322Z test_authenticated_ingest_drain_read_checkpoint_path (test_cli.BoundaryCLITests.test_authenticated_ingest_drain_read_checkpoint_path) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9183828Z test_config_shape_errors_are_safe_json_not_traceback (test_cli.BoundaryCLITests.test_config_shape_errors_are_safe_json_not_traceback) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9217741Z test_denied_auth_does_not_create_store_or_echo_token (test_cli.BoundaryCLITests.test_denied_auth_does_not_create_store_or_echo_token) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9225357Z test_output_exclusive_creation (test_cli.BoundaryCLITests.test_output_exclusive_creation) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9232521Z test_strict_json_and_timestamps (test_cli.BoundaryCLITests.test_strict_json_and_timestamps) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9270641Z test_verified_source_summary_never_echoes_payload (test_cli.BoundaryCLITests.test_verified_source_summary_never_echoes_payload) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9395949Z test_cli_does_not_overwrite_existing_assessment (test_external_validation.PilotEvaluatorTests.test_cli_does_not_overwrite_existing_assessment) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9398420Z test_headers_and_actual_input_are_required (test_external_validation.PilotEvaluatorTests.test_headers_and_actual_input_are_required) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9403040Z test_missing_duplicate_or_unpaired_cases_rejected (test_external_validation.PilotEvaluatorTests.test_missing_duplicate_or_unpaired_cases_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9410684Z test_nonfinite_negative_fractional_count_and_false_denominator_rejected (test_external_validation.PilotEvaluatorTests.test_nonfinite_negative_fractional_count_and_false_denominator_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9413302Z test_paired_descriptive_results_have_no_automatic_claims (test_external_validation.PilotEvaluatorTests.test_paired_descriptive_results_have_no_automatic_claims) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9417177Z test_truth_scopes_and_partial_costs_rejected (test_external_validation.PilotEvaluatorTests.test_truth_scopes_and_partial_costs_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9419518Z test_unknown_truth_cannot_report_zero_error_as_fact (test_external_validation.PilotEvaluatorTests.test_unknown_truth_cannot_report_zero_error_as_fact) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9421757Z test_unknown_truth_is_retained_and_excluded_not_zeroed (test_external_validation.PilotEvaluatorTests.test_unknown_truth_is_retained_and_excluded_not_zeroed) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:49.9423871Z test_zero_accepted_links_is_not_perfect_precision (test_external_validation.PilotEvaluatorTests.test_zero_accepted_links_is_not_perfect_precision) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.0512418Z test_actual_tiny_plan_continues_after_failure_and_keeps_self_run_label (test_external_validation.ReproductionRunnerTests.test_actual_tiny_plan_continues_after_failure_and_keeps_self_run_label) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.0519451Z test_ambient_secrets_are_not_forwarded (test_external_validation.ReproductionRunnerTests.test_ambient_secrets_are_not_forwarded) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.0545353Z test_dry_run_and_plan_verification_never_execute_or_create_output (test_external_validation.ReproductionRunnerTests.test_dry_run_and_plan_verification_never_execute_or_create_output) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.0556306Z test_existing_output_is_rejected_before_source_capture (test_external_validation.ReproductionRunnerTests.test_existing_output_is_rejected_before_source_capture) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.0720892Z test_failed_child_retains_stdout_stderr_and_returncode (test_external_validation.ReproductionRunnerTests.test_failed_child_retains_stdout_stderr_and_returncode) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.0727207Z test_fixed_plan_is_small_and_never_calls_the_runner (test_external_validation.ReproductionRunnerTests.test_fixed_plan_is_small_and_never_calls_the_runner) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.0729627Z test_pilot_template_is_unstarted_and_unapproved (test_external_validation.ReproductionRunnerTests.test_pilot_template_is_unstarted_and_unapproved) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.0739913Z test_source_hash_includes_dirty_file_but_excludes_own_output (test_external_validation.ReproductionRunnerTests.test_source_hash_includes_dirty_file_but_excludes_own_output) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3758931Z test_timeout_retains_partial_logs (test_external_validation.ReproductionRunnerTests.test_timeout_retains_partial_logs) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3766785Z test_alteration_truncation_consistent_manifest_replacement (test_integrity.IntegrityTests.test_alteration_truncation_consistent_manifest_replacement) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3771849Z test_compromised_anchor_is_an_explicit_limit (test_integrity.IntegrityTests.test_compromised_anchor_is_an_explicit_limit) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3775855Z test_intact_and_no_anchor_boundary (test_integrity.IntegrityTests.test_intact_and_no_anchor_boundary) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3781210Z test_old_valid_snapshot_rejected_by_current_anchor_and_floor (test_integrity.IntegrityTests.test_old_valid_snapshot_rejected_by_current_anchor_and_floor) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3791495Z test_wrong_key_scope_revocation_and_freshness (test_integrity.IntegrityTests.test_wrong_key_scope_revocation_and_freshness) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3802922Z test_combined_body_identity_and_linkage_conflicts_reject (test_privacy.PrivacyExtractorIntegrationTests.test_combined_body_identity_and_linkage_conflicts_reject) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3908907Z test_combined_body_linkage_preserves_response_links_and_original_source_digest (test_privacy.PrivacyExtractorIntegrationTests.test_combined_body_linkage_preserves_response_links_and_original_source_digest) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3915510Z test_duplicate_identity_and_query_only_namespace_reject (test_privacy.PrivacyExtractorIntegrationTests.test_duplicate_identity_and_query_only_namespace_reject) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3930267Z test_exact_no_id_and_explicit_403_controls_survive_minimization (test_privacy.PrivacyExtractorIntegrationTests.test_exact_no_id_and_explicit_403_controls_survive_minimization) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3943371Z test_failed_controls_and_mismatched_digest_reject (test_privacy.PrivacyExtractorIntegrationTests.test_failed_controls_and_mismatched_digest_reject) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3951421Z test_failure_does_not_create_partial_publication (test_privacy.PrivacyExtractorIntegrationTests.test_failure_does_not_create_partial_publication) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3959196Z test_native_403_is_not_misclassified_as_adapter_explicit (test_privacy.PrivacyExtractorIntegrationTests.test_native_403_is_not_misclassified_as_adapter_explicit) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3963716Z test_positive_on_an_unrelated_target_cannot_justify_adapter_join (test_privacy.PrivacyExtractorIntegrationTests.test_positive_on_an_unrelated_target_cannot_justify_adapter_join) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3970020Z test_response_only_correlation_cannot_pass_as_no_id_control (test_privacy.PrivacyExtractorIntegrationTests.test_response_only_correlation_cannot_pass_as_no_id_control) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.3985310Z test_unscoped_and_outside_namespace_records_are_counted_without_retention (test_privacy.PrivacyExtractorIntegrationTests.test_unscoped_and_outside_namespace_records_are_counted_without_retention) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4016113Z test_write_outputs_minimized_checksums_and_existing_destination (test_privacy.PrivacyExtractorIntegrationTests.test_write_outputs_minimized_checksums_and_existing_destination) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4034710Z test_wrong_principal_403_is_not_bound_even_when_valid_control_exists (test_privacy.PrivacyExtractorIntegrationTests.test_wrong_principal_403_is_not_bound_even_when_valid_control_exists) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4037596Z test_allowed_identifiers_remain_attributable_and_require_review (test_privacy.PrivacyProjectionTests.test_allowed_identifiers_remain_attributable_and_require_review) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4040449Z test_collection_and_create_without_object_ref_name_preserve_source_identity (test_privacy.PrivacyProjectionTests.test_collection_and_create_without_object_ref_name_preserve_source_identity) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4043642Z test_conflicting_and_partial_typed_linkage_is_rejected (test_privacy.PrivacyProjectionTests.test_conflicting_and_partial_typed_linkage_is_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4046266Z test_four_demonstrated_kubernetes_gaps_are_dropped (test_privacy.PrivacyProjectionTests.test_four_demonstrated_kubernetes_gaps_are_dropped) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4054983Z test_github_job_artifact_projection_and_run_binding (test_privacy.PrivacyProjectionTests.test_github_job_artifact_projection_and_run_binding) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4057981Z test_github_malformed_allowed_types_private_and_missing_identity_reject (test_privacy.PrivacyProjectionTests.test_github_malformed_allowed_types_private_and_missing_identity_reject) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4060720Z test_github_reconstructed_url_rejects_path_traversal_identity (test_privacy.PrivacyProjectionTests.test_github_reconstructed_url_rejects_path_traversal_identity) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4063074Z test_github_unknown_free_text_and_url_credentials_never_survive (test_privacy.PrivacyProjectionTests.test_github_unknown_free_text_and_url_credentials_never_survive) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4065485Z test_json_patch_body_is_omitted_without_interpreting_paths_or_values (test_privacy.PrivacyProjectionTests.test_json_patch_body_is_omitted_without_interpreting_paths_or_values) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4067940Z test_kubernetes_all_urls_body_messages_and_credentials_are_dropped (test_privacy.PrivacyProjectionTests.test_kubernetes_all_urls_body_messages_and_credentials_are_dropped) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4070689Z test_nested_unknown_values_and_sensitive_field_names_do_not_enter_report (test_privacy.PrivacyProjectionTests.test_nested_unknown_values_and_sensitive_field_names_do_not_enter_report) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4073200Z test_oci_comparison_is_independent_and_not_source_authentication (test_privacy.PrivacyProjectionTests.test_oci_comparison_is_independent_and_not_source_authentication) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4075542Z test_oci_uri_credentials_and_query_are_rejected_without_echo (test_privacy.PrivacyProjectionTests.test_oci_uri_credentials_and_query_are_rejected_without_echo) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4078520Z test_projection_and_report_are_deterministic_and_input_is_unchanged (test_privacy.PrivacyProjectionTests.test_projection_and_report_are_deterministic_and_input_is_unchanged) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4085319Z test_required_and_allowlisted_malformed_types_reject_without_echo (test_privacy.PrivacyProjectionTests.test_required_and_allowlisted_malformed_types_reject_without_echo) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4092217Z test_sensitive_resource_and_identity_conflict_fail_closed (test_privacy.PrivacyProjectionTests.test_sensitive_resource_and_identity_conflict_fail_closed) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.4108512Z test_changed_source_bytes_fail_the_colocated_manifest_check (test_privacy_reprocessing.FrozenPrivacyReprocessingTests.test_changed_source_bytes_fail_the_colocated_manifest_check) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.5330455Z test_frozen_inputs_are_bound_and_all_controls_remain_compatible (test_privacy_reprocessing.FrozenPrivacyReprocessingTests.test_frozen_inputs_are_bound_and_all_controls_remain_compatible) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.5333471Z test_incomplete_cohort_rejects_instead_of_claiming_reference_compatibility (test_privacy_reprocessing.FrozenPrivacyReprocessingTests.test_incomplete_cohort_rejects_instead_of_claiming_reference_compatibility) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.5338539Z test_summary_output_is_exclusive_and_contains_no_raw_records (test_privacy_reprocessing.FrozenPrivacyReprocessingTests.test_summary_output_is_exclusive_and_contains_no_raw_records) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.6525901Z test_abrupt_process_exit_before_and_after_commit (test_store.StoreTests.test_abrupt_process_exit_before_and_after_commit) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.6734913Z test_access_is_tenant_scoped_roles_fail_closed_and_denials_are_audited (test_store.StoreTests.test_access_is_tenant_scoped_roles_fail_closed_and_denials_are_audited) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.6888489Z test_ack_is_persistent_and_duplicate_retry_ignores_acquisition_time (test_store.StoreTests.test_ack_is_persistent_and_duplicate_retry_ignores_acquisition_time) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.7049491Z test_checkpoint_stable_tenant_isolated_and_state_changes_are_committed (test_store.StoreTests.test_checkpoint_stable_tenant_isolated_and_state_changes_are_committed) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.7206885Z test_ciphertext_row_swap_and_visible_metadata_tampering_fail (test_store.StoreTests.test_ciphertext_row_swap_and_visible_metadata_tampering_fail) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.7397068Z test_concurrent_connections_cannot_race_past_queue_capacity (test_store.StoreTests.test_concurrent_connections_cannot_race_past_queue_capacity) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.7525682Z test_conflicts_and_sequence_collisions_preserve_original_and_quarantine_input (test_store.StoreTests.test_conflicts_and_sequence_collisions_preserve_original_and_quarantine_input) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.7671986Z test_duplicates_are_accepted_at_capacity_but_new_events_are_not (test_store.StoreTests.test_duplicates_are_accepted_at_capacity_but_new_events_are_not) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.7802488Z test_encryption_protects_bodies_and_wrong_key_cannot_open_store (test_store.StoreTests.test_encryption_protects_bodies_and_wrong_key_cannot_open_store) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.7976053Z test_inventory_arrival_out_of_order_pending_missing_and_late_recovery (test_store.StoreTests.test_inventory_arrival_out_of_order_pending_missing_and_late_recovery) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.8108880Z test_inventory_is_immutable_and_selection_is_explicit (test_store.StoreTests.test_inventory_is_immutable_and_selection_is_explicit) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.8222203Z test_no_inventory_is_unknown_even_with_contiguous_sequences (test_store.StoreTests.test_no_inventory_is_unknown_even_with_contiguous_sequences) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.8397871Z test_reissued_authenticated_statement_with_new_key_and_proof_is_duplicate (test_store.StoreTests.test_reissued_authenticated_statement_with_new_key_and_proof_is_duplicate) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.8583915Z test_retention_holds_receipts_and_pruned_replay_cannot_resurrect_or_complete (test_store.StoreTests.test_retention_holds_receipts_and_pruned_replay_cannot_resurrect_or_complete) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.8890484Z test_same_identity_and_key_cannot_transplant_proof_from_another_store (test_store.StoreTests.test_same_identity_and_key_cannot_transplant_proof_from_another_store) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9015102Z test_store_identity_and_inventory_tampering_are_detected (test_store.StoreTests.test_store_identity_and_inventory_tampering_are_detected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9165010Z test_tampered_ciphertext_fails_drain_read_status_and_checkpoint (test_store.StoreTests.test_tampered_ciphertext_fails_drain_read_status_and_checkpoint) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9167903Z test_access_tokens_scope_expiry_revocation (test_trust.TrustTests.test_access_tokens_scope_expiry_revocation) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9173488Z test_event_and_input_mutation (test_trust.TrustTests.test_event_and_input_mutation) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9183445Z test_freshness_future_and_fixture_policy (test_trust.TrustTests.test_freshness_future_and_fixture_policy) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9189173Z test_https_denies_unapproved_origin_and_credentials_before_network (test_trust.TrustTests.test_https_denies_unapproved_origin_and_credentials_before_network) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9552871Z test_https_limits_reads_and_suppresses_errors (test_trust.TrustTests.test_https_limits_reads_and_suppresses_errors) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9558794Z test_internally_consistent_source_falsehood_is_not_detected (test_trust.TrustTests.test_internally_consistent_source_falsehood_is_not_detected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9566403Z test_inventory_authentication_and_duplicates (test_trust.TrustTests.test_inventory_authentication_and_duplicates) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9586637Z test_malformed_events_rejected (test_trust.TrustTests.test_malformed_events_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9943620Z test_malformed_policy_flags_and_duplicate_https_json_rejected (test_trust.TrustTests.test_malformed_policy_flags_and_duplicate_https_json_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9947892Z test_revoked_unknown_expired_key (test_trust.TrustTests.test_revoked_unknown_expired_key) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9954120Z test_rotation_requires_explicit_new_public_key (test_trust.TrustTests.test_rotation_requires_explicit_new_public_key) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9959000Z test_tampered_payload_and_signature_rejected (test_trust.TrustTests.test_tampered_payload_and_signature_rejected) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9974702Z test_wrong_source_tenant_collector_adapter_origin (test_trust.TrustTests.test_wrong_source_tenant_collector_adapter_origin) ... ok
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9975697Z 
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9975916Z ----------------------------------------------------------------------
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9976333Z Ran 112 tests in 1.687s
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9976505Z 
+execute	Test reference hardening contracts	2026-09-05T04:42:50.9976600Z OK
+execute	Run public synthetic hardening campaign	﻿2026-09-05T04:42:51.0272018Z ##[group]Run python -m eacp_hardening.campaign --output "${RUNNER_TEMP}/eacp-hardening-results"
+execute	Run public synthetic hardening campaign	2026-09-05T04:42:51.0272857Z ^[[36;1mpython -m eacp_hardening.campaign --output "${RUNNER_TEMP}/eacp-hardening-results"^[[0m
+execute	Run public synthetic hardening campaign	2026-09-05T04:42:51.0310288Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+execute	Run public synthetic hardening campaign	2026-09-05T04:42:51.0310678Z env:
+execute	Run public synthetic hardening campaign	2026-09-05T04:42:51.0310946Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Run public synthetic hardening campaign	2026-09-05T04:42:51.0311394Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib/pkgconfig
+execute	Run public synthetic hardening campaign	2026-09-05T04:42:51.0311857Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Run public synthetic hardening campaign	2026-09-05T04:42:51.0312259Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Run public synthetic hardening campaign	2026-09-05T04:42:51.0312665Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Run public synthetic hardening campaign	2026-09-05T04:42:51.0313077Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib
+execute	Run public synthetic hardening campaign	2026-09-05T04:42:51.0313400Z ##[endgroup]
+execute	Run public synthetic hardening campaign	2026-09-05T04:42:52.4295113Z {"boundary_demonstrations": 3, "checks": 86, "failed": 0, "passed": 86}
+execute	Package campaign evidence and handoff identity	﻿2026-09-05T04:42:52.4463796Z ##[group]Run set -euo pipefail
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4464186Z ^[[36;1mset -euo pipefail^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4464491Z ^[[36;1mmkdir "${RUNNER_TEMP}/eacp-hardening-handoff"^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4464958Z ^[[36;1mtar --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner \^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4465538Z ^[[36;1m  -czf "${RUNNER_TEMP}/eacp-hardening-handoff/eacp-hardening-v1.4.tar.gz" \^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4466015Z ^[[36;1m  -C "${RUNNER_TEMP}/eacp-hardening-results" .^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4466554Z ^[[36;1mpython - <<'PY'^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4466794Z ^[[36;1mimport hashlib, json, os^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4467072Z ^[[36;1mfrom pathlib import Path^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4467441Z ^[[36;1mhandoff = Path(os.environ["RUNNER_TEMP"]) / "eacp-hardening-handoff"^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4467908Z ^[[36;1marchive = handoff / "eacp-hardening-v1.4.tar.gz"^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4468255Z ^[[36;1mwith archive.open("rb") as stream:^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4468624Z ^[[36;1m    digest = hashlib.file_digest(stream, "sha256").hexdigest()^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4469422Z ^[[36;1m(handoff / "SHA256SUMS").write_text(f"{digest}  {archive.name}\n")^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4487828Z ^[[36;1mbinding = {^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4488322Z ^[[36;1m    "schema": "eacp.hardening-archive-binding/1",^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4488724Z ^[[36;1m    "repository": os.environ["GITHUB_REPOSITORY"],^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4489487Z ^[[36;1m    "workflow": ".github/workflows/eacp-hardening-v1.4.yml",^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4489905Z ^[[36;1m    "source_sha": os.environ["GITHUB_SHA"],^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4490237Z ^[[36;1m    "source_ref": os.environ["GITHUB_REF"],^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4490571Z ^[[36;1m    "run_id": int(os.environ["GITHUB_RUN_ID"]),^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4490941Z ^[[36;1m    "run_attempt": int(os.environ["GITHUB_RUN_ATTEMPT"]),^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4491552Z ^[[36;1m    "artifact_name": "eacp-hardening-v1.4-" + os.environ["GITHUB_RUN_ID"] + "-" + os.environ["GITHUB_RUN_ATTEMPT"],^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4492105Z ^[[36;1m    "archive_name": archive.name,^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4492393Z ^[[36;1m    "archive_sha256": digest,^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4492725Z ^[[36;1m    "evidence_class": "synthetic_local_hardening_campaign",^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4493067Z ^[[36;1m}^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4493443Z ^[[36;1m(handoff / "binding.json").write_text(json.dumps(binding, sort_keys=True, indent=2) + "\n")^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4493891Z ^[[36;1mPY^[[0m
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4529976Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4530325Z env:
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4530589Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4531030Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib/pkgconfig
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4531462Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4531842Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4532221Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4532621Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib
+execute	Package campaign evidence and handoff identity	2026-09-05T04:42:52.4532946Z ##[endgroup]
+execute	Upload exact handoff artifact	﻿2026-09-05T04:42:52.4993779Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4995222Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4995610Z with:
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4995830Z   name: eacp-hardening-v1.4-33945266470-1
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4996182Z   path: /home/runner/work/_temp/eacp-hardening-handoff/
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4996502Z   if-no-files-found: error
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4996730Z   retention-days: 90
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4996949Z   compression-level: 6
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4997158Z   overwrite: false
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4997373Z   include-hidden-files: false
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4997600Z env:
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4997841Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4998287Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib/pkgconfig
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4998698Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4999435Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.4999833Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.5000405Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.5000721Z ##[endgroup]
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.6749562Z (node:2382) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.6750919Z (Use `node --trace-deprecation ...` to show where the warning was created)
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.6869931Z With the provided path, there will be 3 files uploaded
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.6871576Z Artifact name is valid!
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.6872685Z Root directory input is valid!
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.8842698Z Beginning upload of artifact content to blob storage
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.9072728Z (node:2382) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.9305299Z Uploaded bytes 3231
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.9442704Z Finished uploading artifact content to blob storage!
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.9444344Z SHA256 digest of uploaded artifact zip is 3e6a663941d8b0e5102349b8995238084b828c530ad224a1a9f8d804ecebf6d4
+execute	Upload exact handoff artifact	2026-09-05T04:42:52.9445788Z Finalizing artifact upload
+execute	Upload exact handoff artifact	2026-09-05T04:42:53.1328497Z Artifact eacp-hardening-v1.4-33945266470-1.zip successfully finalized. Artifact ID 9963122568
+execute	Upload exact handoff artifact	2026-09-05T04:42:53.1330208Z Artifact eacp-hardening-v1.4-33945266470-1 has been successfully uploaded! Final size is 3231 bytes. Artifact ID is 9963122568
+execute	Upload exact handoff artifact	2026-09-05T04:42:53.1336269Z Artifact download URL: https://github.com/obedebessa/eacp-operational-provenance/actions/runs/33945266470/artifacts/9963122568
+execute	Post Set up Python	﻿2026-09-05T04:42:53.1524025Z Post job cleanup.
+execute	Post Check out source without persistent credentials	﻿2026-09-05T04:42:53.2964595Z Post job cleanup.
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.3850278Z [command]/usr/bin/git version
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.3889892Z git version 2.55.0
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.3932193Z Temporarily overriding HOME='/home/runner/work/_temp/bbcbb914-df8a-48ad-9351-5f200f9a6b19' before making global git config changes
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.3933569Z Adding repository directory to the temporary git global config as a safe directory
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.3939629Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/eacp-operational-provenance/eacp-operational-provenance
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.3975393Z Removing SSH command configuration
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.3983675Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.4024113Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.4300203Z Removing HTTP extra header
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.4309764Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.4347594Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.4677726Z Removing includeIf entries pointing to credentials config files
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.4679483Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+execute	Post Check out source without persistent credentials	2026-09-05T04:42:53.4728898Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+execute	Complete job	﻿2026-09-05T04:42:53.5199532Z Evaluate and set job outputs
+execute	Complete job	2026-09-05T04:42:53.5204996Z Set output 'artifact_id'
+execute	Complete job	2026-09-05T04:42:53.5207292Z Set output 'artifact_digest'
+execute	Complete job	2026-09-05T04:42:53.5208524Z Cleaning up orphan processes
+execute	Complete job	2026-09-05T04:42:53.5488443Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+attest	Set up job	﻿2026-09-05T04:42:57.9918425Z Current runner version: '2.337.0'
+attest	Set up job	2026-09-05T04:42:57.9944197Z ##[group]Runner Image Provisioner
+attest	Set up job	2026-09-05T04:42:57.9945138Z Hosted Compute Agent
+attest	Set up job	2026-09-05T04:42:57.9945770Z Version: 20260828.587
+attest	Set up job	2026-09-05T04:42:57.9946477Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+attest	Set up job	2026-09-05T04:42:57.9947251Z Build Date: 2026-08-28T16:44:25Z
+attest	Set up job	2026-09-05T04:42:57.9948012Z Worker ID: {c313085a-9143-4b5b-b87d-caf82414cbc0}
+attest	Set up job	2026-09-05T04:42:57.9948726Z Azure Region: eastus
+attest	Set up job	2026-09-05T04:42:57.9949338Z ##[endgroup]
+attest	Set up job	2026-09-05T04:42:57.9951428Z ##[group]Operating System
+attest	Set up job	2026-09-05T04:42:57.9952120Z Ubuntu
+attest	Set up job	2026-09-05T04:42:57.9952710Z 24.04.4
+attest	Set up job	2026-09-05T04:42:57.9953253Z LTS
+attest	Set up job	2026-09-05T04:42:57.9953811Z ##[endgroup]
+attest	Set up job	2026-09-05T04:42:57.9954429Z ##[group]Runner Image
+attest	Set up job	2026-09-05T04:42:57.9955074Z Image: ubuntu-24.04
+attest	Set up job	2026-09-05T04:42:57.9955684Z Version: 20260831.293.1
+attest	Set up job	2026-09-05T04:42:57.9956772Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260831.293/images/ubuntu/Ubuntu2404-Readme.md
+attest	Set up job	2026-09-05T04:42:57.9958975Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260831.293
+attest	Set up job	2026-09-05T04:42:57.9960268Z ##[endgroup]
+attest	Set up job	2026-09-05T04:42:57.9961784Z ##[group]GITHUB_TOKEN Permissions
+attest	Set up job	2026-09-05T04:42:57.9964209Z Actions: read
+attest	Set up job	2026-09-05T04:42:57.9964948Z Attestations: write
+attest	Set up job	2026-09-05T04:42:57.9965546Z Contents: read
+attest	Set up job	2026-09-05T04:42:57.9966095Z Metadata: read
+attest	Set up job	2026-09-05T04:42:57.9966715Z ##[endgroup]
+attest	Set up job	2026-09-05T04:42:57.9968856Z Secret source: Actions
+attest	Set up job	2026-09-05T04:42:57.9970568Z Prepare workflow directory
+attest	Set up job	2026-09-05T04:42:58.0297552Z Prepare all required actions
+attest	Set up job	2026-09-05T04:42:58.0346315Z Getting action download info
+attest	Set up job	2026-09-05T04:42:58.2439484Z Download action repository 'actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0' (SHA:634f93cb2916e3fdff6788551b99b062d0335ce0)
+attest	Set up job	2026-09-05T04:42:58.5147908Z Download action repository 'actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8' (SHA:4d101475d8b20a2381f78447822ac1eab6504dd8)
+attest	Set up job	2026-09-05T04:42:58.6756868Z Getting action download info
+attest	Set up job	2026-09-05T04:42:58.7482209Z Download action repository 'actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d' (SHA:508db95dd578ae2727ebd6217d5ba78e4fbda05d)
+attest	Set up job	2026-09-05T04:42:58.9365326Z Complete job name: attest
+attest	Validate uploaded artifact metadata before downloading	﻿2026-09-05T04:42:59.0139805Z ##[group]Run set -euo pipefail
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0141204Z ^[[36;1mset -euo pipefail^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0142195Z ^[[36;1mpython3 -I - <<'PY'^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0143212Z ^[[36;1mimport json, os, re, subprocess^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0144703Z ^[[36;1mrepo, sha = (os.environ[k] for k in ("GITHUB_REPOSITORY", "GITHUB_SHA"))^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0146716Z ^[[36;1mrun, attempt = (int(os.environ[k]) for k in ("GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT"))^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0148459Z ^[[36;1martifact_id = os.environ["EACP_ARTIFACT_ID"]^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0149914Z ^[[36;1martifact_digest = os.environ["EACP_ARTIFACT_DIGEST"]^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0152202Z ^[[36;1mif not re.fullmatch(r"[1-9][0-9]*", artifact_id) or not re.fullmatch(r"[0-9a-f]{64}", artifact_digest):^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0154207Z ^[[36;1m    raise SystemExit("Invalid artifact ID or digest")^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0155500Z ^[[36;1mresponse = subprocess.run(^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0156807Z ^[[36;1m    ["gh", "api", f"repos/{repo}/actions/artifacts/{artifact_id}"],^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0158655Z ^[[36;1m    capture_output=True, text=True, check=True, timeout=30,^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0160542Z ^[[36;1m)^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0161578Z ^[[36;1mmetadata = json.loads(response.stdout)^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0163072Z ^[[36;1mif (metadata.get("id") != int(artifact_id)^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0164738Z ^[[36;1m    or metadata.get("name") != f"eacp-hardening-v1.4-{run}-{attempt}"^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0166547Z ^[[36;1m    or metadata.get("expired") is not False^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0168284Z ^[[36;1m    or metadata.get("digest") != f"sha256:{artifact_digest}"^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0169815Z ^[[36;1m    or metadata.get("workflow_run", {}).get("id") != run^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0171894Z ^[[36;1m    or metadata.get("workflow_run", {}).get("head_sha") != sha^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0173847Z ^[[36;1m    or type(metadata.get("size_in_bytes")) is not int^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0175309Z ^[[36;1m    or not 0 < metadata["size_in_bytes"] <= 250_000_000):^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0176898Z ^[[36;1m    raise SystemExit("GitHub artifact origin or size mismatch")^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0178278Z ^[[36;1mPY^[[0m
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0222731Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0224329Z env:
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0233993Z   GH_TOKEN: ***
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0234865Z   EACP_ARTIFACT_ID: 9963122568
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0236357Z   EACP_ARTIFACT_DIGEST: 3e6a663941d8b0e5102349b8995238084b828c530ad224a1a9f8d804ecebf6d4
+attest	Validate uploaded artifact metadata before downloading	2026-09-05T04:42:59.0237956Z ##[endgroup]
+attest	Download exact artifact from this run	﻿2026-09-05T04:42:59.5494446Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+attest	Download exact artifact from this run	2026-09-05T04:42:59.5503785Z ##[group]Run actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+attest	Download exact artifact from this run	2026-09-05T04:42:59.5504944Z with:
+attest	Download exact artifact from this run	2026-09-05T04:42:59.5505377Z   artifact-ids: 9963122568
+attest	Download exact artifact from this run	2026-09-05T04:42:59.5506094Z   path: /home/runner/work/_temp/eacp-hardening-handoff
+attest	Download exact artifact from this run	2026-09-05T04:42:59.5506917Z   merge-multiple: true
+attest	Download exact artifact from this run	2026-09-05T04:42:59.5507609Z   repository: obedebessa/eacp-operational-provenance
+attest	Download exact artifact from this run	2026-09-05T04:42:59.5508413Z   run-id: 33945266470
+attest	Download exact artifact from this run	2026-09-05T04:42:59.5508899Z ##[endgroup]
+attest	Download exact artifact from this run	2026-09-05T04:42:59.7054981Z Downloading artifacts by ID
+attest	Download exact artifact from this run	2026-09-05T04:42:59.7204327Z (node:2084) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+attest	Download exact artifact from this run	2026-09-05T04:42:59.7206340Z (Use `node --trace-deprecation ...` to show where the warning was created)
+attest	Download exact artifact from this run	2026-09-05T04:42:59.7816673Z Found 1 artifact(s)
+attest	Download exact artifact from this run	2026-09-05T04:42:59.7831632Z Preparing to download the following artifacts:
+attest	Download exact artifact from this run	2026-09-05T04:42:59.7835585Z - eacp-hardening-v1.4-33945266470-1 (ID: 9963122568, Size: 3231, Expected Digest: sha256:3e6a663941d8b0e5102349b8995238084b828c530ad224a1a9f8d804ecebf6d4)
+attest	Download exact artifact from this run	2026-09-05T04:42:59.9084039Z Redirecting to blob download url: https://productionresultssa12.blob.core.windows.net/actions-results/76e3aa27-835a-4ec0-a415-b23cad05bfda/workflow-job-run-acb11856-d7d9-5e0d-91d5-caa893cf475c/artifacts/04498f69cbb4a11783bcff188a521d4aa2431ab94b08e4de5677e1a502facbc5.zip
+attest	Download exact artifact from this run	2026-09-05T04:42:59.9088856Z Starting download of artifact to: /home/runner/work/_temp/eacp-hardening-handoff
+attest	Download exact artifact from this run	2026-09-05T04:42:59.9369099Z (node:2084) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+attest	Download exact artifact from this run	2026-09-05T04:42:59.9424534Z SHA256 digest of downloaded artifact is 3e6a663941d8b0e5102349b8995238084b828c530ad224a1a9f8d804ecebf6d4
+attest	Download exact artifact from this run	2026-09-05T04:42:59.9427093Z Artifact download completed successfully.
+attest	Download exact artifact from this run	2026-09-05T04:42:59.9428430Z Total of 1 artifact(s) downloaded
+attest	Download exact artifact from this run	2026-09-05T04:42:59.9430646Z Download artifact has finished successfully
+attest	Validate artifact identity and bytes as data	﻿2026-09-05T04:42:59.9604555Z ##[group]Run set -euo pipefail
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9605641Z ^[[36;1mset -euo pipefail^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9606599Z ^[[36;1mpython3 -I - <<'PY'^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9607666Z ^[[36;1mimport hashlib, json, os^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9608815Z ^[[36;1mfrom pathlib import Path^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9610734Z ^[[36;1mroot = Path(os.environ["RUNNER_TEMP"]) / "eacp-hardening-handoff"^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9613260Z ^[[36;1mexpected_files = {"eacp-hardening-v1.4.tar.gz", "SHA256SUMS", "binding.json"}^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9615570Z ^[[36;1mif {p.name for p in root.iterdir()} != expected_files:^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9617370Z ^[[36;1m    raise SystemExit("Unexpected handoff file set")^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9619676Z ^[[36;1mif any(p.is_symlink() or not p.is_file() or p.stat().st_size == 0 for p in root.iterdir()):^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9623004Z ^[[36;1m    raise SystemExit("Handoff must contain nonempty regular files only")^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9625163Z ^[[36;1marchive = root / "eacp-hardening-v1.4.tar.gz"^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9627365Z ^[[36;1mif (archive.stat().st_size > 250_000_000 or (root / "binding.json").stat().st_size > 8192^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9629615Z ^[[36;1m    or (root / "SHA256SUMS").stat().st_size > 256):^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9631547Z ^[[36;1m    raise SystemExit("Handoff exceeds bounded size")^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9633129Z ^[[36;1mwith archive.open("rb") as stream:^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9634795Z ^[[36;1m    digest = hashlib.file_digest(stream, "sha256").hexdigest()^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9636951Z ^[[36;1mif (root / "SHA256SUMS").read_text() != f"{digest}  {archive.name}\n":^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9638957Z ^[[36;1m    raise SystemExit("Archive checksum mismatch")^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9641360Z ^[[36;1mrepo, sha, ref = (os.environ[k] for k in ("GITHUB_REPOSITORY", "GITHUB_SHA", "GITHUB_REF"))^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9642983Z ^[[36;1mrun, attempt = (int(os.environ[k]) for k in ("GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT"))^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9644214Z ^[[36;1mname = f"eacp-hardening-v1.4-{run}-{attempt}"^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9645202Z ^[[36;1mbinding = json.loads((root / "binding.json").read_text())^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9646056Z ^[[36;1mexpected = {^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9646866Z ^[[36;1m    "schema": "eacp.hardening-archive-binding/1", "repository": repo,^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9648060Z ^[[36;1m    "workflow": ".github/workflows/eacp-hardening-v1.4.yml",^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9649265Z ^[[36;1m    "source_sha": sha, "source_ref": ref, "run_id": run, "run_attempt": attempt,^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9650893Z ^[[36;1m    "artifact_name": name, "archive_name": archive.name, "archive_sha256": digest,^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9652155Z ^[[36;1m    "evidence_class": "synthetic_local_hardening_campaign",^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9652973Z ^[[36;1m}^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9653651Z ^[[36;1mif (binding != expected or type(binding.get("run_id")) is not int^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9654720Z ^[[36;1m    or type(binding.get("run_attempt")) is not int):^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9655637Z ^[[36;1m    raise SystemExit("Handoff identity mismatch")^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9657043Z ^[[36;1mprint("Exact same-run archive identity and SHA-256 checked; archive was not unpacked.")^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9658172Z ^[[36;1mPY^[[0m
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9695466Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+attest	Validate artifact identity and bytes as data	2026-09-05T04:42:59.9696279Z ##[endgroup]
+attest	Validate artifact identity and bytes as data	2026-09-05T04:43:00.0018109Z Exact same-run archive identity and SHA-256 checked; archive was not unpacked.
+attest	Attest the validated archive	﻿2026-09-05T04:43:00.0395153Z ##[group]Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+attest	Attest the validated archive	2026-09-05T04:43:00.0396256Z with:
+attest	Attest the validated archive	2026-09-05T04:43:00.0397126Z   subject-path: /home/runner/work/_temp/eacp-hardening-handoff/eacp-hardening-v1.4.tar.gz
+attest	Attest the validated archive	2026-09-05T04:43:00.0398922Z   push-to-registry: false
+attest	Attest the validated archive	2026-09-05T04:43:00.0399484Z   create-storage-record: true
+attest	Attest the validated archive	2026-09-05T04:43:00.0400269Z   show-summary: true
+attest	Attest the validated archive	2026-09-05T04:43:00.0408690Z   github-token: ***
+attest	Attest the validated archive	2026-09-05T04:43:00.0409172Z ##[endgroup]
+attest	Attest the validated archive	2026-09-05T04:43:00.0472117Z ##[start-action display=Attest;id=provenance.attest]
+attest	Attest the validated archive	2026-09-05T04:43:00.0577238Z ##[group]Run actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d
+attest	Attest the validated archive	2026-09-05T04:43:00.0578127Z with:
+attest	Attest the validated archive	2026-09-05T04:43:00.0578970Z   subject-path: /home/runner/work/_temp/eacp-hardening-handoff/eacp-hardening-v1.4.tar.gz
+attest	Attest the validated archive	2026-09-05T04:43:00.0580397Z   push-to-registry: false
+attest	Attest the validated archive	2026-09-05T04:43:00.0580982Z   create-storage-record: true
+attest	Attest the validated archive	2026-09-05T04:43:00.0581531Z   show-summary: true
+attest	Attest the validated archive	2026-09-05T04:43:00.0590514Z   github-token: ***
+attest	Attest the validated archive	2026-09-05T04:43:00.0591027Z env:
+attest	Attest the validated archive	2026-09-05T04:43:00.0591472Z   NODE_OPTIONS: --max-http-header-size=32768
+attest	Attest the validated archive	2026-09-05T04:43:00.0592115Z ##[endgroup]
+attest	Attest the validated archive	2026-09-05T04:43:00.2239735Z Attestation type: Build Provenance
+attest	Attest the validated archive	2026-09-05T04:43:01.3292451Z Attestation created for eacp-hardening-v1.4.tar.gz@sha256:b4ee08dc32eb56e568ccc93ba45459642f3844427adab0bd8c044153b5ac3bea
+attest	Attest the validated archive	2026-09-05T04:43:01.3426168Z ##[group]^[[36mAttestation signed using certificate from Public Good Sigstore instance^[[39m
+attest	Attest the validated archive	2026-09-05T04:43:01.3427287Z -----BEGIN CERTIFICATE-----
+attest	Attest the validated archive	2026-09-05T04:43:01.3427969Z MIIH4zCCB2igAwIBAgIUfm4+fnxeCC2zJptk/a4Jj7CYvPMwCgYIKoZIzj0EAwMw
+attest	Attest the validated archive	2026-09-05T04:43:01.3428865Z NzEVMBMGA1UEChMMc2lnc3RvcmUuZGV2MR4wHAYDVQQDExVzaWdzdG9yZS1pbnRl
+attest	Attest the validated archive	2026-09-05T04:43:01.3429806Z cm1lZGlhdGUwHhcNMjYwOTA1MDQ0MzAwWhcNMjYwOTA1MDQ1MzAwWjAAMFkwEwYH
+attest	Attest the validated archive	2026-09-05T04:43:01.3431046Z KoZIzj0CAQYIKoZIzj0DAQcDQgAEsYnxsYYxp3x30xVu95CTPf1EU4RWUi86TA+o
+attest	Attest the validated archive	2026-09-05T04:43:01.3431980Z Lz5VCThZiR3jIbNfbRxwLW905sQlyejwQTwnVI+vHRDvKTg6OaOCBocwggaDMA4G
+attest	Attest the validated archive	2026-09-05T04:43:01.3432914Z A1UdDwEB/wQEAwIHgDATBgNVHSUEDDAKBggrBgEFBQcDAzAdBgNVHQ4EFgQUnOsK
+attest	Attest the validated archive	2026-09-05T04:43:01.3433818Z qCmrvY5wh0APszA4bDQhCmgwHwYDVR0jBBgwFoAU39Ppz1YkEZb5qNjpKFWixi4Y
+attest	Attest the validated archive	2026-09-05T04:43:01.3434696Z ZD8wgYEGA1UdEQEB/wR3MHWGc2h0dHBzOi8vZ2l0aHViLmNvbS9vYmVkZWJlc3Nh
+attest	Attest the validated archive	2026-09-05T04:43:01.3435561Z L2VhY3Atb3BlcmF0aW9uYWwtcHJvdmVuYW5jZS8uZ2l0aHViL3dvcmtmbG93cy9l
+attest	Attest the validated archive	2026-09-05T04:43:01.3436479Z YWNwLWhhcmRlbmluZy12MS40LnltbEByZWZzL2hlYWRzL21haW4wOQYKKwYBBAGD
+attest	Attest the validated archive	2026-09-05T04:43:01.3437377Z vzABAQQraHR0cHM6Ly90b2tlbi5hY3Rpb25zLmdpdGh1YnVzZXJjb250ZW50LmNv
+attest	Attest the validated archive	2026-09-05T04:43:01.3438253Z bTAfBgorBgEEAYO/MAECBBF3b3JrZmxvd19kaXNwYXRjaDA2BgorBgEEAYO/MAED
+attest	Attest the validated archive	2026-09-05T04:43:01.3439186Z BCgwYmNiMDM4ZmVmOTMwZmFmZjNlZjE5ZjY2MWJmOTk1Zjk3ZDYwNWQ4MCsGCisG
+attest	Attest the validated archive	2026-09-05T04:43:01.3440276Z AQQBg78wAQQEHUVBQ1AgaGFyZGVuaW5nIHYxLjQgY2FuZGlkYXRlMDQGCisGAQQB
+attest	Attest the validated archive	2026-09-05T04:43:01.3441190Z g78wAQUEJm9iZWRlYmVzc2EvZWFjcC1vcGVyYXRpb25hbC1wcm92ZW5hbmNlMB0G
+attest	Attest the validated archive	2026-09-05T04:43:01.3442078Z CisGAQQBg78wAQYED3JlZnMvaGVhZHMvbWFpbjA7BgorBgEEAYO/MAEIBC0MK2h0
+attest	Attest the validated archive	2026-09-05T04:43:01.3442961Z dHBzOi8vdG9rZW4uYWN0aW9ucy5naXRodWJ1c2VyY29udGVudC5jb20wgYMGCisG
+attest	Attest the validated archive	2026-09-05T04:43:01.3443847Z AQQBg78wAQkEdQxzaHR0cHM6Ly9naXRodWIuY29tL29iZWRlYmVzc2EvZWFjcC1v
+attest	Attest the validated archive	2026-09-05T04:43:01.3444769Z cGVyYXRpb25hbC1wcm92ZW5hbmNlLy5naXRodWIvd29ya2Zsb3dzL2VhY3AtaGFy
+attest	Attest the validated archive	2026-09-05T04:43:01.3445691Z ZGVuaW5nLXYxLjQueW1sQHJlZnMvaGVhZHMvbWFpbjA4BgorBgEEAYO/MAEKBCoM
+attest	Attest the validated archive	2026-09-05T04:43:01.3446668Z KDBiY2IwMzhmZWY5MzBmYWZmM2VmMTlmNjYxYmY5OTVmOTdkNjA1ZDgwHQYKKwYB
+attest	Attest the validated archive	2026-09-05T04:43:01.3447614Z BAGDvzABCwQPDA1naXRodWItaG9zdGVkMEkGCisGAQQBg78wAQwEOww5aHR0cHM6
+attest	Attest the validated archive	2026-09-05T04:43:01.3448556Z Ly9naXRodWIuY29tL29iZWRlYmVzc2EvZWFjcC1vcGVyYXRpb25hbC1wcm92ZW5h
+attest	Attest the validated archive	2026-09-05T04:43:01.3449499Z bmNlMDgGCisGAQQBg78wAQ0EKgwoMGJjYjAzOGZlZjkzMGZhZmYzZWYxOWY2NjFi
+attest	Attest the validated archive	2026-09-05T04:43:01.3450630Z Zjk5NWY5N2Q2MDVkODAfBgorBgEEAYO/MAEOBBEMD3JlZnMvaGVhZHMvbWFpbjAa
+attest	Attest the validated archive	2026-09-05T04:43:01.3451554Z BgorBgEEAYO/MAEPBAwMCjEzMjQ3MjA2NDYwLQYKKwYBBAGDvzABEAQfDB1odHRw
+attest	Attest the validated archive	2026-09-05T04:43:01.3452534Z czovL2dpdGh1Yi5jb20vb2JlZGViZXNzYTAYBgorBgEEAYO/MAERBAoMCDQwNTgz
+attest	Attest the validated archive	2026-09-05T04:43:01.3453965Z MzgzMIGDBgorBgEEAYO/MAESBHUMc2h0dHBzOi8vZ2l0aHViLmNvbS9vYmVkZWJl
+attest	Attest the validated archive	2026-09-05T04:43:01.3454877Z c3NhL2VhY3Atb3BlcmF0aW9uYWwtcHJvdmVuYW5jZS8uZ2l0aHViL3dvcmtmbG93
+attest	Attest the validated archive	2026-09-05T04:43:01.3455805Z cy9lYWNwLWhhcmRlbmluZy12MS40LnltbEByZWZzL2hlYWRzL21haW4wOAYKKwYB
+attest	Attest the validated archive	2026-09-05T04:43:01.3456747Z BAGDvzABEwQqDCgwYmNiMDM4ZmVmOTMwZmFmZjNlZjE5ZjY2MWJmOTk1Zjk3ZDYw
+attest	Attest the validated archive	2026-09-05T04:43:01.3457685Z NWQ4MCEGCisGAQQBg78wARQEEwwRd29ya2Zsb3dfZGlzcGF0Y2gwbQYKKwYBBAGD
+attest	Attest the validated archive	2026-09-05T04:43:01.3458615Z vzABFQRfDF1odHRwczovL2dpdGh1Yi5jb20vb2JlZGViZXNzYS9lYWNwLW9wZXJh
+attest	Attest the validated archive	2026-09-05T04:43:01.3459539Z dGlvbmFsLXByb3ZlbmFuY2UvYWN0aW9ucy9ydW5zLzMzOTQ1MjY2NDcwL2F0dGVt
+attest	Attest the validated archive	2026-09-05T04:43:01.3460700Z cHRzLzEwFgYKKwYBBAGDvzABFgQIDAZwdWJsaWMwYwYKKwYBBAGDvzABGARVDFNy
+attest	Attest the validated archive	2026-09-05T04:43:01.3461661Z ZXBvOm9iZWRlYmVzc2FANDA1ODMzODMvZWFjcC1vcGVyYXRpb25hbC1wcm92ZW5h
+attest	Attest the validated archive	2026-09-05T04:43:01.3462578Z bmNlQDEzMjQ3MjA2NDY6cmVmOnJlZnMvaGVhZHMvbWFpbjCBiwYKKwYBBAHWeQIE
+attest	Attest the validated archive	2026-09-05T04:43:01.3463482Z AgR9BHsAeQB3AN09MGrGxxEyYxkeHJlnNwKiSl643jyt/4eKcoAvKe6OAAABoG/g
+attest	Attest the validated archive	2026-09-05T04:43:01.3464355Z hioAAAQDAEgwRgIhAMSPB/kn12T5FSb9Sbjn81zL+P9/hcMGmLdAJJHMCNbuAiEA
+attest	Attest the validated archive	2026-09-05T04:43:01.3465216Z jXff3RDDleDiMIhCcTVlGEHS749Vtaa/phf66vZ3pvUwCgYIKoZIzj0EAwMDaQAw
+attest	Attest the validated archive	2026-09-05T04:43:01.3466152Z ZgIxAPnJZqaOwv8UWEBCKG8co8cWPI4CrYqu0SuFbeKvjUrK0y2Gt4vborQV/vVK
+attest	Attest the validated archive	2026-09-05T04:43:01.3467259Z HLmiwQIxANwuuEIu//0WVXTMqWk9Nmt7FtJWEhdvFKB2JxvuCQ4kWhYWjjfcDa82
+attest	Attest the validated archive	2026-09-05T04:43:01.3467913Z YI8ZNi/wEg==
+attest	Attest the validated archive	2026-09-05T04:43:01.3468274Z -----END CERTIFICATE-----
+attest	Attest the validated archive	2026-09-05T04:43:01.3468553Z 
+attest	Attest the validated archive	2026-09-05T04:43:01.3469133Z ##[endgroup]
+attest	Attest the validated archive	2026-09-05T04:43:01.3469844Z ^[[36mAttestation signature uploaded to Rekor transparency log^[[39m
+attest	Attest the validated archive	2026-09-05T04:43:01.3471149Z https://search.sigstore.dev?logIndex=2720809304
+attest	Attest the validated archive	2026-09-05T04:43:01.3471670Z ^[[36mAttestation uploaded to repository^[[39m
+attest	Attest the validated archive	2026-09-05T04:43:01.3472149Z https://github.com/obedebessa/eacp-operational-provenance/attestations/45407867
+attest	Attest the validated archive	2026-09-05T04:43:01.3734804Z ##[end-action id=provenance.attest;outcome=success;conclusion=success;duration_ms=1326]
+attest	Record the attestation boundary	﻿2026-09-05T04:43:01.3799525Z ##[group]Run {
+attest	Record the attestation boundary	2026-09-05T04:43:01.3799813Z ^[[36;1m{^[[0m
+attest	Record the attestation boundary	2026-09-05T04:43:01.3800391Z ^[[36;1m  echo '## EACP 1.4 candidate signing stage'^[[0m
+attest	Record the attestation boundary	2026-09-05T04:43:01.3800794Z ^[[36;1m  echo "Signing outcome: ${EACP_SIGNING_OUTCOME}"^[[0m
+attest	Record the attestation boundary	2026-09-05T04:43:01.3801244Z ^[[36;1m  echo 'This stage handles the archive as data on a fresh hosted runner.'^[[0m
+attest	Record the attestation boundary	2026-09-05T04:43:01.3801851Z ^[[36;1m  echo 'A successful signing step still requires independent cryptographic verification.'^[[0m
+attest	Record the attestation boundary	2026-09-05T04:43:01.3802508Z ^[[36;1m  echo 'The archive contains a synthetic hardening campaign, not a field deployment.'^[[0m
+attest	Record the attestation boundary	2026-09-05T04:43:01.3803306Z ^[[36;1m  echo 'Attestation binds bytes and workflow identity; it does not establish upstream event truth or automatically establish SLSA L3.'^[[0m
+attest	Record the attestation boundary	2026-09-05T04:43:01.3803932Z ^[[36;1m} >> "${GITHUB_STEP_SUMMARY}"^[[0m
+attest	Record the attestation boundary	2026-09-05T04:43:01.3839426Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+attest	Record the attestation boundary	2026-09-05T04:43:01.3839795Z env:
+attest	Record the attestation boundary	2026-09-05T04:43:01.3840001Z   EACP_SIGNING_OUTCOME: success
+attest	Record the attestation boundary	2026-09-05T04:43:01.3840512Z ##[endgroup]
+attest	Complete job	﻿2026-09-05T04:43:01.3972943Z Cleaning up orphan processes
+attest	Complete job	2026-09-05T04:43:01.4255023Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

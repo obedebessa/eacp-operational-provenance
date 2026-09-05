@@ -1,0 +1,17 @@
+{
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "eacp-hardening-v1.4.yml",
+    "--repo",
+    "obedebessa/eacp-operational-provenance",
+    "--ref",
+    "eacp-v1.4-hardening"
+  ],
+  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "started_at": "2026-09-05T04:42:02.513012+00:00",
+  "elapsed_seconds": 2.2390950419940054,
+  "exit_code": 0,
+  "timed_out": false
+}

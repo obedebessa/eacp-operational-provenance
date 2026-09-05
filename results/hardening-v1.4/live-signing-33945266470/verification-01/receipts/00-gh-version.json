@@ -1,0 +1,23 @@
+{
+  "command": [
+    "gh",
+    "--version"
+  ],
+  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "elapsed_seconds": 0.038890958996489644,
+  "expectation_met": true,
+  "expected_exit_code": 0,
+  "finished_at": "2026-09-05T04:44:51.455248Z",
+  "name": "00-gh-version",
+  "offline_boundary": null,
+  "offline_requested": false,
+  "phase": "metadata",
+  "process_state": "completed",
+  "returncode": 0,
+  "started_at": "2026-09-05T04:44:51.416381Z",
+  "stderr": "receipts/00-gh-version.stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout": "receipts/00-gh-version.stdout.txt",
+  "stdout_sha256": "12d3a84351274b3964544be1b210e8d12f848a323e275f6e100efcc86187a661",
+  "timeout_seconds": 60
+}
