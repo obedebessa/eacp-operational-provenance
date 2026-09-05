@@ -8,7 +8,7 @@
     "obedebessa/eacp-operational-provenance",
     "--log"
   ],
-  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "cwd": "/workspace/eacp",
   "started_at": "2026-09-05T04:43:27.670620+00:00",
   "elapsed_seconds": 3.6191252499702387,
   "exit_code": 0,

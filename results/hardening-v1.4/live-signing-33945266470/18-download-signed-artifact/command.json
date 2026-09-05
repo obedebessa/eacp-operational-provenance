@@ -9,9 +9,9 @@
     "--name",
     "eacp-hardening-v1.4-33945266470-1",
     "--dir",
-    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/artifact-33945266470"
+    "/workspace/eacp/outputs/EACP_v1.4_Live_Signing_2026-09-05/artifact-33945266470"
   ],
-  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "cwd": "/workspace/eacp",
   "started_at": "2026-09-05T04:43:47.082685+00:00",
   "elapsed_seconds": 2.5272584169870242,
   "exit_code": 0,

@@ -1,0 +1,48 @@
+name: EACP operability candidate (no attestation)
+on:
+  push:
+    branches: ["eacp-v1.5-operability"]
+  pull_request:
+    paths:
+      - "eacp_hardening/**"
+      - "tests/operability/**"
+      - "pyproject.toml"
+      - "scripts/**"
+      - "docs/v1.5/**"
+      - ".github/workflows/eacp-operability-v1.5.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  installed-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install the actual distribution
+        run: |
+          python -m pip install --upgrade pip==26.2.1
+          python -m pip install .
+      - name: Test contracts with assertions optimized out of production
+        run: python -O -m unittest discover -s tests/operability -v
+      - name: Exercise installed CLI outside checkout
+        working-directory: ${{ runner.temp }}
+        run: python -I -m eacp_hardening demo --output-directory installed-demo
+      - name: Preserve historical source and candidate identity
+        run: python scripts/verify_candidate_v1_5.py --freeze
+      - name: Inspect the current tracked snapshot for private paths
+        run: |
+          python -m pip install 'pypdf==6.10.0'
+          eacp_snapshot="$(mktemp -d)"
+          git archive HEAD | tar -x -C "$eacp_snapshot"
+          python scripts/privacy_scan_v1_5.py "$eacp_snapshot"

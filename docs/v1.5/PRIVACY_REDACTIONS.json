@@ -1,0 +1,372 @@
+{
+  "format": "eacp.privacy-redactions/1",
+  "original_commit": "e2807efc14209e42ba5ac82f5aa8d44599d22c43",
+  "files": [
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/README.md",
+      "original_sha256": "9693b12cba24b5ea2d6fa254755b9518deaf50a90b02d8fb16b25609a306f188",
+      "redacted_sha256": "998222223d23e452de3552b614ec5b6c37cdce46d4bad554954ffd7f4133c36d",
+      "reason": "Disclose that selected unsigned receipts are privacy derivatives of the retained execution reference."
+    },
+    {
+      "path": "docs/v1.4/REVIEWER_PACKET.md",
+      "original_sha256": "158cb6bed606bdb6b86ec95c32a7463e4b73bcecdcb6cfd2f292a90cd56b5c75",
+      "redacted_sha256": "0e518d4b7a50c53b36dcda5ad3ce4e947980ee55905b501438cd6e0c7bf8baba",
+      "reason": "Replace private reviewer identifier with a neutral role."
+    },
+    {
+      "path": "docs/v1.5/README.md",
+      "original_sha256": "d56704822603bbc5be07aa28c047ced562ca85cfd49dc7595992592789c09eca",
+      "redacted_sha256": "fa3c44a4b1aa9222082c4951975836ccce0e8cdb02a9dc70b35cd01798d730bb",
+      "reason": "Replace private reviewer identifier with a neutral role."
+    },
+    {
+      "path": "results/hardening-v1.4/additional-checks/candidate-verifier.txt",
+      "original_sha256": "21c8ad26f39656bea479fa567fb48581a0b66d803992dff360d7e21718009d91",
+      "redacted_sha256": "ec60ec7a9c2183049f73be725a08a85070b10a29ff1a8075a44ac74819272c1e",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/additional-checks/correlation-tests.txt",
+      "original_sha256": "25419f3da63b784f83951f28d985c19ab2be62429ced4b1e9493b4fa5d574910",
+      "redacted_sha256": "5148a150c42c0888911c67986342156736e51c18b922e10b1f454f9821fd6f6e",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/additional-checks/historical-adapter-tests.txt",
+      "original_sha256": "b1a34edff09bc287938a5db56241830e5ea20afc4b3dcc50501804a46c92aa81",
+      "redacted_sha256": "474e279ec0404145f848acbab83351bb08827e0ff43b97779b025a5d4ec1147f",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/additional-checks/index-tests.txt",
+      "original_sha256": "fe1dbefc98edfd76fd9d42324455ee6f7c90a789b9615aa403c81d9a34d35e0f",
+      "redacted_sha256": "850c3864596a7fcae3093dc1d5883fb0eefa66761c11299af57fcf311ab9286d",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/additional-checks/metadata.json",
+      "original_sha256": "bef8ed8d71a4409b41fe4b0095520badbf85334fc769aeb9fab0d9d9fa15bd79",
+      "redacted_sha256": "cb7bea7925c2b9762621713435500a8fe06e9195f17d5001daa3bf2ddbc9b228",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/additional-checks/repository-tests.txt",
+      "original_sha256": "f815b7f8a5001e6f41dca649d4ffb684dd77b92408a4bb53d7f4d6b3fd3e9398",
+      "redacted_sha256": "0155ef2c6c3d0f8c6ba2441dbc3fb0f361849b8eb1237fba7016b9d36c4e8b96",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/01-main-before/command.json",
+      "original_sha256": "4983ceda0a124ac03e87467fbac2874b70d35a90dcce8cb8e8e333aa93235cb3",
+      "redacted_sha256": "056df35c9bea43167e9a07fb861c8466404f91b36a759d5e70a8b33774ef32c0",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/02-main-protection-enabled/command.json",
+      "original_sha256": "fcc378567c34b828125a97c129f6254ba719b4f829c8dbe770a9b59a9530445e",
+      "redacted_sha256": "c87dae4449fb5ecb449f497fb52c192938b350d86d78d9a668e7db7090c1a409",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/03-main-protection-checks-request/command.json",
+      "original_sha256": "6f6385126c09e97cabb55c1e9a9b21ebdfc48e6eba1ecd73c301110066f0cbc2",
+      "redacted_sha256": "fb6c57d636d8ed81cbecbacd6445a776a55b915102159a469e7a03afaf519c7a",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/04-publish-candidate-branch/command.json",
+      "original_sha256": "d869e89551b11b5d07e3d8fa8f97d9ff2029d2d0592c41e60e1cd64f0ad7abe7",
+      "redacted_sha256": "cac3100a47184d790e867813d1ebff5623d02dfd7d57a5ffd733770dcdf91f70",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/05-open-candidate-pr/command.json",
+      "original_sha256": "ba4f6615d0788bebfe81f57faf442b5a9bccc08bd7be342087d3371a38164fd1",
+      "redacted_sha256": "1244ece8340ad5b04d5dc9b2c81dbdcf3133769b7f3e2caa4b92a3759c167e41",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/06-pr-checks/command.json",
+      "original_sha256": "f83c682137befa4b86396057d5f6fd19d7f673076e32e40d6794aeb7df75a526",
+      "redacted_sha256": "68726203ab41041ad2f25296cb4334d3f2d6bbd1afd2cc70c475970587130528",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/07-pr-signing-denied-jobs/command.json",
+      "original_sha256": "c69de947a309cc18c0cd5e04f6bc03a0c86ebe3ec3eaa60725dfaea23ed2557e",
+      "redacted_sha256": "1b5b3b2bf6d43a53eec1afb59a5a6f2c7fb011c2e8cc792fa59a41c6db8b1f6f",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/08-pr-signing-denied-logs/command.json",
+      "original_sha256": "9bf3ad0240e06a489ceb4d5c68400dca3109e94de227771ea1cedf85101d2a47",
+      "redacted_sha256": "f195a8f94473031ed389a31ed2ce29660c1c014a08809d47bb267412ca38f585",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/09-merge-reviewed-candidate/command.json",
+      "original_sha256": "0bf4ad33f9bf40a8e99598b58842c33993fb4e8417bca5528fcf660d7fba3d04",
+      "redacted_sha256": "254f158b832e5643832eddbcfe7a859509b7714d3d18ff50e323959c03270424",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/10-protected-main-before-dispatch/command.json",
+      "original_sha256": "7468edf0e7a35f0406544f2ddd9b28edfb71c89fc035b04bc0ffc6867c719945",
+      "redacted_sha256": "03a0de491e397dac4c3db2fb2b984081fcfd7a6452ea3fb45c7995e9b53fde54",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/11-dispatch-protected-main/command.json",
+      "original_sha256": "f65d5e1e062a944b3e58d8d5729033db3c9ae74d07f0a409b8e96c7dd5903dc6",
+      "redacted_sha256": "66de57ca9bf6db7b7ba7f29f4e38c50c4d1c3e7a7feab47d2aa3f80d43bc7755",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/12-dispatch-unprotected-branch-control/command.json",
+      "original_sha256": "217a94dc9383f970193e5f95f89587fb0c5f6856dcad0a35dd867c08f876ebfe",
+      "redacted_sha256": "934020fc13a4e8808f032773200e799f55c05480f5483056b1d2de47b3d99fd7",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/13-main-run/command.json",
+      "original_sha256": "e7562acf512432596cc8041cf184ed7b9e5789ea4e36e616493737a93672d3c3",
+      "redacted_sha256": "f38c9ffd0a1f1b85f7f7a9ad580738e0abbacb1fc553b023d494abc13a0d82d3",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/14-main-jobs/command.json",
+      "original_sha256": "ae63a649c51fa70050a4708f5417a5ad5e86b3250ef678f9d842c29490a2a536",
+      "redacted_sha256": "6ee7c196d83ae49b9259cee6752b1a20cdd5f4b35945d66a6958f3a67f781fb2",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/15-main-artifacts/command.json",
+      "original_sha256": "cc246767745a9369ae063e271ecef0e846f2d7ab507f47eb81e75d5ee834153f",
+      "redacted_sha256": "1963d9ab12e9a8133d91b1261e291e4e073b3f2f8092b4b0d58c251ad0b9eac9",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/16-main-logs/command.json",
+      "original_sha256": "a2eb11588cc02ebaa76c91891863b6691845ff59fcba11691e0d42310bc04274",
+      "redacted_sha256": "168796766cb583c8156e0dc106055751e26dce9379a384fbce90a25fefe0ea03",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/17-branch-control-jobs/command.json",
+      "original_sha256": "aef96d557137ecc16d40ba756484ccf0bf223f87f3bf4afb3a8f0b0a2fe5fdf1",
+      "redacted_sha256": "17cc49b09eae67b06e56f0eab63a6a932b0e385bc1b6d433a7e65c11efc5216f",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/18-download-signed-artifact/command.json",
+      "original_sha256": "eb901db20fa6b78d58155e91ed7bc98d79bb7802c5400e1e62b55ac18b401aac",
+      "redacted_sha256": "af978afe95b17735f4f328a92d63f1aca6ac6c7765d5ca5730c057d6fed0a42c",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/19-download-attestation-bundle/command.json",
+      "original_sha256": "83338252c7179dc13e00b579691ab3397827a68058f84f002465c9416c2c91f3",
+      "redacted_sha256": "d9c387b03eb5625256505a216e0bc11f10a17815dbdc5c6e04579fc92ca60be2",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/20-final-main-protection/command.json",
+      "original_sha256": "3dff522a2248a933c14bc71635b6c8e4d0c4296365ce73a0d5025d4127d37804",
+      "redacted_sha256": "fb55c221be92576843712a5f6806a0afb7b9d4bd6586ba44b4fb12c159599561",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/21-branch-control-logs/command.json",
+      "original_sha256": "6a2b7564f6379ab4d501a2ca7f989043b5423bf6311f8e4978bfbc165ae31e03",
+      "redacted_sha256": "510efb13aee3fd0f9e50f5defd72c210d5ac766deac80c4b6e99c714a2d34f41",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/22-main-reproduction-ci/command.json",
+      "original_sha256": "f567f679b507e683123cb23619de55982e981eab6cb89455b522f3507b20175f",
+      "redacted_sha256": "0950049d93d845f46632cec5f9fe3d22ccbaf06cf43de783de0b33e6df795a06",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/23-post-evidence-root-tests/command.json",
+      "original_sha256": "ee248e03ecae482bfee83a8ad42d0500a679a45370da2d6767748ae8d6635709",
+      "redacted_sha256": "44ea49191c388d281902a2dd711f226697fee357941ad81cb639fa587945d4ba",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/inputs.json",
+      "original_sha256": "d28750b50afa4e8b7fa5b72fb54541cb913866496e9080b729695ef9a33c3bd5",
+      "redacted_sha256": "b2d91156bd5f9ba954620aa59fffbac5b604666301d91bc7b28426d8de167e29",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/00-gh-version.json",
+      "original_sha256": "79b2a1160bc3dc260d352247263a7848b726dd02a95a043f953a87853aad579a",
+      "redacted_sha256": "6601de7a340db58bea8746e79db7c9d84bd7a79bc35381d5edd661eba71f795f",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/00b-binding-and-checksum-consistency.json",
+      "original_sha256": "9a5f0341367db501e899bceb566de7a3bc2fb7727fcdb080cfc7e77c7709d18e",
+      "redacted_sha256": "42618382c986ef2797a68eef4752303a8084e22fa5783a2103adf3c32245e780",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/01-gh-default-trust.json",
+      "original_sha256": "172bf18a706cc1f2d04d44ea4cab972bf2e2c9d2fafe27cbcf6109afb0ce6493",
+      "redacted_sha256": "7db5175af84f600ab62c64246346b004d179bdbbfd225b2d32b27ffb9107783a",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/02-wrapper-default-trust.json",
+      "original_sha256": "963934b02871b2883cedfbc4671f110befcc275f7baf9fdc080ac4dab34d4f28",
+      "redacted_sha256": "233977c4744aa2ad25963a32a8cd63fc47dbf8038dd59ebe0d920e7848928472",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/03-capture-official-trusted-root.json",
+      "original_sha256": "80b33609f868b0e2871d65b60261e1f86e9a042a68dab620799384840693fc73",
+      "redacted_sha256": "f1ce7c62046d13ca72a65e71299c7f612c3c22aa5859c801fc1b0a7fc74f3e42",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/04-gh-captured-root-offline.json",
+      "original_sha256": "77bcb2c2bed58abd47034ffdcbf60aef06eb370e39ee7dcea896a47e5aed8cdf",
+      "redacted_sha256": "43c163926d49c81889cc64a853f07c974ab050eebe685f6c9d53d30c185ca5df",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/05-wrapper-captured-root-offline.json",
+      "original_sha256": "756f5cde051162be74af38be56e5a0f7957dfc9b6cf501820c7ab5d8e75e2577",
+      "redacted_sha256": "4fe8fa947aa0d9205bdc9c02894c17efab5132c0550f49f937701cbf532f3d9d",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/06-negative-altered-archive-gh.json",
+      "original_sha256": "9b9b4c89491caea40dcbfb625ad3baeb087b90cd4503256da1a1ab3beabe2715",
+      "redacted_sha256": "e4631084cdfaddbfd9339601b490dd64e1ba83237ebfda6907dd8cf662697cf9",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/07-negative-altered-archive-wrapper.json",
+      "original_sha256": "033fbd13ac7ba87b1b47dbedd0d944e69d784f4548a8ed58e1a456eb6ea1ed15",
+      "redacted_sha256": "979358decb0b753a3fcc11eeb8e1814e9faef179d46fa7f5ef4d1d7b402c1f6f",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/08-negative-wrong-sha-wrapper.json",
+      "original_sha256": "7b6e88697008fcb6ff4c93997b0dd4a939804c426aeaf32d3c158e8767aa2a4d",
+      "redacted_sha256": "6b06b52c21cebc905d8b702550803af9ca1c78035a6de9461946e6be8cd4104f",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/09-negative-wrong-run-wrapper.json",
+      "original_sha256": "4cb75bed9084d32afca287ffe944deef5ac168965d4c143435a1f23c29ed9103",
+      "redacted_sha256": "e5c22c54898ff38cb64d123d0fdaa774d6541e389c99d8f65d18320e336619ee",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/10-negative-wrong-signer-gh.json",
+      "original_sha256": "d87d0f4b94dd56cc32adb9e956b8192d09c889f2a5798fe85ca4d8dc22187512",
+      "redacted_sha256": "1aa38abfc4fa3c0321f763a9921a01040285463fb7e8ce0980b267b355fe6fb3",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/receipts/11-negative-wrong-ref-gh.json",
+      "original_sha256": "a5875a5db0f5dda21b8b02ad6bee0794102df3416f6659fe89328ba7de9a0f37",
+      "redacted_sha256": "f52777709b9b3609fb6211e85e95687ef2c882e97e134852aba3c2f005ef4c59",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/live-signing-33945266470/verification-01/summary.json",
+      "original_sha256": "5084645b36903d6be93622e1447a241ed78d1c75ba314699a5f6d4fb229fea67",
+      "redacted_sha256": "582e8be94fc03d0240f436a64a98fe86cb611e41224700863e8d6ed6c8c8b538",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/correlation/environment.json",
+      "original_sha256": "792eef2bf32d3dd96d4dd5438c2efb7c821b605c6e279df519e9116f23a12ca5",
+      "redacted_sha256": "e9ca8de6f0c3cc7c659b4cb81cc05d19d85da321b859123b1dee067d35bdc8cd",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/correlation_smoke.result.json",
+      "original_sha256": "b272f57e478286af92c2f30595a4f577b8c8ea0e83b4dc58de39cc793c49c091",
+      "redacted_sha256": "67a21169e40fb61ab01fea4212d118d3933e08817be6cdd82c84824b35ea226d",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/correlation_smoke.stdout.txt",
+      "original_sha256": "0695f4472d95c9242950624a4853ad2e9cdc5ddedad12ad4b969e686d5698472",
+      "redacted_sha256": "581535c7f31418a69e40243b3705ed8d5d841f7474fecdf7bfec9e44f67e89ff",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/frozen_confirmatory_cohort.result.json",
+      "original_sha256": "ac1857570b7c9088f7ebc0eb7b8df4caee1279ce09e4d7a4a840f264d445f692",
+      "redacted_sha256": "9cecf79a6de341882cc2d84d65b1849f1b8bd0b58083f6d0c1626f266928a93b",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/frozen_index.result.json",
+      "original_sha256": "268f61fd336fb5be7a7763599735fbdf22351973cf7e2816ea4c7b03bdf14713",
+      "redacted_sha256": "fde5390b155ce53997550c9d67236b32471dd4cbf52f544d147036856bb02701",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/frozen_initial_cohort.result.json",
+      "original_sha256": "203563d2735e377b3d5523593a6860b3056c609c29ff5c525288f01b11162aa0",
+      "redacted_sha256": "ebd9c2ca2442052d187ae635ca4f8cdd6cd07d988408b074bd1dc49250408d58",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/frozen_reference.result.json",
+      "original_sha256": "ac9606e85ae9650cf2f759613a81022c78f4b93b33a64dcb9d669d6103f4adb9",
+      "redacted_sha256": "57ca5005b97ad5603a091f9e3c6d6288a0320edb7b8107ab38d2bc2fba9cbb51",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/frozen_reference.stdout.txt",
+      "original_sha256": "168055180ca00e211188d3a5cc62fc287af05dc529e5c1e0e74989287abd462b",
+      "redacted_sha256": "1108f9fcacd323fe4145d3d5f3de0bc288f3ae9c426e4601e078954bd96d5ac6",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/hardening_tests.result.json",
+      "original_sha256": "3cdbfaf44849da4f0ce8965e62ab6fe20e8805c789193967e96e673a45545f30",
+      "redacted_sha256": "0cf000b82ac392b0713513eee511ace7f7bea62ce76cf7147c255ad38490f452",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/index_smoke.result.json",
+      "original_sha256": "92c7eb667bfd89f64a80c3cc043893e9d259600a818e1b92adc62d497163ece2",
+      "redacted_sha256": "950c88b2fdcab02680100eecfc9fea3e8a6dbfd051c3fb72627fb1e1a25bccf0",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/index_smoke.stdout.txt",
+      "original_sha256": "5679b7914814a613562a7f02b978a913a19fca303651fbf4d48e267115d66bc2",
+      "redacted_sha256": "93d8054f50525c245b318f0f95ca8a540169c9b3acd8bb1065dfe5dfd3d2e941",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/plan.json",
+      "original_sha256": "f22aeaccc4e03ea28b4ab8373ec8658b142222f8f6ba31f111468ff2c5c81388",
+      "redacted_sha256": "c13c4af4fc81275562fb2b85d132df9f5990431f76d4a23cfd1e25a11b7077e2",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/profile_tests.result.json",
+      "original_sha256": "0ecf3efd38cf0c946b7c8dd88de4942e4ce57fe922fdca01d1ca48c06c59e96f",
+      "redacted_sha256": "c346605bcad2a4b554dcbf203bbb19a95fe6b442c8491522c1a78c4c86d27670",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    },
+    {
+      "path": "results/hardening-v1.4/reproduction/summary.json",
+      "original_sha256": "4ef1b5a514324d425108d041011925ee454b4e8a26c779698b9f6caba595519e",
+      "redacted_sha256": "5260eb2716f06b79c4bdfa05676f3a510334e9dbb96293ee995d738b28ab7268",
+      "reason": "Replace private local filesystem prefixes with portable placeholders."
+    }
+  ]
+}

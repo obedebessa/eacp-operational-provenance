@@ -7,27 +7,27 @@
   "checks": [
     {
       "name": "repository-tests",
-      "command": "'/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B -m unittest discover -s tests -q",
+      "command": "'/opt/eacp-tools/python/bin/python3' -B -m unittest discover -s tests -q",
       "exit_code": 0
     },
     {
       "name": "historical-adapter-tests",
-      "command": "'/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B -m unittest discover -s experiments/github_actions/tests -q",
+      "command": "'/opt/eacp-tools/python/bin/python3' -B -m unittest discover -s experiments/github_actions/tests -q",
       "exit_code": 0
     },
     {
       "name": "correlation-tests",
-      "command": "'/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B -m unittest discover -s experiments/correlation_robustness -q",
+      "command": "'/opt/eacp-tools/python/bin/python3' -B -m unittest discover -s experiments/correlation_robustness -q",
       "exit_code": 0
     },
     {
       "name": "index-tests",
-      "command": "'/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B -m unittest discover -s experiments/index_ablation -q",
+      "command": "'/opt/eacp-tools/python/bin/python3' -B -m unittest discover -s experiments/index_ablation -q",
       "exit_code": 0
     },
     {
       "name": "candidate-verifier",
-      "command": "'/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B scripts/verify_hardening.py",
+      "command": "'/opt/eacp-tools/python/bin/python3' -B scripts/verify_hardening.py",
       "exit_code": 0
     },
     {

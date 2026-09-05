@@ -1,4 +1,4 @@
-Command: '/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B -m unittest discover -s experiments/index_ablation -q
+Command: '/opt/eacp-tools/python/bin/python3' -B -m unittest discover -s experiments/index_ablation -q
 Source commit: e4716e82b9cd86058288ce59744aefb88632fec8
 Exit code: 0
 Classification: author-executed local verification

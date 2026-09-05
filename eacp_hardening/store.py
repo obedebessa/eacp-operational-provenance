@@ -23,6 +23,7 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 from .common import (HardeningError, Principal, VerifiedEvent, VerifiedInventory,
                      canonical_bytes, identifier, require_role, utc_time)
+from .files import private_file, check_sidecars
 
 
 class QueueFullError(HardeningError):
@@ -102,13 +103,15 @@ class EvidenceStore:
         self.path = Path(path)
         self.max_pending = max_pending
         self._cipher = AESGCM(encryption_key)
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        fd = os.open(self.path, os.O_CREAT | os.O_RDWR, 0o600)
+        self.path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        fd = private_file(self.path)
         os.close(fd)
+        check_sidecars(self.path)
         self._db = sqlite3.connect(str(self.path), isolation_level=None, timeout=5)
         self._db.row_factory = sqlite3.Row
         try:
             self._db.execute("PRAGMA foreign_keys=ON")
+            self._db.execute("PRAGMA trusted_schema=OFF")
             self._db.execute("PRAGMA busy_timeout=5000")
             mode = self._db.execute("PRAGMA journal_mode=WAL").fetchone()[0]
             if mode.lower() != "wal":
@@ -154,6 +157,23 @@ class EvidenceStore:
 
     @contextmanager
     def _transaction(self) -> Iterator[None]:
+        if self._db.in_transaction:
+            # Only synchronous, trusted in-process composition. An outer batch
+            # commits the cursor and every enqueue together, before its ACK.
+            name = 'nested_' + uuid.uuid4().hex
+            self._db.execute('SAVEPOINT ' + name)
+            try:
+                yield
+                self._db.execute('RELEASE ' + name)
+            except BaseException:
+                # SQLITE_FULL/IOERR can already roll back the entire transaction.
+                # Preserve that original failure instead of masking it with a
+                # nonexistent-savepoint error.
+                if self._db.in_transaction:
+                    self._db.execute('ROLLBACK TO ' + name)
+                    self._db.execute('RELEASE ' + name)
+                raise
+            return
         self._db.execute("BEGIN IMMEDIATE")
         try:
             yield

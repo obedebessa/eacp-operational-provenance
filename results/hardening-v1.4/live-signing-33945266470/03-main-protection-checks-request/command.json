@@ -6,9 +6,9 @@
     "PUT",
     "repos/obedebessa/eacp-operational-provenance/branches/main/protection",
     "--input",
-    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/eacp-live-signing-tools/main-protection-checks.json"
+    "/workspace/eacp/outputs/eacp-live-signing-tools/main-protection-checks.json"
   ],
-  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "cwd": "/workspace/eacp",
   "started_at": "2026-09-05T04:40:42.507134+00:00",
   "elapsed_seconds": 0.9743807500344701,
   "exit_code": 0,

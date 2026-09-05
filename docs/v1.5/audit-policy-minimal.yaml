@@ -1,0 +1,19 @@
+# TEMPLATE ONLY. Replace the lab namespace after written data/security approval.
+# This is NOT the historical RequestResponse experiment policy.
+apiVersion: audit.k8s.io/v1
+kind: Policy
+rules:
+  - level: None
+    resources:
+      - group: ""
+        resources: ["secrets", "configmaps"]
+      - group: "authentication.k8s.io"
+        resources: ["tokenreviews"]
+  - level: Metadata
+    namespaces: ["eacp-authorized-observation-only"]
+    resources:
+      - group: "apps"
+        resources: ["deployments"]
+      - group: ""
+        resources: ["pods"]
+  - level: None

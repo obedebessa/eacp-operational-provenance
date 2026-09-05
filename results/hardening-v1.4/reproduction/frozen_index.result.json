@@ -1,11 +1,11 @@
 {
   "command": [
-    "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/opt/eacp-tools/python/bin/python3",
     "experiments/index_ablation/index_ablation.py",
     "--verify",
     "experiments/index_ablation/results/reference"
   ],
-  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "cwd": "/workspace/eacp",
   "elapsed_seconds": 0.07408683298854157,
   "finished_at": "2026-09-05T04:12:56.130667Z",
   "name": "frozen_index",

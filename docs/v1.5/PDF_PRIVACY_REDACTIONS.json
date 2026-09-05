@@ -1,0 +1,18 @@
+{
+  "format": "eacp.privacy-redactions/1",
+  "original_commit": "e2807efc14209e42ba5ac82f5aa8d44599d22c43",
+  "files": [
+    {
+      "path": "paper/Cross_Plane_Operational_Provenance_Preprint_v1.3.0.pdf",
+      "original_sha256": "2b02f04cfa08f917c2c42fa8417b853ad5126c01108eb9c7465b707ac5bae4b1",
+      "redacted_sha256": "551bb4d9294d865e3d6f1dd9b45e2205235e67fa366d88462640e4557ce2a5ed",
+      "reason": "Remove private correspondence email and its mailto annotation while preserving scientific authorship, scientific text, page layout, official repository links, and DOI links."
+    },
+    {
+      "path": "paper/EACP_preprint.pdf",
+      "original_sha256": "83e5338d257a6f706c2177f4b00583f1e756231fe1634313ecd4b0d0e1146019",
+      "redacted_sha256": "4de7f8347604c8e33607e15d964ce20f88cbbcd32caee08017b456e233754a83",
+      "reason": "Remove private correspondence email and its mailto annotation while preserving scientific authorship, scientific text, page layout, official repository links, and DOI links."
+    }
+  ]
+}

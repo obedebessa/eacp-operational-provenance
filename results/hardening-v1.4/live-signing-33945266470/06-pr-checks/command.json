@@ -9,7 +9,7 @@
     "--json",
     "number,url,headRefOid,baseRefOid,mergeStateStatus,statusCheckRollup"
   ],
-  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "cwd": "/workspace/eacp",
   "started_at": "2026-09-05T04:41:29.181112+00:00",
   "elapsed_seconds": 1.0199122500489466,
   "exit_code": 0,

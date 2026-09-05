@@ -1,5 +1,12 @@
 # EACP 1.4 candidate: observed GitHub signing and local verification
 
+Privacy derivative: selected unsigned text receipts in this checkout replace
+private filesystem prefixes with portable placeholders. The original bytes at
+execution reference `e2807efc14209e42ba5ac82f5aa8d44599d22c43` and these derivative
+bytes are bound by `docs/v1.5/PRIVACY_REDACTIONS.json`. Descriptions below of raw,
+unedited receipts refer to that original record. Signed archives, attestation
+bundles, recorded outcomes and cryptographic values remain unchanged.
+
 On 2026-09-05, the real protected-main workflow completed and its exact TAR was
 cryptographically verified using GitHub CLI 2.97.0 and the strict EACP wrapper,
 both with default trust and offline with a separately captured official trust

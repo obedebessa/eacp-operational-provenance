@@ -1,25 +1,36 @@
 # EACP operational-provenance artifact
 
-> **Software archival edition: EACP 1.4.0.** Start with the
-> [hardening implementation and verification guide](docs/v1.4/README.md) and
-> [reviewer packet](docs/v1.4/REVIEWER_PACKET.md). The new collection/security
-> implementation is separate from the unchanged Profile 1.3 schema and archived
-> experiments. See the [1.4.0 release notes](RELEASE_NOTES_v1.4.0.md) and
-> [software DOI](https://doi.org/10.5281/zenodo.22326718), reserved at source freeze;
-> the Zenodo record is authoritative for publication status. No field or
-> independently authenticated human-validation claim is added. The badges,
-> research results, release notes and citations below describe **published 1.3.0**.
-> Use `python3 scripts/verify_hardening.py` for this implementation; use the immutable
-> `v1.3.0` checkout for the historical release verifier and historical manifest.
->
-> The implementation is publicly available on GitHub. [Live run 33945266470 and its
-> verification record](results/hardening-v1.4/live-signing-33945266470/README.md)
-> demonstrate separate execution/signing and default/offline verification of the
-> exact signed TAR. That attestation does not cover the whole repository, PDFs,
-> or a later review ZIP; it adds no external-review, field or SLSA L3 claim.
+**Software 1.5.0rc1 / security boundary 1.4 / Profile and paper 1.3.**
+This is one research project with successive software improvements, not three
+papers or three protocol versions. Start with the [lineage and review card](START_HERE.md),
+[release notes](RELEASE_NOTES_v1.5.0rc1.md), and [operational quickstart](docs/v1.5/README.md).
 
-The 1.4.0 software edition does not create a Profile 1.4 or a paper 1.4. The
-following research overview describes the preserved **1.3.0** evidence.
+The external execution records report the original candidate at `e2807efc`:
+275 of 276 tests passed initially, one historical cryptographic check was skipped,
+and that check passed in the retained follow-up (112 hardening tests, no skips).
+The 52 optimized-mode executions and 112 repeated tests are not additional unique
+tests. This is a reported reexecution, not an independently authenticated expert
+approval, a field pilot, a new paper, a production certification, or a signature
+of the 1.5 source tree. See [the execution record and limits](docs/v1.5/EXTERNAL_EXECUTION.md).
+
+Current distribution copies suppress private local paths, reviewer identifiers
+and private contact details. Redacted files are explicitly recorded as derivatives
+in [the privacy policy](docs/v1.5/RELEASE_PRIVACY.md), not misrepresented as byte-identical
+original receipts. Original scientific results and signed TAR bytes are retained;
+historical tags still identify the original archival versions. Git history is
+not included in the privacy-screened review ZIP. Old tags, public history and
+already-published third-party copies are not erased by this update.
+
+The [1.4 security guide](docs/v1.4/README.md) and
+[retained signing run 33945266470](results/hardening-v1.4/live-signing-33945266470/README.md)
+describe the previous software boundary. Its signed TAR does **not** authenticate
+this 1.5 tree or review ZIP. No 1.5 DOI or new live signature is claimed.
+The reserved [1.4 DOI](https://doi.org/10.5281/zenodo.22326718) is not a 1.5 DOI;
+the Zenodo record is authoritative for its publication status.
+
+## Archived scientific contribution: Profile and paper 1.3
+
+The following research overview, citations and badges describe **1.3.0**.
 
 [![Profile DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22307668.svg)](https://doi.org/10.5281/zenodo.22307668)
 [![Preprint DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22283868.svg)](https://doi.org/10.5281/zenodo.22283868)

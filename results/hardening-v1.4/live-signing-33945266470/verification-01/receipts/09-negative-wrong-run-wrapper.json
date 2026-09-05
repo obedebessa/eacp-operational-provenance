@@ -1,10 +1,10 @@
 {
   "command": [
-    "/Users/obede/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
-    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate/scripts/verify_attestation_v1_4.py",
-    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/verification-01/inputs/eacp-hardening-v1.4.tar.gz",
+    "/opt/eacp-tools/python/bin/python3",
+    "/workspace/eacp/scripts/verify_attestation_v1_4.py",
+    "/workspace/eacp/outputs/EACP_v1.4_Live_Signing_2026-09-05/verification-01/inputs/eacp-hardening-v1.4.tar.gz",
     "--bundle",
-    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/verification-01/inputs/bundle.jsonl",
+    "/workspace/eacp/outputs/EACP_v1.4_Live_Signing_2026-09-05/verification-01/inputs/bundle.jsonl",
     "--repository",
     "obedebessa/eacp-operational-provenance",
     "--source-sha",
@@ -16,9 +16,9 @@
     "--run-attempt",
     "1",
     "--trusted-root",
-    "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/outputs/EACP_v1.4_Live_Signing_2026-09-05/verification-01/inputs/trusted_root.jsonl"
+    "/workspace/eacp/outputs/EACP_v1.4_Live_Signing_2026-09-05/verification-01/inputs/trusted_root.jsonl"
   ],
-  "cwd": "/Users/obede/Library/Mobile Documents/com~apple~CloudDocs/EB-1 Vencedor/tmp/eacp-v1.3-candidate",
+  "cwd": "/workspace/eacp",
   "elapsed_seconds": 0.07159829197917134,
   "expectation_met": true,
   "expected_exit_code": 1,
