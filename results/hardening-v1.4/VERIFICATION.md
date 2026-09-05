@@ -7,8 +7,9 @@ Python 3.12.14 and cryptography 50.0.1. The before/after source-tree SHA-256 was
 The tree was clean and did not change during the recorded reproduction.
 
 Classification: **author-executed local validation**, not independent review or
-organizational evidence. A later results-only commit packages these records; it
-does not change the code that produced them.
+organizational evidence. Later results/packaging commits package these records;
+they do not change the collection/storage code that produced them. A packaging-only
+filename correction appends `.zip` without discarding the dotted candidate version.
 
 ## Results
 

@@ -24,8 +24,10 @@ def package(destination: Path) -> dict:
     if git("rev-parse", "v1.3.0^{commit}") != HISTORICAL_COMMIT:
         raise ValueError("historical tag pin changed")
     destination = destination.resolve()
-    if destination.exists():
-        raise ValueError("destination must not already exist")
+    archive = destination.parent / (destination.name + ".zip")
+    checksum_file = Path(str(archive) + ".sha256")
+    if any(path.exists() for path in (destination, archive, checksum_file)):
+        raise ValueError("destination, archive and checksum must not already exist")
     source_commit = git("rev-parse", "HEAD")
     branch = git("symbolic-ref", "HEAD")
     if not branch.startswith("refs/heads/"):
@@ -78,12 +80,10 @@ this package, and no correspondence has been sent automatically.
     files = sorted(path for path in destination.iterdir() if path.is_file())
     (destination / "SHA256SUMS").write_text("".join(
         hashlib.sha256(path.read_bytes()).hexdigest() + "  " + path.name + "\n" for path in files))
-    archive = destination.with_suffix(".zip")
     with zipfile.ZipFile(archive, "x", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as output:
         for path in sorted(destination.iterdir()):
             output.write(path, arcname=destination.name + "/" + path.name)
     checksum = hashlib.sha256(archive.read_bytes()).hexdigest()
-    checksum_file = Path(str(archive) + ".sha256")
     with checksum_file.open("x") as output:
         output.write(checksum + "  " + archive.name + "\n")
     return {**metadata, "archive": str(archive), "archive_sha256": checksum}
