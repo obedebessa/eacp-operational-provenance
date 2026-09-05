@@ -1,12 +1,13 @@
-# EACP 1.4.0-rc1: collection security and resilience
+# EACP 1.4.0: collection security and resilience
 
-Status: **engineering candidate publicly available on GitHub**, with a verified
-live signing run; no final v1.4 Zenodo release or production readiness is claimed.
+Status: **software archival edition**, with a retained verified live signing run.
+DOI `10.5281/zenodo.22326718` was reserved at source freeze; consult the Zenodo
+record for publication status. Archival finality is not production readiness.
 This is not a new normative Profile. Profile 1.3 semantics and the historical paper,
 datasets, workflows and result verifiers remain byte-preserved. The versioned
 1.3 DOIs do not identify this new source code or these new experiments.
 
-This candidate responds to the technical assessment with executable controls,
+This implementation responds to the technical assessment with executable controls,
 negative tests and measured failure behavior. It does not promise freedom from
 criticism, establish source truth, or turn author-executed tests into independent
 replication. See the [one-pass reviewer packet](REVIEWER_PACKET.md).
@@ -141,7 +142,7 @@ consent, an agreed pilot, or a result.
 
 `v1.3.0^{commit}` remains `537799bd2b292ce6e78004de22f4ab6df1b4feda`.
 Only current repository presentation/package metadata and current CI/contract
-routing are changed by this candidate among old tracked files. A preexisting
+routing are changed by this implementation among old tracked files. A preexisting
 documentation-only commit, `e1ee51f050d7bf6e31dbee68560dd781e9b75985`, had already
 added the standalone Profile DOI to several release documents and its current
 manifest; the verifier accounts for that exact prior baseline. Archived experiment/specification
@@ -149,7 +150,9 @@ code, datasets, manifests, PDFs and original verifiers are unchanged.
 
 The old `scripts/verify_repository.py` and `MANIFEST-v1.3.0.sha256` still describe
 the old release. Run them in that exact immutable checkout. The new
-`scripts/verify_hardening.py` checks candidate metadata and rejects modifications
-to frozen content. Its `--release` gate still rejects this candidate as a final
-archival release. The live v1.4 signature identifies its own source and archive;
+`scripts/verify_hardening.py` checks version metadata and rejects modifications
+to frozen content. Its `--release` gate requires an exact annotated v1.4.0 tag,
+a clean checkout, the final manifest and preserved implementation/evidence pins.
+It checks local release readiness, not Zenodo publication or human independence.
+The live v1.4 signature identifies its own source and archive;
 the v1.3 DOIs continue to identify their historical materials.
